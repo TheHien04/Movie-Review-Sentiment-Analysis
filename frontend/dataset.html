@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dataset Overview | Movie Sentiment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dataset.css"/>
+</head>
+<body style="font-family: 'Montserrat', Arial, sans-serif; background: #f7f7fc;">
+  <header class="header-gradient">
+    <div class="header-content">
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4c8.svg" alt="Dataset Icon" style="height:38px;width:38px;filter:drop-shadow(0 2px 6px #7b5cff55);">
+        <h1 style="color:#fff;">Dataset Overview</h1>
+      </div>
+      <nav>
+        <a href="index.html" style="color:#fff;">Home</a>
+        <a href="batch.html" style="color:#fff;">Sentiment Analysis</a>
+        <a href="evaluation.html" style="color:#fff;">Evaluation</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="card dataset-stats-section">
+      <h2>Dataset Statistics</h2>
+      <div class="section-desc">Key statistics about the movie review dataset.</div>
+      <div id="dataset-stats">
+        <div style="font-size:1.05rem; margin-bottom:6px;">
+          <span title="Trung bình số ký tự mỗi review">Avg. review length:</span> 1288
+        </div>
+        <div style="font-size:1.05rem; margin-bottom:6px;">
+          <span title="Số lượng review có label là Negative">Negative:</span> 17500
+        </div>
+        <div style="font-size:1.05rem; margin-bottom:6px;">
+          <span title="Số lượng review có label là Positive">Positive:</span> 17500
+        </div>
+        <div style="font-size:1.05rem; margin-bottom:6px;">
+          <span title="Tổng số review trong dataset">Total samples:</span> 35000
+        </div>
+      </div>
+    </section>
+
+    <section class="card sample-section">
+      <h2>Sample Data</h2>
+      <div class="section-desc">Browse and search sample reviews from the dataset.</div>
+      <div class="card" style="margin-bottom:18px;">
+        <h3 style="text-align:center;">Label Distribution</h3>
+  <canvas id="label-chart" width="340" height="220" style="max-width:340px; height:220px; margin:0 auto; display:block;"></canvas>
+      </div>
+
+      <div class="sample-controls">
+        <input id="sample-search" type="search" placeholder="Search text…" class="sample-search">
+        <div class="badge" id="sample-count">0 items</div>
+      </div>
+
+      <div id="pager" class="pager">
+        <button id="prev-page" class="btn-soft" type="button" disabled>Prev</button>
+        <span id="page-info" class="badge">1/1</span>
+        <button id="next-page" class="btn-soft" type="button" disabled>Next</button>
+        <div class="pager-right">
+          <label for="per-page" class="badge">Rows per page</label>
+          <select id="per-page" class="badge">
+            <option value="3">3</option>
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+          <a class="btn-soft" href="/api/sample.csv" download>Download sample CSV</a>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table id="sample-table">
+          <thead>
+            <tr><th>Review</th><th>Label</th></tr>
+          </thead>
+          <tbody><!-- filled by JS --></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Movie Sentiment AI | For Statistical Machine Learning Project</p>
+  </footer>
+
+  <script src="main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

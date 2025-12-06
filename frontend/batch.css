@@ -1,0 +1,192 @@
+/* CSS riêng cho trang batch.html */
+body {
+  background: #f8f9fa;
+}
+/* --- Sentiment Analysis Page Style --- */
+body,
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", "Roboto", "Montserrat", Arial, sans-serif;
+  background: #f8fafc;
+}
+.main-bg {
+  min-height: 100vh;
+  background: linear-gradient(120deg, #f8fafc 0%, #e3e6f3 100%);
+}
+.header-gradient {
+  background: linear-gradient(90deg, #4b3c8a 0%, #6c63ff 100%);
+  box-shadow: 0 4px 24px rgba(76, 60, 138, 0.12);
+}
+.footer-gradient {
+  background: linear-gradient(90deg, #4b3c8a 0%, #6c63ff 100%);
+}
+.main-card {
+  background: linear-gradient(120deg, #fff 60%, #f3eaff 100%);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(76, 60, 138, 0.1);
+  margin: 0 auto;
+  padding: 2.5rem 2rem !important;
+}
+.input-section textarea {
+  border-radius: 1rem;
+  font-size: 1.1rem;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(76, 60, 138, 0.07);
+  border: 1px solid #e3e6f3;
+  background: #f8fafc;
+  transition: box-shadow 0.2s;
+}
+.input-section textarea:focus {
+  box-shadow: 0 4px 16px rgba(76, 60, 138, 0.13);
+  border-color: #6c63ff;
+}
+.btn-animated {
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  border-radius: 2rem !important;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(76, 60, 138, 0.07);
+}
+.btn-animated:active {
+  transform: scale(0.98);
+}
+#single-result .result-card {
+  background: #f8fafc;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(76, 60, 138, 0.07);
+  padding: 16px 20px;
+  margin-top: 10px;
+  text-align: center;
+}
+#single-result .pos {
+  color: #2563eb;
+  background: #e3fcec;
+  border-radius: 1rem;
+  padding: 4px 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+#single-result .neg {
+  color: #c00;
+  background: #ffe4ec;
+  border-radius: 1rem;
+  padding: 4px 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+#file-label {
+  font-size: 1rem;
+  color: #888;
+  margin-left: 8px;
+}
+.batch-section input[type="file"] {
+  border-radius: 1rem;
+  padding: 8px;
+  font-size: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e3e6f3;
+}
+.batch-section h3 {
+  font-family: "Montserrat", Arial, sans-serif;
+  font-size: 1.3rem;
+  color: #232946;
+  margin-bottom: 10px;
+}
+.progress {
+  background: #eebbc3;
+  border-radius: 1rem;
+  height: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(76, 60, 138, 0.07);
+}
+#upload-bar {
+  display: block;
+  height: 100%;
+  background: #6c63ff;
+  border-radius: 1rem;
+  width: 0%;
+  transition: width 0.3s;
+}
+#single-result,
+#result-section {
+  margin-top: 10px;
+}
+.history {
+  background: #f8fafc;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(76, 60, 138, 0.07);
+  padding: 12px 18px;
+  margin-top: 10px;
+}
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #e3e6f3;
+  font-size: 1rem;
+}
+.history-item:last-child {
+  border-bottom: none;
+}
+.badge {
+  background: #eebbc3;
+  color: #232946;
+  border-radius: 1rem;
+  padding: 4px 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+#result-section table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: separate;
+  border-spacing: 0;
+  box-shadow: 0 2px 8px rgba(76, 60, 138, 0.07);
+}
+#result-section th,
+#result-section td {
+  padding: 12px 18px;
+  text-align: center;
+  border-bottom: 1px solid #e3e6f3;
+}
+#result-section th {
+  background: #eebbc3;
+  color: #232946;
+  font-weight: 700;
+}
+#result-section td {
+  background: #fff;
+  vertical-align: middle;
+}
+#result-section td.pos {
+  color: #2563eb;
+  font-weight: 600;
+}
+#result-section td.neg {
+  color: #c00;
+  font-weight: 600;
+}
+#result-section tr:last-child td {
+  border-bottom: none;
+}
+@media (max-width: 900px) {
+  .main-card {
+    padding: 1.2rem 0.5rem !important;
+  }
+}
+@media (max-width: 600px) {
+  .main-card {
+    padding: 0.5rem 0.2rem !important;
+  }
+  .input-section textarea {
+    font-size: 1rem;
+    padding: 8px;
+  }
+  #file-label {
+    font-size: 0.95rem;
+    min-width: 80px;
+  }
+}

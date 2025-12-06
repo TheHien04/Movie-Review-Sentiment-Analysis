@@ -1,0 +1,209 @@
+background: #f3eaff;
+box-shadow: 0 2px 12px rgba(123, 92, 255, 0.1);
+transition: background 0.18s, box-shadow 0.18s;
+/* CSS riêng cho trang dataset.html */
+body {
+  background: #f7f7fc;
+}
+/* ...thêm các style cho dataset.html ở đây... */
+body {
+  background: #f7f7fc;
+  font-family: "Montserrat", Arial, sans-serif;
+  color: #232946;
+}
+
+/* Header gradient and centering for Dataset page to match Sentiment Analysis */
+.header-gradient {
+  background: linear-gradient(90deg, #7b5cff 0%, #8f5de8 100%);
+  padding: 0 0 2.2rem 0;
+  box-shadow: 0 2px 8px rgba(76, 60, 138, 0.07);
+}
+.header-content {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+header h1 {
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin: 1.2rem 0 0.5rem 0;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 1px;
+}
+nav {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 0.5rem;
+  justify-content: center;
+}
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: color 0.2s, background 0.2s, border 0.2s;
+  padding: 4px 18px;
+  border-radius: 8px;
+  border: 2px solid #fff;
+  background: transparent;
+  box-shadow: none;
+  margin-bottom: 2px;
+}
+nav a:hover {
+  color: #7b5cff;
+  background: #fff;
+  border-color: #fff;
+}
+nav {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+nav a {
+  color: #232946;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+nav a:hover {
+  color: #eebbc3;
+}
+
+.card {
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 4px 24px rgba(123, 92, 255, 0.1);
+  padding: 1.7rem 2.2rem 1.3rem 2.2rem;
+  margin: 2.2rem auto 1.7rem auto;
+  max-width: 1100px;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.section-desc {
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+
+.sample-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 10px 0 18px 0;
+  justify-content: center;
+}
+.sample-search {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background: #f7f8fa;
+  transition: border-color 0.2s;
+}
+.sample-search:focus {
+  border-color: #b6b6f7;
+  outline: none;
+}
+.badge {
+  display: inline-block;
+  background: #eebbc3;
+  color: #232946;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+.pager {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 8px 0 18px 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pager-right {
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.btn-soft {
+  background: #eebbc3;
+  color: #232946;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 1px 4px rgba(76, 60, 138, 0.05);
+}
+.btn-soft:disabled {
+  background: #f7f8fa;
+  color: #aaa;
+  cursor: not-allowed;
+}
+.btn-soft:hover:not(:disabled) {
+  background: #b6b6f7;
+  color: #232946;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+#sample-table {
+  width: 100%;
+  max-width: 1000px;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(76, 60, 138, 0.05);
+  font-size: 1rem;
+}
+#sample-table th,
+#sample-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e3e6f3;
+  text-align: left;
+  vertical-align: top;
+}
+#sample-table th {
+  background: #f7f8fa;
+  font-weight: 700;
+  color: #232946;
+}
+#sample-table td {
+  color: #232946;
+}
+#sample-table tr:last-child td {
+  border-bottom: none;
+}
+
+footer {
+  width: 100vw;
+  background: linear-gradient(90deg, #7b5cff 0%, #8f5de8 100%);
+  color: #fff;
+  text-align: center;
+  font-size: 1rem;
+  padding: 18px 0 16px 0;
+  margin: 0;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 -2px 8px rgba(76, 60, 138, 0.07);
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Model Evaluation | Movie Sentiment</title>
+  <link rel="stylesheet" href="evaluation.css"/>
+</head>
+<body>
+  <header>
+    <h1 class="fw-bold display-5 text-white mb-1">
+      <span class="me-2">🎬</span>Model Evaluation
+    </h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="batch.html">Sentiment Analysis</a>
+      <a href="dataset.html">Dataset</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eval-grid">
+      <section class="metrics-section card">
+  <h2>Evaluation Metrics</h2>
+  <div class="section-desc">Key metrics to evaluate model accuracy, coverage, and specificity.</div>
+  <div id="metrics-cards" class="metrics-cards"></div>
+      </section>
+
+      <section class="confusion-section card">
+  <h2>Confusion Matrix</h2>
+  <div class="section-desc">Confusion matrix shows the number of correct/incorrect predictions for each class.</div>
+        <!-- Confusion matrix table will be rendered here by JS -->
+      </section>
+
+      <section class="charts-section card">
+  <h2>Label Distribution</h2>
+  <div class="section-desc">Pie chart of the number of samples for each sentiment label.</div>
+        <div class="chart-card">
+          <div class="label-filter-wrap" style="margin-bottom:10px;">
+            <label for="label-filter" style="font-weight:500;">Filter:</label>
+            <select id="label-filter" style="margin-left:8px;">
+              <option value="all">All</option>
+              <option value="negative">Negative</option>
+              <option value="positive">Positive</option>
+            </select>
+          </div>
+          <canvas id="label-chart"></canvas>
+          <div class="caption">Pie chart of label distribution</div>
+        </div>
+      </section>
+
+      <section class="summary-section card">
+  <h2>Summary & Actions</h2>
+  <div class="section-desc">Summary of evaluation results and data export actions.</div>
+        <div id="summary-box" class="summary-box"><!-- filled by JS --></div>
+        <div class="threshold-control">
+          <label for="threshold-slider" class="form-label">Adjust decision threshold:</label>
+          <input type="range" min="0.1" max="0.9" step="0.01" value="0.5" id="threshold-slider" aria-label="Decision threshold" tabindex="0" />
+          <span id="threshold-value"><span class="summary-value">50%</span></span>
+        </div>
+        <button id="export-pdf-btn" class="btn-export">Export Evaluation to PDF</button>
+        <button id="metrics-detail-btn" class="btn-soft" style="margin-top:8px;">View Metrics Details</button>
+        <button id="cm-detail-btn" class="btn-soft" style="margin-top:8px;">View Confusion Matrix Details</button>
+        <button id="label-detail-btn" class="btn-soft" style="margin-top:8px;">View Label Distribution Details</button>
+        <!-- Modal for details -->
+        <div class="modal fade" id="detail-modal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel">Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="detail-modal-body"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="eval-loading" style="display:none;text-align:center;margin-top:18px;">
+      <span class="loader"></span> Loading evaluation data...
+    </div>
+    <div id="eval-error" style="display:none;color:#c00;text-align:center;margin-top:18px;"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Movie Sentiment AI | For Statistical Machine Learning Project</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="main.js?v=legend2"></script>
+</body>
+</html>
