@@ -3,23 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Model Evaluation | Movie Sentiment</title>
+  <meta name="description" content="Movie Sentiment Analysis - Model Evaluation Dashboard"/>
+  <meta name="theme-color" content="#6366f1"/>
+  <title>Model Evaluation | Movie Sentiment Analysis</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="evaluation.css"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="theme.css"/>
+  <link rel="stylesheet" href="premium-effects.css"/>
+  <link rel="stylesheet" href="loading.css"/>
+  <link rel="stylesheet" href="toast.css"/>
+	<style>
+		.skip-link {
+			position: absolute;
+			left: -9999px;
+			z-index: 999;
+			padding: 1em;
+			background-color: #000;
+			color: white;
+			text-decoration: none;
+		}
+		.skip-link:focus {
+			left: 50%;
+			transform: translateX(-50%);
+			top: 10px;
+		}
+	</style>
 </head>
-<body>
-  <header>
-    <h1 class="fw-bold display-5 text-white mb-1">
-      <span class="me-2">🎬</span>Model Evaluation
-    </h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="batch.html">Sentiment Analysis</a>
-      <a href="dataset.html">Dataset</a>
-    </nav>
-  </header>
+<body class="main-bg">
+	<a href="#main-content" class="skip-link">Skip to main content</a>
+	<!-- Navigation Bar -->
+	<nav class="navbar-custom" role="navigation" aria-label="Main navigation">
+    <div class="navbar-content">
+      <a href="index.html" class="navbar-logo">
+        <span>🎬</span>
+        <span>Movie Sentiment AI</span>
+      </a>
+      <ul class="navbar-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="batch.html">Sentiment Analysis</a></li>
+        <li><a href="compare.html">Compare</a></li>
+        <li><a href="evaluation.html" class="active">Evaluation</a></li>
+        <li><a href="dataset.html">Dataset</a></li>
+      </ul>
+    </div>
+  </nav>
 
+  <header class="header-gradient">
+    <h1 class="fw-bold display-5 text-white mb-1">
+      <span class="me-2">📊</span>Model Evaluation
+    </h1>
+  </header>
+  
   <main>
     <div class="eval-grid">
+      <!-- Dataset Overview Section -->
+      <section class="dataset-info-section card">
+        <h2>📊 Dataset Overview</h2>
+        <div class="section-desc">Complete information about the training and validation datasets</div>
+        <div id="dataset-info-cards" class="metrics-cards">
+          <div class="metric-card">
+            <div>Total Samples</div>
+            <div><strong id="total-samples">Loading...</strong></div>
+          </div>
+          <div class="metric-card">
+            <div>Training Set</div>
+            <div><strong id="train-samples">Loading...</strong></div>
+          </div>
+          <div class="metric-card">
+            <div>Validation Set</div>
+            <div><strong id="val-samples">Loading...</strong></div>
+          </div>
+          <div class="metric-card">
+            <div>Test Set</div>
+            <div><strong id="test-samples">Loading...</strong></div>
+          </div>
+        </div>
+        <div style="margin-top: 20px;">
+          <canvas id="dataset-split-chart" width="400" height="200" style="max-width:100%; height:200px; margin:0 auto; display:block;"></canvas>
+        </div>
+      </section>
+
       <section class="metrics-section card">
   <h2>Evaluation Metrics</h2>
   <div class="section-desc">Key metrics to evaluate model accuracy, coverage, and specificity.</div>
@@ -32,9 +96,10 @@
         <!-- Confusion matrix table will be rendered here by JS -->
       </section>
 
-      <section class="charts-section card">
-  <h2>Label Distribution</h2>
-  <div class="section-desc">Pie chart of the number of samples for each sentiment label.</div>
+      <!-- Label Distribution -->
+      <section class="charts-section card" style="grid-column: auto !important;">
+        <h2>📊 Label Distribution</h2>
+        <div class="section-desc">Pie chart of the number of samples for each sentiment label.</div>
         <div class="chart-card">
           <div class="label-filter-wrap" style="margin-bottom:10px;">
             <label for="label-filter" style="font-weight:500;">Filter:</label>
@@ -44,8 +109,17 @@
               <option value="positive">Positive</option>
             </select>
           </div>
-          <canvas id="label-chart"></canvas>
+          <canvas id="label-chart" width="340" height="220" style="max-width:100%; height:220px; margin:0 auto; display:block;"></canvas>
           <div class="caption">Pie chart of label distribution</div>
+        </div>
+      </section>
+
+      <!-- Metrics Comparison Chart -->
+      <section class="metrics-comparison-section card" style="grid-column: auto !important;">
+        <h2>📈 Metrics Comparison</h2>
+        <div class="section-desc">Visual comparison of all evaluation metrics</div>
+        <div style="padding: 20px;">
+          <canvas id="metrics-comparison-chart" width="400" height="250" style="max-width:100%; height:250px; margin:0 auto; display:block;"></canvas>
         </div>
       </section>
 
@@ -83,12 +157,301 @@
     <div id="eval-error" style="display:none;color:#c00;text-align:center;margin-top:18px;"></div>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Movie Sentiment AI | For Statistical Machine Learning Project</p>
+  <footer class="py-3 text-center footer-gradient text-white-50 mt-4">
+    <small>&copy; 2025 Movie Sentiment AI | For Statistical Machine Learning Project</small>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="main.js?v=legend2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="loading.js"></script>
+  <script src="toast.js"></script>
+  <script src="excel-export.js"></script>
+  <script src="chart-enhancer.js"></script>
+  <script src="theme.js"></script>
+  <script src="shared.js"></script>
+  <script>
+    // Inline evaluation loader - ensures metrics load properly
+    (function() {
+      const API_URL = 'http://localhost:8000/api/metrics';
+      const DATASET_API_URL = 'http://localhost:8000/api/dataset-info';
+      const metricsCardsEl = document.getElementById('metrics-cards');
+      const confusionSection = document.querySelector('.confusion-section');
+      const summaryBox = document.getElementById('summary-box');
+      const labelCanvas = document.getElementById('label-chart');
+      const datasetSplitCanvas = document.getElementById('dataset-split-chart');
+      const metricsComparisonCanvas = document.getElementById('metrics-comparison-chart');
+      const loadingEl = document.getElementById('eval-loading');
+      const errorEl = document.getElementById('eval-error');
+      let labelChart = null;
+      let datasetSplitChart = null;
+      let metricsComparisonChart = null;
+      let currentThreshold = 0.5;
+      let currentMetrics = null;
+
+      // Load dataset information
+      function loadDatasetInfo() {
+        console.log('[Eval] Loading dataset info...');
+        fetch(DATASET_API_URL)
+          .then(response => response.json())
+          .then(data => {
+            console.log('[Eval] Dataset info loaded:', data);
+            
+            // Update dataset statistics
+            const stats = data.statistics || {};
+            document.getElementById('total-samples').textContent = stats.total_samples || 'N/A';
+            document.getElementById('train-samples').textContent = stats.train_samples || 'N/A';
+            document.getElementById('val-samples').textContent = stats.val_samples || 'N/A';
+            document.getElementById('test-samples').textContent = stats.test_samples || 'N/A';
+            
+            // Render dataset split chart
+            if (datasetSplitCanvas && typeof Chart !== 'undefined') {
+              if (datasetSplitChart) datasetSplitChart.destroy();
+              
+              datasetSplitChart = new Chart(datasetSplitCanvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                  labels: ['Training', 'Validation', 'Test'],
+                  datasets: [{
+                    label: 'Number of Samples',
+                    data: [
+                      stats.train_samples || 0,
+                      stats.val_samples || 0,
+                      stats.test_samples || 0
+                    ],
+                    backgroundColor: ['#6366f1', '#ec4899', '#10b981'],
+                    borderColor: ['#4f46e5', '#db2777', '#059669'],
+                    borderWidth: 2
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      ticks: {
+                        callback: function(value) {
+                          return value.toLocaleString();
+                        }
+                      }
+                    }
+                  },
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                      callbacks: {
+                        label: function(ctx) {
+                          return ctx.raw.toLocaleString() + ' samples';
+                        }
+                      }
+                    }
+                  }
+                }
+              });
+            }
+          })
+          .catch(err => {
+            console.error('[Eval] Dataset info error:', err);
+            document.getElementById('total-samples').textContent = 'Error';
+            document.getElementById('train-samples').textContent = 'Error';
+            document.getElementById('val-samples').textContent = 'Error';
+            document.getElementById('test-samples').textContent = 'Error';
+          });
+      }
+
+      function loadMetrics(threshold) {
+        console.log('[Eval] Fetching metrics with threshold:', threshold);
+        if (loadingEl) loadingEl.style.display = 'block';
+        if (errorEl) errorEl.style.display = 'none';
+
+        fetch(API_URL + '?threshold=' + threshold)
+          .then(response => {
+            console.log('[Eval] Response:', response.status);
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            return response.json();
+          })
+          .then(data => {
+            console.log('[Eval] Data loaded:', data);
+            if (loadingEl) loadingEl.style.display = 'none';
+            
+            // Store current metrics for chart
+            currentMetrics = data;
+
+            // Render metrics cards
+            if (metricsCardsEl) {
+              const metrics = [
+                { name: 'Accuracy', value: data.accuracy, tip: '(TP + TN) / total' },
+                { name: 'F1 Score', value: data.f1, tip: '2·(Precision·Recall)/(P+R)' },
+                { name: 'Precision', value: data.precision, tip: 'TP / (TP + FP)' },
+                { name: 'Recall', value: data.recall, tip: 'TP / (TP + FN)' }
+              ];
+              metricsCardsEl.innerHTML = metrics.map(m => 
+                '<div class="metric-card"><div>' + m.name + ' <span class="info-badge" title="' + m.tip + '">i</span></div><div><strong>' + (m.value * 100).toFixed(2) + '%</strong></div></div>'
+              ).join('');
+            }
+            
+            // Render metrics comparison chart
+            if (metricsComparisonCanvas && typeof Chart !== 'undefined') {
+              if (metricsComparisonChart) metricsComparisonChart.destroy();
+              
+              metricsComparisonChart = new Chart(metricsComparisonCanvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                  labels: ['Accuracy', 'F1 Score', 'Precision', 'Recall'],
+                  datasets: [{
+                    label: 'Metric Value (%)',
+                    data: [
+                      data.accuracy * 100,
+                      data.f1 * 100,
+                      data.precision * 100,
+                      data.recall * 100
+                    ],
+                    backgroundColor: ['#6366f1', '#ec4899', '#10b981', '#f59e0b'],
+                    borderColor: ['#4f46e5', '#db2777', '#059669', '#d97706'],
+                    borderWidth: 2
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      max: 100,
+                      ticks: {
+                        callback: function(value) {
+                          return value + '%';
+                        }
+                      }
+                    }
+                  },
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                      callbacks: {
+                        label: function(ctx) {
+                          return ctx.raw.toFixed(2) + '%';
+                        }
+                      }
+                    }
+                  }
+                }
+              });
+            }
+
+            // Render confusion matrix
+            if (confusionSection && data.confusion_matrix) {
+              const cm = data.confusion_matrix;
+              const max = Math.max(cm[0][0], cm[0][1], cm[1][0], cm[1][1], 1);
+              const cell = (v) => '<td style="background:rgba(232,187,195,' + (0.15 + 0.35 * (v / max)) + ');">' + v + '</td>';
+              
+              // Remove old table if exists
+              const oldTable = confusionSection.querySelector('.cm-table-wrap');
+              if (oldTable) oldTable.remove();
+              
+              confusionSection.insertAdjacentHTML('beforeend',
+                '<div class="cm-table-wrap"><table class="cm-table">' +
+                '<thead><tr><th></th><th>Pred 0</th><th>Pred 1</th></tr></thead>' +
+                '<tbody>' +
+                '<tr><th>True 0</th>' + cell(cm[0][0]) + cell(cm[0][1]) + '</tr>' +
+                '<tr><th>True 1</th>' + cell(cm[1][0]) + cell(cm[1][1]) + '</tr>' +
+                '</tbody></table></div>'
+              );
+            }
+
+            // Render label distribution chart
+            if (labelCanvas && data.label_distribution && typeof Chart !== 'undefined') {
+              const ld = data.label_distribution;
+              const neg = Array.isArray(ld) ? ld[0] : (ld.negative || 0);
+              const pos = Array.isArray(ld) ? ld[1] : (ld.positive || 0);
+
+              if (labelChart) labelChart.destroy();
+              
+              labelChart = new Chart(labelCanvas.getContext('2d'), {
+                type: 'pie',
+                data: {
+                  labels: ['Negative', 'Positive'],
+                  datasets: [{
+                    data: [neg, pos],
+                    backgroundColor: ['#eebbc3', '#232946']
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                      callbacks: {
+                        label: function(ctx) {
+                          const total = neg + pos || 1;
+                          const pct = ((ctx.raw / total) * 100).toFixed(1);
+                          return ctx.label + ': ' + ctx.raw + ' (' + pct + '%)';
+                        }
+                      }
+                    }
+                  }
+                }
+              });
+            }
+
+            // Render summary
+            if (summaryBox && data.confusion_matrix) {
+              const cm = data.confusion_matrix;
+              const n = cm[0][0] + cm[0][1] + cm[1][0] + cm[1][1];
+              const ld = data.label_distribution || [0, 0];
+              const neg = Array.isArray(ld) ? ld[0] : (ld.negative || 0);
+              const pos = Array.isArray(ld) ? ld[1] : (ld.positive || 0);
+              const total = neg + pos || 1;
+              
+              summaryBox.innerHTML = 
+                '<div class="summary-stat"><div class="label">Test set size</div><div class="value">n = <span class="summary-value">' + n + '</span></div></div>' +
+                '<div class="summary-stat"><div class="label">Decision threshold</div><div class="value"><span class="summary-value">' + (threshold * 100).toFixed(0) + '%</span></div></div>' +
+                '<div class="summary-stat"><div class="label">Negative samples</div><div class="value"><span class="summary-value">' + neg + '</span> (' + ((neg/total)*100).toFixed(1) + '%)</div></div>' +
+                '<div class="summary-stat"><div class="label">Positive samples</div><div class="value"><span class="summary-value">' + pos + '</span> (' + ((pos/total)*100).toFixed(1) + '%)</div></div>';
+            }
+          })
+          .catch(err => {
+            console.error('[Eval] Error:', err);
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (errorEl) {
+              errorEl.style.display = 'block';
+              errorEl.innerHTML = '<div style="color:#ff6b6b; padding:15px; background:rgba(255,107,107,0.1); border-radius:8px; text-align:left;">' +
+                '<strong>❌ Không thể tải metrics</strong><br><br>' +
+                '<strong>Lỗi:</strong> ' + err.message + '<br><br>' +
+                '<strong>Hướng dẫn:</strong><br>' +
+                '1. Kiểm tra Backend (port 8000)<br>' +
+                '2. Mở: <a href="http://localhost:8000/api/metrics" target="_blank" style="color:#7b5cff;">http://localhost:8000/api/metrics</a><br>' +
+                '3. Hard refresh: <kbd>Cmd+Shift+R</kbd>' +
+                '</div>';
+            }
+          });
+      }
+
+      // Setup threshold slider
+      const slider = document.getElementById('threshold-slider');
+      const valueSpan = document.getElementById('threshold-value');
+      if (slider && valueSpan) {
+        slider.addEventListener('input', function() {
+          valueSpan.textContent = Math.round(this.value * 100) + '%';
+        });
+        slider.addEventListener('change', function() {
+          loadMetrics(parseFloat(this.value));
+        });
+      }
+
+      // Load on DOMContentLoaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() { 
+          loadDatasetInfo();
+          loadMetrics(currentThreshold); 
+        });
+      } else {
+        loadDatasetInfo();
+        loadMetrics(currentThreshold);
+      }
+    })();
+  </script>
 </body>
 </html>

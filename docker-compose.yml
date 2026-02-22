@@ -1,0 +1,60 @@
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: movie-sentiment-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_APP=backend/app.py
+      - FLASK_ENV=production
+      - HOST=0.0.0.0
+      - PORT=8000
+      - LOG_LEVEL=INFO
+      - CACHE_ENABLED=True
+      - RATE_LIMIT_ENABLED=True
+      - RATE_LIMIT_PER_MINUTE=60
+      - RATE_LIMIT_PREDICT_PER_MINUTE=10
+    volumes:
+      - ./logs:/app/logs
+      - ./sentiment_model:/app/sentiment_model
+      - ./data:/app/data
+    restart: unless-stopped
+    networks:
+      - sentiment-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Service (Nginx)
+  frontend:
+    image: nginx:alpine
+    container_name: movie-sentiment-frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - sentiment-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/index.html"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  sentiment-network:
+    driver: bridge
+
+volumes:
+  logs:
+  model-data:

@@ -40,6 +40,8 @@ MANIFEST
 .DS_Store
 Thumbs.db
 *.log
+app.log
+logs/*.log
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -51,11 +53,20 @@ Thumbs.db
 *.safetensors
 *.bin
 *.h5
-results/
 checkpoint-*/
 *.pkl
 *.pickle
+
+# CSV files (except samples needed for testing)
 *.csv
+!data/samples/*.csv
+!data/raw/*.csv
+
+# Generated artifacts (can be regenerated)
+artifacts/results/*.png
+artifacts/results/*.txt
+artifacts/checkpoints/
+results/
 
 # Environment
 .env

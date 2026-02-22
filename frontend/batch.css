@@ -1,67 +1,160 @@
-/* CSS riêng cho trang batch.html */
-body {
-  background: #f8f9fa;
-}
-/* --- Sentiment Analysis Page Style --- */
-body,
-html {
+/* ========================================
+   MODERN BATCH ANALYSIS PAGE STYLES
+   Purple Gradient Theme with Glass Morphism
+======================================== */
+
+/* Base Styles */
+body, html {
   height: 100%;
   margin: 0;
   padding: 0;
   font-family: "Segoe UI", "Roboto", "Montserrat", Arial, sans-serif;
   background: #f8fafc;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
 }
+
+/* Main Background - Soft & Comfortable Gradient */
 .main-bg {
   min-height: 100vh;
-  background: linear-gradient(120deg, #f8fafc 0%, #e3e6f3 100%);
+  height: auto;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  position: relative;
+  overflow-y: visible;
+  padding-bottom: 2rem;
 }
+
+.main-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(167, 139, 250, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(196, 181, 253, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  animation: gradient-shift 15s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Header */
+header,
 .header-gradient {
-  background: linear-gradient(90deg, #4b3c8a 0%, #6c63ff 100%);
-  box-shadow: 0 4px 24px rgba(76, 60, 138, 0.12);
+  background: rgba(15, 23, 42, 0.7) !important;
+  backdrop-filter: blur(20px) saturate(150%);
+  border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  color: #fff;
+  padding: 36px 0 20px 0;
+  text-align: center !important;
+  border-radius: 0 0 1.5rem 1.5rem;
+  margin-bottom: 20px;
+  width: 100%;
 }
+
+header h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 0 20px rgba(139, 92, 246, 0.3);
+  text-align: center !important;
+}
+
+header .lead {
+  text-align: center;
+  margin: 0 auto;
+  max-width: 600px;
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+/* Footer */
 .footer-gradient {
-  background: linear-gradient(90deg, #4b3c8a 0%, #6c63ff 100%);
+  background: rgba(30, 27, 75, 0.4);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
 }
+
+/* Main Card */
 .main-card {
-  background: linear-gradient(120deg, #fff 60%, #f3eaff 100%);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
   border-radius: 1.5rem;
-  box-shadow: 0 8px 32px rgba(76, 60, 138, 0.1);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   margin: 0 auto;
   padding: 2.5rem 2rem !important;
 }
+
+/* Input Section */
 .input-section textarea {
   border-radius: 1rem;
   font-size: 1.1rem;
   padding: 14px;
-  box-shadow: 0 2px 8px rgba(76, 60, 138, 0.07);
-  border: 1px solid #e3e6f3;
-  background: #f8fafc;
-  transition: box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
 }
+
 .input-section textarea:focus {
-  box-shadow: 0 4px 16px rgba(76, 60, 138, 0.13);
-  border-color: #6c63ff;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+  background: rgba(255, 255, 255, 1);
+  outline: none;
 }
+
+/* Animated Buttons */
 .btn-animated {
-  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 2rem !important;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(76, 60, 138, 0.07);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.25), 0 0 0 1px rgba(196, 181, 253, 0.3) inset;
+  background: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #c4b5fd 100%);
+  background-size: 200% 200%;
+  border: none;
+  color: #1e1b4b;
+  animation: gradient-animation 3s ease infinite;
 }
+
+@keyframes gradient-animation {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.btn-animated:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 35px rgba(139, 92, 246, 0.35), 0 0 0 1px rgba(196, 181, 253, 0.4) inset;
+}
+
 .btn-animated:active {
   transform: scale(0.98);
 }
+
+/* Result Card */
 #single-result .result-card {
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 1rem;
-  box-shadow: 0 2px 8px rgba(76, 60, 138, 0.07);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
   padding: 16px 20px;
   margin-top: 10px;
   text-align: center;
+  border: 1px solid rgba(102, 126, 234, 0.2);
 }
+
 #single-result .pos {
-  color: #2563eb;
+  color: #10b981;
+  font-weight: 600;
+}
   background: #e3fcec;
   border-radius: 1rem;
   padding: 4px 12px;

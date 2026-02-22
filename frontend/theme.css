@@ -1,0 +1,258 @@
+/* ============================================
+   DARK MODE & THEME SYSTEM
+   ============================================ */
+
+:root {
+  /* Light Mode Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+  
+  /* Purple Theme (unchanged) */
+  --purple-primary: #7b5cff;
+  --purple-dark: #6366f1;
+  --purple-light: #a78bfa;
+  --purple-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  /* Status Colors */
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --warning-color: #f59e0b;
+  --info-color: #3b82f6;
+}
+
+/* Dark Mode Variables */
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: rgba(30, 41, 59, 0.95);
+  --bg-glass: rgba(30, 41, 59, 0.85);
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --overlay-bg: rgba(0, 0, 0, 0.7);
+}
+
+/* Apply theme to body */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: var(--bg-glass);
+  border: 2px solid var(--border-color);
+  border-radius: 50px;
+  padding: 8px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px var(--shadow-color);
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px var(--shadow-color);
+  border-color: var(--purple-primary);
+}
+
+.theme-toggle .icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover .icon {
+  transform: rotate(20deg);
+}
+
+/* Cards with theme support */
+.card {
+  background: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+  box-shadow: 0 4px 6px var(--shadow-color) !important;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Navbar with theme support */
+.navbar-custom {
+  background: var(--bg-glass) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  backdrop-filter: blur(10px);
+}
+
+.navbar-custom a {
+  color: var(--text-primary) !important;
+}
+
+/* Header gradient (always visible in both modes) */
+.header-gradient {
+  background: var(--purple-gradient) !important;
+  color: white !important;
+}
+
+/* Tables */
+table {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+table thead {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+table tbody tr:hover {
+  background: var(--bg-secondary);
+}
+
+/* Inputs & Forms */
+input, textarea, select {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--purple-primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(123, 92, 255, 0.25) !important;
+}
+
+/* Buttons - maintain purple theme */
+.btn-animated {
+  background: var(--purple-gradient);
+  color: white;
+  border: none;
+}
+
+.btn-soft {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* Charts - dark mode support */
+[data-theme="dark"] canvas {
+  filter: brightness(0.95);
+}
+
+/* Tooltips */
+.badge {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* Loading states */
+.loading-placeholder {
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    var(--bg-card) 50%,
+    var(--bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Confidence Score Color Gradient */
+.confidence-gradient {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(
+    to right,
+    #ef4444 0%,    /* Red - Very Negative */
+    #f59e0b 25%,   /* Orange - Negative */
+    #94a3b8 50%,   /* Gray - Neutral */
+    #a78bfa 75%,   /* Light Purple - Positive */
+    #7b5cff 100%   /* Purple - Very Positive */
+  );
+  position: relative;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.confidence-indicator {
+  position: absolute;
+  top: -3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid var(--purple-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.confidence-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 5px;
+}
+
+/* Sentiment colors */
+.sentiment-positive {
+  color: var(--purple-primary);
+  font-weight: bold;
+}
+
+.sentiment-negative {
+  color: var(--error-color);
+  font-weight: bold;
+}
+
+.sentiment-neutral {
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .theme-toggle {
+    bottom: 10px;
+    right: 10px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Print mode - always light */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .theme-toggle {
+    display: none !important;
+  }
+}

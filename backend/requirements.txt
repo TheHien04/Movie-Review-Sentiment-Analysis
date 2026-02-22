@@ -1,7 +1,24 @@
-flask
-flask-cors
-transformers
-torch
-pandas
-scikit-learn
-numpy
+# Core Dependencies
+flask>=3.0.0
+flask-cors>=4.0.0
+transformers>=4.30.0
+torch>=2.0.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+numpy>=1.24.0
+
+# Production Enhancements
+python-dotenv>=1.0.0        # Environment variables
+flask-caching>=2.1.0        # API response caching
+flask-limiter>=3.5.0        # Rate limiting
+
+# Testing
+pytest>=7.4.0               # Unit testing framework
+pytest-flask>=1.2.0         # Flask testing utilities
+pytest-cov>=4.1.0           # Code coverage reports
+
+# Security
+werkzeug>=3.0.0             # Secure filename handling (included with Flask)
+
+# Optional: Production Server
+gunicorn>=21.2.0           # Production WSGI server (for deployment)

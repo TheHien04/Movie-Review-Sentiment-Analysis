@@ -1,0 +1,520 @@
+/* ========================================
+   SHARED STYLES FOR ALL PAGES
+   ======================================== */
+
+:root {
+  --primary-color: #6366f1;
+  --primary-dark: #4f46e5;
+  --secondary-color: #a78bfa;
+  --accent-color: #ec4899;
+  --bg-dark: #0f172a;
+  --bg-darker: #1e1b4b;
+  --text-light: #e2e8f0;
+  --text-muted: #cbd5e1;
+  --border-color: rgba(139, 92, 246, 0.15);
+}
+
+/* ========================================
+   NAVBAR - SHARED NAVIGATION BAR
+   ======================================== */
+.navbar-custom {
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px) saturate(150%);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  z-index: 1000;
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1.25rem;
+  transition: opacity 0.3s ease;
+}
+
+.navbar-logo:hover {
+  opacity: 0.8;
+  color: white;
+}
+
+.navbar-logo svg {
+  width: 28px;
+  height: 28px;
+  fill: var(--secondary-color);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links a {
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.navbar-links a:hover {
+  background: rgba(139, 92, 246, 0.2);
+  color: var(--secondary-color);
+}
+
+.navbar-links a.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .navbar-links {
+    gap: 0.5rem;
+  }
+
+  .navbar-links a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .navbar-logo {
+    font-size: 1rem;
+  }
+
+  .navbar-logo svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* ========================================
+   LOADING SPINNER
+   ======================================== */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(139, 92, 246, 0.2);
+  border-top-color: var(--secondary-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner.small {
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+}
+
+.spinner.large {
+  width: 60px;
+  height: 60px;
+  border-width: 5px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   SKELETON LOADER
+   ======================================== */
+.skeleton {
+  background: linear-gradient(90deg, rgba(200, 200, 200, 0.2) 25%, rgba(200, 200, 200, 0.3) 50%, rgba(200, 200, 200, 0.2) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 0.5rem;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-text {
+  height: 18px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.skeleton-heading {
+  height: 24px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+  width: 70%;
+}
+
+.skeleton-card {
+  height: 200px;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  width: 95%;
+}
+
+.skeleton-line:last-child {
+  margin-bottom: 0;
+}
+
+.skeleton-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.skeleton-row-item {
+  flex: 1;
+  height: 40px;
+  border-radius: 4px;
+}
+
+/* ========================================
+   BUTTON WITH LOADING STATE
+   ======================================== */
+.btn-loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ========================================
+   ALERT & TOAST
+   ======================================== */
+.alert-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(30, 27, 75, 0.95);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-left: 4px solid var(--primary-color);
+  animation: slide-in 0.3s ease;
+  max-width: 400px;
+}
+
+.alert-toast.success {
+  border-left-color: #10b981;
+}
+
+.alert-toast.error {
+  border-left-color: #ef4444;
+}
+
+.alert-toast.warning {
+  border-left-color: #f59e0b;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+.fade-in {
+  animation: fade-in 0.5s ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.loading-disabled {
+  opacity: 0.7;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.error-state {
+  border-color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.05) !important;
+}
+
+.success-state {
+  border-color: #10b981 !important;
+  background-color: rgba(16, 185, 129, 0.05) !important;
+}
+/* ========================================
+   PREMIUM CARD EFFECTS
+   ======================================== */
+.card-premium {
+  background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(250,250,255,0.95));
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(139, 92, 246, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-premium:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(139, 92, 246, 0.1);
+}
+
+/* ========================================
+   GLASS MORPHISM EFFECT
+   ======================================== */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+/* ========================================
+   GRADIENT TEXT
+   ======================================== */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========================================
+   PULSE ANIMATION
+   ======================================== */
+.pulse {
+  animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* ========================================
+   HOVER SCALE EFFECT
+   ======================================== */
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* ========================================
+   GLOW EFFECT
+   ======================================== */
+.glow {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+}
+
+.glow:hover {
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.6);
+}
+
+/* ========================================
+   STATUS INDICATORS
+   ======================================== */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.status-dot.online {
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.status-dot.offline {
+  background: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+}
+
+.status-dot.loading {
+  background: #f59e0b;
+  animation: pulse-animation 1s infinite;
+}
+
+/* ========================================
+   METRIC CARD STYLING
+   ======================================== */
+.metric-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 8px 16px rgba(139, 92, 246, 0.15);
+}
+
+.metric-card strong {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.info-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: rgba(139, 92, 246, 0.2);
+  border-radius: 50%;
+  font-size: 10px;
+  color: var(--primary-color);
+  margin-left: 4px;
+  cursor: help;
+}
+
+/* ========================================
+   CONFUSION MATRIX STYLING
+   ======================================== */
+.cm-table-wrap {
+  margin-top: 16px;
+}
+
+.cm-table {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.cm-table th, .cm-table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.1);
+  font-weight: 500;
+}
+
+.cm-table th {
+  background: rgba(139, 92, 246, 0.2);
+  color: var(--text-light);
+}
+
+.cm-table td {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* ========================================
+   SUMMARY BOX STYLING
+   ======================================== */
+.summary-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.summary-stat:last-child {
+  border-bottom: none;
+}
+
+.summary-stat .label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.summary-stat .value {
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.summary-value {
+  color: var(--secondary-color);
+  font-weight: 700;
+}
+
+/* ========================================
+   METRICS CARDS GRID
+   ======================================== */
+.metrics-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}

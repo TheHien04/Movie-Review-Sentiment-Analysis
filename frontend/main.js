@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!review) return alert('Please enter a review!');
       showLoading('single-result');
       try {
-        const res = await fetch('/api/predict', {
+        const res = await fetch('http://localhost:8000/api/predict', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text: review })
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
       formData.append('file', fileInput.files[0]);
 
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/api/predict', true);
+      xhr.open('POST', 'http://localhost:8000/api/predict', true);
       const bar = document.getElementById('upload-bar');
       const wrap = document.getElementById('upload-progress');
       if (wrap && bar) { wrap.style.display = 'block'; bar.style.width = '0%'; }
@@ -79,17 +79,58 @@ document.addEventListener('DOMContentLoaded', function () {
       new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
+    // Register keyboard shortcuts for sentiment analysis page
+    if (window.keyboardShortcuts && analyzeBtn) {
+      keyboardShortcuts.register('analyze', () => {
+        document.getElementById('analyze-btn')?.click();
+      });
+      
+      keyboardShortcuts.register('clear', () => {
+        const ta = document.getElementById('single-review');
+        if (ta) {
+          ta.value = '';
+          ta.focus();
+        }
+      });
+      
+      keyboardShortcuts.register('export', () => {
+        document.getElementById('download-csv-btn')?.click();
+      });
+      
+      keyboardShortcuts.register('history', () => {
+        showHistoryModal();
+      });
+      
+      keyboardShortcuts.register('close', () => {
+        // Close any open modals
+        const modals = document.querySelectorAll('.modal.show');
+        modals.forEach(modal => {
+          const bsModal = bootstrap.Modal.getInstance(modal);
+          if (bsModal) bsModal.hide();
+        });
+      });
+    }
+
     // -------- Evaluation (evaluation.html) --------
     if (document.getElementById('metrics-cards')) {
+      console.log('[DEBUG] Starting metrics fetch...');
       const loading = document.getElementById('eval-loading');
       const errorDiv = document.getElementById('eval-error');
       let evalData = null;
       let currentThreshold = 0.5;
       function fetchAndRenderEvaluation(threshold) {
         if (loading) loading.style.display = 'block';
-        fetch(`/api/metrics?threshold=${threshold}`)
-          .then(r => { if (!r.ok) throw new Error('Failed to fetch metrics'); return r.json(); })
+        if (errorDiv) { errorDiv.style.display = 'none'; errorDiv.textContent = ''; }
+        
+        console.log('[DEBUG] Fetching metrics with threshold:', threshold);
+        fetch(`http://localhost:8000/api/metrics?threshold=${threshold}`)
+          .then(r => { 
+            console.log('[DEBUG] Metrics response:', r.status, r.statusText);
+            if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`); 
+            return r.json(); 
+          })
           .then(data => {
+            console.log('✓ Metrics loaded:', data);
             if (loading) loading.style.display = 'none';
             evalData = data;
             renderConfusionMatrix(data.confusion_matrix);
@@ -97,9 +138,22 @@ document.addEventListener('DOMContentLoaded', function () {
             renderLabelChart(data.label_distribution);
             renderSummary(data);
           })
-          .catch(() => {
+          .catch((err) => {
             if (loading) loading.style.display = 'none';
-            if (errorDiv) errorDiv.textContent = 'Error loading evaluation metrics.';
+            console.error('✗ Metrics error:', err);
+            if (errorDiv) {
+              errorDiv.style.display = 'block';
+              errorDiv.innerHTML = `
+                <div style="color: #ff6b6b; padding: 15px; background: rgba(255,107,107,0.1); border-radius: 8px; text-align: left;">
+                  <strong>❌ Không thể tải metrics</strong><br><br>
+                  <strong>Lỗi:</strong> ${err.message}<br><br>
+                  <strong>Hướng dẫn fix:</strong><br>
+                  1. Kiểm tra Backend có chạy không (port 8000)<br>
+                  2. Mở tab mới, truy cập: <a href="http://localhost:8000/api/metrics" target="_blank" style="color:#7b5cff;">http://localhost:8000/api/metrics</a><br>
+                  3. Hard refresh trang này: <kbd>Cmd+Shift+R</kbd> (Mac) hoặc <kbd>Ctrl+Shift+R</kbd> (Windows)
+                </div>
+              `;
+            }
           });
       }
       // Initial fetch
@@ -180,9 +234,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // -------- Dataset (dataset.html) --------
     if (document.getElementById('dataset-stats')) {
-      fetch('/api/dataset-info')
-        .then(r => r.json())
+      console.log('[DEBUG] Starting dataset fetch...');
+      document.getElementById('dataset-stats').innerHTML = '<span style="color:#aaa;">⏳ Đang tải dữ liệu...</span>';
+      
+      fetch('http://localhost:8000/api/dataset-info')
+        .then(r => {
+          console.log('[DEBUG] Response status:', r.status, r.statusText);
+          if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+          return r.json();
+        })
         .then(data => {
+          console.log('✓ Dataset loaded:', data);
+          if (!data || !data.stats) {
+            throw new Error('API trả về dữ liệu không hợp lệ');
+          }
           renderDatasetStats(data.stats);
           renderSampleTable(data.samples);
           initSampleTableEnhance();
@@ -191,8 +256,19 @@ document.addEventListener('DOMContentLoaded', function () {
             renderDatasetLabelChart(data.stats.Negative, data.stats.Positive);
           }
         })
-        .catch(() => {
-          document.getElementById('dataset-stats').textContent = 'Error loading dataset info.';
+        .catch(err => {
+          console.error('✗ Dataset error:', err);
+          document.getElementById('dataset-stats').innerHTML = `
+            <div style="color: #ff6b6b; padding: 15px; background: rgba(255,107,107,0.1); border-radius: 8px;">
+              <strong>❌ Không thể tải dữ liệu</strong><br><br>
+              <strong>Lỗi:</strong> ${err.message}<br><br>
+              <strong>Hướng dẫn fix:</strong><br>
+              1. Kiểm tra Backend có chạy không (port 8000)<br>
+              2. Mở tab mới, truy cập: <a href="http://localhost:8000/api/dataset-info" target="_blank" style="color:#7b5cff;">http://localhost:8000/api/dataset-info</a><br>
+              3. Hard refresh trang này: <kbd>Cmd+Shift+R</kbd> (Mac) hoặc <kbd>Ctrl+Shift+R</kbd> (Windows)<br>
+              4. Mở Console (F12) để xem chi tiết lỗi
+            </div>
+          `;
         });
       // Pie chart rendering function
       let pieChartInstance = null;
@@ -247,17 +323,37 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!el) return;
     const isPos = data.label === 1;
     const icon = isPos ? '😃' : '😞';
+    const confidence = data.probability;
+    
+    // Create unique ID for gradient container
+    const gradientId = `confidence-gradient-${Date.now()}`;
+    
     el.innerHTML = `
       <div class="result-card" style="animation:pop .18s ease;">
         <h3>Prediction Result</h3>
         <p><strong>Sentiment:</strong> <span class="${isPos ? 'pos' : 'neg'}">${icon} ${isPos ? 'Positive' : 'Negative'}</span></p>
-        <p><strong>Probability:</strong> ${(data.probability * 100).toFixed(2)}%</p>
+        <p><strong>Confidence:</strong> ${confidenceVisualizer ? confidenceVisualizer.formatConfidence(confidence, data.label) : (confidence * 100).toFixed(2) + '%'}</p>
+        <div id="${gradientId}" class="mt-3"></div>
       </div>
     `;
-    // save session history (max 5)
+    
+    // Add confidence gradient visualization
+    if (window.confidenceVisualizer) {
+      setTimeout(() => {
+        confidenceVisualizer.createGradient(gradientId, confidence, data.label);
+      }, 100);
+    }
+    
+    // Save to persistent history (localStorage via SentimentHistory)
     try {
       const ta = document.getElementById('single-review');
-      const item = { text: (ta?.value || '').slice(0, 120), label: isPos ? 'Positive' : 'Negative', p: (data.probability * 100).toFixed(1) };
+      const text = ta?.value || '';
+      if (window.sentimentHistory && text) {
+        sentimentHistory.add(text, data.label, confidence);
+      }
+      
+      // Keep legacy sessionStorage for backward compatibility
+      const item = { text: text.slice(0, 120), label: isPos ? 'Positive' : 'Negative', p: (confidence * 100).toFixed(1) };
       const arr = JSON.parse(sessionStorage.getItem('history') || '[]');
       arr.unshift(item); if (arr.length > 5) arr.pop();
       sessionStorage.setItem('history', JSON.stringify(arr));
@@ -276,6 +372,90 @@ document.addEventListener('DOMContentLoaded', function () {
         <span>${i.text}</span>
         <span class="badge">${i.label} • ${i.p}%</span>
       </div>`).join('');
+  }
+
+  function showHistoryModal() {
+    if (!window.sentimentHistory) return;
+    
+    const history = sentimentHistory.getAll();
+    const stats = sentimentHistory.getStats();
+    
+    let modal = document.getElementById('history-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'history-modal';
+      modal.className = 'modal fade';
+      modal.tabIndex = -1;
+      modal.innerHTML = `
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content" style="background: var(--bg-card); color: var(--text-primary);">
+            <div class="modal-header" style="border-color: var(--border-color);">
+              <h5 class="modal-title">📜 Sentiment Analysis History</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row mb-3">
+                <div class="col-md-3 text-center">
+                  <div class="p-2 rounded" style="background: var(--bg-secondary);">
+                    <strong>${stats.total}</strong><br><small>Total</small>
+                  </div>
+                </div>
+                <div class="col-md-3 text-center">
+                  <div class="p-2 rounded" style="background: var(--bg-secondary);">
+                    <strong style="color: var(--purple-primary);">${stats.positive}</strong><br><small>Positive</small>
+                  </div>
+                </div>
+                <div class="col-md-3 text-center">
+                  <div class="p-2 rounded" style="background: var(--bg-secondary);">
+                    <strong style="color: var(--error-color);">${stats.negative}</strong><br><small>Negative</small>
+                  </div>
+                </div>
+                <div class="col-md-3 text-center">
+                  <div class="p-2 rounded" style="background: var(--bg-secondary);">
+                    <strong>${(stats.avgConfidence * 100).toFixed(1)}%</strong><br><small>Avg Conf.</small>
+                  </div>
+                </div>
+              </div>
+              <div id="history-list-full" style="max-height: 400px; overflow-y: auto;"></div>
+              <div class="text-center mt-3">
+                <button class="btn btn-sm btn-soft" onclick="sentimentHistory.exportCSV()">📥 Export CSV</button>
+                <button class="btn btn-sm btn-soft ms-2" onclick="if(confirm('Clear all history?')) { sentimentHistory.clear(); location.reload(); }">🗑️ Clear All</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    
+    // Render history items
+    const listEl = document.getElementById('history-list-full');
+    if (listEl) {
+      if (history.length === 0) {
+        listEl.innerHTML = '<p class="text-center text-muted">No history yet. Analyze some reviews!</p>';
+      } else {
+        listEl.innerHTML = history.map(item => `
+          <div class="card mb-2" style="background: var(--bg-secondary); border-color: var(--border-color);">
+            <div class="card-body p-2">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="flex-grow-1">
+                  <small class="text-muted">${new Date(item.timestamp).toLocaleString()}</small>
+                  <p class="mb-1 mt-1">${item.text}</p>
+                </div>
+                <div class="ms-2 text-end">
+                  <span class="badge ${item.sentiment === 1 ? 'bg-success' : 'bg-danger'}">${item.sentiment === 1 ? 'Positive' : 'Negative'}</span>
+                  <br><small>${(item.confidence * 100).toFixed(1)}%</small>
+                  <br><button class="btn btn-sm btn-link text-danger p-0 mt-1" onclick="sentimentHistory.delete(${item.id}); location.reload();">🗑️</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+    
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
   }
   // cute pop keyframes
   (() => {
@@ -605,7 +785,11 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderDatasetStats(stats) {
     const el = document.getElementById('dataset-stats');
     if (!el) return;
-    el.innerHTML = Object.keys(stats || {}).map(k => `<div><strong>${k}:</strong> ${stats[k]}</div>`).join('');
+    const html = Object.keys(stats || {}).map(k => {
+      const label = k.replace(/_/g, ' ');
+      return `<div style="font-size:1.05rem; margin-bottom:6px;"><strong>${label}:</strong> ${typeof stats[k] === 'number' ? stats[k].toLocaleString() : stats[k]}</div>`;
+    }).join('');
+    el.innerHTML = html || '<span style="color:#999;">No data available</span>';
   }
 
   function renderSampleTable(samples) {

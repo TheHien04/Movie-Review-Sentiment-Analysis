@@ -1,0 +1,238 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Code Quality Checks
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pylint black
+      
+      - name: Run flake8
+        run: |
+          flake8 backend/ scripts/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 backend/ scripts/ --count --max-complexity=10 --max-line-length=127 --statistics
+      
+      - name: Run pylint
+        continue-on-error: true
+        run: |
+          pylint backend/ --disable=C,R --max-line-length=127
+      
+      - name: Check code formatting with black
+        run: |
+          black --check backend/ scripts/
+
+  # Security Scan
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit safety
+      
+      - name: Run bandit security scan
+        run: |
+          bandit -r backend/ -f json -o bandit-report.json
+      
+      - name: Check dependencies with safety
+        continue-on-error: true
+        run: |
+          pip install -r backend/requirements.txt
+          safety check --json
+
+  # Unit Tests
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10']
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install pytest pytest-cov pytest-mock
+      
+      - name: Create test data directories
+        run: |
+          mkdir -p data/samples
+          echo "text,label" > data/samples/val_small.csv
+          echo "Great movie,1" >> data/samples/val_small.csv
+          echo "Bad movie,0" >> data/samples/val_small.csv
+      
+      - name: Run pytest
+        run: |
+          pytest tests/ -v --cov=backend --cov-report=xml --cov-report=html
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+  # Build Docker Image
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    if: github.event_name == 'push'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/movie-sentiment-analysis
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/movie-sentiment-analysis:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/movie-sentiment-analysis:buildcache,mode=max
+      
+      - name: Image digest
+        run: echo ${{ steps.build.outputs.digest }}
+
+  # Deploy to Staging (Optional)
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: staging
+      url: https://staging.movie-sentiment.example.com
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to staging server
+        run: |
+          echo "Deploying to staging..."
+          # Add your deployment commands here
+          # Example: SSH to server and pull latest image
+          # ssh user@staging-server "docker-compose pull && docker-compose up -d"
+
+  # Deploy to Production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://movie-sentiment.example.com
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to production server
+        run: |
+          echo "Deploying to production..."
+          # Add your deployment commands here
+          # Example: SSH to server and pull latest image
+          # ssh user@prod-server "docker-compose pull && docker-compose up -d"
+      
+      - name: Verify deployment
+        run: |
+          echo "Verifying deployment health..."
+          # curl -f https://movie-sentiment.example.com/health
+
+  # Create Release
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [deploy-production]
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            docs/API_COMPLETE.md
+            docker-compose.yml
+          body: |
+            ## Movie Review Sentiment Analysis - Release ${{ github.ref_name }}
+            
+            ### What's New
+            - Enhanced frontend with loading animations and toast notifications
+            - Advanced validation and search history
+            - New backend endpoints for model metadata and confidence filtering
+            - Docker containerization with docker-compose
+            - Comprehensive API documentation
+            
+            ### Installation
+            ```bash
+            docker-compose up -d
+            ```
+            
+            ### Documentation
+            See [API_COMPLETE.md](docs/API_COMPLETE.md) for full API documentation.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
