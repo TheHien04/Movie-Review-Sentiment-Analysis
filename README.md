@@ -395,10 +395,11 @@ CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "backend.app:app"]
 
 ## 📖 Documentation
 
-- **[IMPROVEMENTS.md](IMPROVEMENTS.md)**: Detailed production improvements
-- **[API.md](API.md)**: Complete API documentation
+- **[API_COMPLETE.md](docs/API_COMPLETE.md)**: Complete API documentation
+- **[DEPLOYMENT.md](docs/DEPLOYMENT.md)**: Deployment guidelines
+- **[CHANGELOG.md](docs/CHANGELOG.md)**: Version history
+- **[SETUP_GUIDE.md](SETUP_GUIDE.md)**: Detailed setup instructions
 - **[CONTRIBUTING.md](CONTRIBUTING.md)**: Contribution guidelines
-- **[CHANGELOG.md](CHANGELOG.md)**: Version history
 
 ## 🧪 Testing Checklist
 
@@ -408,45 +409,6 @@ CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "backend.app:app"]
 - [ ] Test file upload validation
 - [ ] Test accessibility (keyboard nav)
 - [ ] Run Lighthouse audit (score > 95)
-
-## 🔒 Security
-
-⚠️ **Before Production Deployment:**
-1. Change `SECRET_KEY` to a random secure value
-2. Update `ALLOWED_ORIGINS` in `.env`
-3. Set `DEBUG=False`
-4. Enable rate limiting
-5. Use HTTPS
-6. Review security headers
-
-## 📝 License
-
-MIT License
-
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/TheHien04/Movie-Review-Sentiment-Analysis/issues)
-- **Documentation**: See `/docs` folder
-- **Email**: Contact repository owner
-
-## 🏆 Project Quality Score
-
-**Overall: 9.5/10** ⭐⭐⭐⭐⭐
-
-| Category | Score | Notes |
-|----------|-------|-------|
-| Code Quality | 9/10 | Clean, modular, well-documented |
-| Testing | 9/10 | Comprehensive unit tests, 90%+ coverage |
-| Security | 9/10 | Input validation, rate limiting, secure config |
-| Performance | 9/10 | Caching, optimization, efficient processing |
-| UI/UX | 10/10 | Modern design, glass morphism, responsive |
-| Accessibility | 9/10 | WCAG 2.1 compliant, screen reader support |
-| Documentation | 10/10 | Comprehensive README, API docs, guides |
-| Production-Ready | 9/10 | Logging, monitoring, health checks, deployment ready |
 
 ## 🎓 Learning Outcomes
 
@@ -461,6 +423,6 @@ This project demonstrates:
 
 ---
 
-**Version**: 2.0.0 | **Status**: Production Ready | **Last Updated**: February 2025
+**Version**: 2.0.0 | **Status**: Production Ready | **Last Updated**: February 2026
 
-Made with ❤️ for Statistical Machine Learning Project
+Made with ❤️ by **The Hien** for Statistical Machine Learning Project
