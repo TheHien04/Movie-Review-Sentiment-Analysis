@@ -2,7 +2,6 @@
 
 A **production-ready**, professional ML web application for analyzing movie review sentiments using transformer-based NLP models with an interactive dashboard.
 
-**Rating: 9.5/10** ⭐⭐⭐⭐⭐
 
 ## 🌟 Features
 
