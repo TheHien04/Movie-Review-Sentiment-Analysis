@@ -63,6 +63,65 @@ A **production-ready**, professional ML web application for analyzing movie revi
 - **Chart Animations**: Smooth transitions and gradient coloring
 - **Search History**: localStorage persistence with export/import
 
+## 📸 Screenshots & Features Showcase
+
+### 🏠 Home Page
+Beautiful landing page with modern glass morphism design and gradient effects.
+
+![Home Page - Hero Section](Images/Home1.jpg)
+*Main landing page with hero section and feature highlights*
+
+![Home Page - Features](Images/Home2.jpg)
+*Overview of key features and capabilities*
+
+### 🎯 Sentiment Analysis
+Real-time sentiment analysis with confidence scores and visual feedback.
+
+![Sentiment Analysis Page](Images/Sentiment%20Analysis.jpg)
+*Main sentiment analysis interface with text input and instant results*
+
+![Analysis Results - Detailed View](Images/Analysis%202.jpg)
+*Detailed analysis results with confidence visualization and word importance*
+
+![Analysis with Explainable AI](Images/Analysis%203.jpg)
+*Word-level sentiment heatmap showing contribution to overall sentiment*
+
+### 🎤 Voice Input Feature
+Hands-free review input with real-time speech-to-text transcription.
+
+![Voice Analysis](Images/Analyze%20voice.jpg)
+*Voice input interface with live waveform visualization and audio feedback*
+
+### 📜 Analysis History
+Track and manage all your previous sentiment analyses with statistics.
+
+![Analysis History](Images/Analyze%20history.jpg)
+*Complete history tracker with search, filter, export capabilities, and analytics dashboard*
+
+### ⚖️ Compare Reviews
+Side-by-side comparison of multiple reviews with visual charts.
+
+![Compare Mode](Images/Compare.jpg)
+*Compare two reviews simultaneously with detailed sentiment breakdown and comparison charts*
+
+### 📊 Dataset Explorer
+Browse and explore the training dataset with interactive filters.
+
+![Dataset Overview](Images/Dataset%201.jpg)
+*Dataset explorer showing sample reviews with sentiment distribution*
+
+![Dataset Statistics](Images/Dataset%202.jpg)
+*Detailed dataset statistics, charts, and sample data visualization*
+
+### 📈 Model Evaluation
+Comprehensive model performance metrics and visualizations.
+
+![Evaluation Metrics](Images/Evaluation%201.jpg)
+*Model performance dashboard with accuracy, F1 score, precision, and recall metrics*
+
+![Confusion Matrix](Images/Evaluation%202.jpg)
+*Interactive confusion matrix and detailed performance analytics with ROC curve*
+
 ## ⚙️ Installation
 
 ```bash
