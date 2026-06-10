@@ -3,10 +3,14 @@
    ============================================ */
 
 class ThemeManager {
-  constructor() {
+  constructor(options) {
+    options = options || {};
     this.currentTheme = this.getSavedTheme();
     this.initTheme();
-    this.createToggleButton();
+    this.useNavToggle = options.useNavToggle || !!document.querySelector('[data-theme-toggle]');
+    if (!this.useNavToggle) {
+      this.createToggleButton();
+    }
   }
 
   // Get saved theme from localStorage
@@ -19,19 +23,34 @@ class ThemeManager {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       return 'dark';
     }
-    return 'light';
+    return 'dark';
   }
 
   // Initialize theme
   initTheme() {
     document.documentElement.setAttribute('data-theme', this.currentTheme);
+    if (document.body) {
+      document.body.setAttribute('data-theme', this.currentTheme);
+    }
+    this.updateThemeColorMeta();
+  }
+
+  updateThemeColorMeta() {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) {
+      meta.setAttribute('content', this.currentTheme === 'light' ? '#f1f5f9' : '#050508');
+    }
   }
 
   // Toggle between light and dark
   toggleTheme() {
     this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', this.currentTheme);
+    if (document.body) {
+      document.body.setAttribute('data-theme', this.currentTheme);
+    }
     localStorage.setItem('theme', this.currentTheme);
+    this.updateThemeColorMeta();
     this.updateToggleButton();
     this.animateTransition();
   }
@@ -76,9 +95,9 @@ class ThemeManager {
 class ConfidenceVisualizer {
   constructor() {
     this.colors = {
-      negative: { r: 239, g: 68, b: 68 },      // Red
-      neutral: { r: 148, g: 163, b: 184 },     // Gray
-      positive: { r: 123, g: 92, b: 255 }      // Purple
+      negative: { r: 229, g: 9, b: 20 },       // Rotten red
+      neutral: { r: 154, g: 163, b: 175 },     // Muted
+      positive: { r: 61, g: 214, b: 140 }      // Fresh green
     };
   }
 
@@ -109,9 +128,9 @@ class ConfidenceVisualizer {
     const labels = document.createElement('div');
     labels.className = 'confidence-label';
     labels.innerHTML = `
-      <span>😢 Negative</span>
-      <span>😐 Neutral</span>
-      <span>😊 Positive</span>
+      <span>✕ Rotten</span>
+      <span>— Mixed</span>
+      <span>★ Fresh</span>
     `;
 
     // Clear and append
@@ -223,8 +242,10 @@ class KeyboardShortcuts {
     this.handlers[action] = handler;
   }
 
-  // Create help button
+  // Create help button (batch page only — layout footer covers shortcuts elsewhere)
   createHelpButton() {
+    if (document.querySelector('[data-cinema-footer]')) return;
+    if (document.body.dataset.page && document.body.dataset.page !== 'analyze') return;
     const button = document.createElement('button');
     button.className = 'btn btn-sm btn-soft position-fixed';
     button.style.cssText = 'bottom: 20px; right: 20px; z-index: 999; border-radius: 50%; width: 40px; height: 40px;';
@@ -338,7 +359,7 @@ class SentimentHistory {
   exportCSV() {
     const history = this.getAll();
     if (history.length === 0) {
-      alert('No history to export!');
+      window.toast ? window.toast.warn('No history to export!') : null;
       return;
     }
 
@@ -373,13 +394,13 @@ let keyboardShortcuts;
 let sentimentHistory;
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize theme system
-  themeManager = new ThemeManager();
+  // Initialize theme system (navbar toggle from layout.js when present)
+  themeManager = new ThemeManager({ useNavToggle: !!document.querySelector('[data-theme-toggle]') });
+  window.themeManager = themeManager;
   
   // Initialize other systems
   confidenceVisualizer = new ConfidenceVisualizer();
   keyboardShortcuts = new KeyboardShortcuts();
   sentimentHistory = new SentimentHistory();
 
-  console.log('✨ Enhanced features loaded: Dark Mode, Confidence Gradient, Shortcuts, History');
 });

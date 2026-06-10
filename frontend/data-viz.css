@@ -1,0 +1,364 @@
+/**
+ * Professional data-viz & tables (overrides legacy purple / white table styles)
+ */
+
+/* —— Evaluation metric tiles —— */
+.eval-grid .metric-card {
+  background: rgba(18, 18, 26, 0.95) !important;
+  border: 1px solid rgba(201, 162, 39, 0.28) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  color: var(--cinema-cream, #f5f0e6) !important;
+  border-radius: 8px !important;
+  padding: 1.25rem 1.5rem !important;
+  min-width: 120px;
+  cursor: default;
+}
+
+.eval-grid .metric-card > div:first-child {
+  color: var(--cinema-muted, #9ca3af) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.08em;
+}
+
+.eval-grid .metric-card strong {
+  color: #e8c547 !important;
+  font-size: 1.65rem !important;
+  text-shadow: none !important;
+}
+
+.eval-grid .dataset-info-section,
+.eval-grid .metrics-section,
+.eval-grid .confusion-section,
+.eval-grid .charts-section,
+.eval-grid .summary-section,
+.eval-grid .metrics-comparison-section {
+  background: rgba(18, 18, 26, 0.92) !important;
+  border: 1px solid rgba(201, 162, 39, 0.22) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Chart containers — prevent clipped pie */
+.chart-card,
+.eval-grid canvas {
+  max-width: 100%;
+}
+
+.chart-card {
+  background: rgba(5, 5, 8, 0.35) !important;
+  border: 1px solid rgba(201, 162, 39, 0.15) !important;
+  border-radius: 8px !important;
+  padding: 1.25rem !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  display: block !important;
+}
+
+/* Fixed-size box so Chart.js responsive pie actually draws slices */
+.chart-wrap--pie {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  height: 260px;
+  margin: 0 auto 0.75rem;
+}
+
+.chart-wrap--pie canvas,
+.chart-wrap--bar {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+}
+
+.chart-wrap--bar {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  margin: 0 auto;
+}
+
+#metrics-comparison-chart,
+#dataset-split-chart {
+  min-height: 220px;
+}
+
+/* Controls — cinema, not purple */
+.btn-soft,
+.btn-export {
+  background: transparent !important;
+  color: #e8c547 !important;
+  border: 1px solid rgba(201, 162, 39, 0.45) !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.btn-export {
+  background: linear-gradient(135deg, #9a7b2a, #e8c547) !important;
+  color: #1a1408 !important;
+  border: none !important;
+  width: 100%;
+  padding: 0.75rem !important;
+}
+
+.btn-soft:hover,
+.btn-export:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(201, 162, 39, 0.25) !important;
+}
+
+.btn-soft:hover {
+  background: rgba(201, 162, 39, 0.1) !important;
+  color: #f5d76e !important;
+}
+
+#threshold-slider {
+  accent-color: #c9a227 !important;
+  width: 100%;
+  max-width: 280px;
+}
+
+#threshold-value,
+.summary-value {
+  color: #e8c547 !important;
+}
+
+.summary-box {
+  background: rgba(5, 5, 8, 0.4) !important;
+  border: 1px solid rgba(201, 162, 39, 0.2) !important;
+}
+
+.summary-stat {
+  background: rgba(18, 18, 26, 0.9) !important;
+  border: 1px solid rgba(201, 162, 39, 0.15) !important;
+  color: #f5f0e6 !important;
+}
+
+.summary-stat .label {
+  color: #9ca3af !important;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cm-table {
+  background: rgba(5, 5, 8, 0.5) !important;
+  border: 1px solid rgba(201, 162, 39, 0.2) !important;
+}
+
+.cm-table th {
+  background: rgba(201, 162, 39, 0.12) !important;
+  color: #f5f0e6 !important;
+}
+
+/* Model comparison table — avoid clipped ROC-AUC column */
+#model-comparison-table.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+#model-comparison-table .cm-table {
+  width: 100%;
+  min-width: 520px;
+  font-size: 0.88rem;
+}
+
+#model-comparison-table .cm-table th,
+#model-comparison-table .cm-table td {
+  white-space: nowrap;
+  padding: 0.5rem 0.65rem;
+}
+
+#model-comparison-section .chart-note a {
+  color: #e8c547;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+#model-comparison-section .chart-note a:hover {
+  color: #f5f0e6;
+}
+
+/* —— Dataset stats cards —— */
+.dataset-stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.dataset-stats-cards .metric-card {
+  text-align: center;
+  padding: 0.85rem 0.65rem;
+  min-height: auto;
+}
+
+.dataset-stats-cards .metric-card > div:first-child {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+  margin-bottom: 0.35rem;
+}
+
+.dataset-stats-cards .metric-card strong {
+  font-size: 1.35rem;
+  display: block;
+}
+
+/* —— Dataset stats list (legacy) —— */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem 1.5rem;
+}
+
+.stats-grid dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.stats-grid dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e8c547;
+}
+
+/* —— Sample table (dark, readable) —— */
+#sample-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(12, 12, 18, 0.95) !important;
+  border: 1px solid rgba(201, 162, 39, 0.22) !important;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.9rem;
+  box-shadow: none !important;
+}
+
+#sample-table th {
+  background: rgba(201, 162, 39, 0.12) !important;
+  color: #f5f0e6 !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+}
+
+#sample-table td {
+  color: #d1cdc4 !important;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+#sample-table tr:last-child td {
+  border-bottom: none;
+}
+
+#sample-table tr:hover td {
+  background: rgba(201, 162, 39, 0.06);
+}
+
+.label-fresh {
+  color: #3dd68c;
+  font-weight: 600;
+}
+
+.label-rotten {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.sample-controls .badge,
+.pager .badge {
+  background: rgba(201, 162, 39, 0.12) !important;
+  color: #e8c547 !important;
+  border: 1px solid rgba(201, 162, 39, 0.25);
+  border-radius: 4px;
+  padding: 0.35rem 0.65rem;
+  font-weight: 600;
+}
+
+.dataset-stats-section .section-desc,
+.charts-section .section-desc {
+  font-size: 0.9rem;
+  color: #9ca3af !important;
+}
+
+.chart-note {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+/* —— Responsive —— */
+@media (max-width: 640px) {
+  .eval-grid .metric-card {
+    padding: 0.85rem 1rem !important;
+    min-width: 0;
+  }
+
+  .eval-grid .metric-card strong {
+    font-size: 1.3rem !important;
+  }
+
+  .chart-wrap--pie {
+    max-width: 100%;
+    height: 220px;
+  }
+
+  .chart-wrap--bar {
+    height: 200px;
+  }
+
+  .dataset-stats-cards {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #sample-table {
+    font-size: 0.8rem;
+  }
+
+  #sample-table th,
+  #sample-table td {
+    padding: 0.55rem 0.65rem;
+  }
+
+  .sample-controls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .pager {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .pager-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  #model-comparison-table .cm-table {
+    min-width: 400px;
+    font-size: 0.78rem;
+  }
+}

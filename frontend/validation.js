@@ -70,7 +70,7 @@ class ValidationManager {
         if (config.showWordCounter && !parent.querySelector('.word-counter')) {
             const wordCounter = document.createElement('div');
             wordCounter.className = 'word-counter';
-            wordCounter.innerHTML = '📝 <span class="word-count">0</span> words';
+            wordCounter.innerHTML = '<span class="word-count">0</span> words';
             element.parentNode.insertBefore(wordCounter, element.nextSibling);
         }
 

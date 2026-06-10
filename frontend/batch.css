@@ -3,16 +3,7 @@
    Purple Gradient Theme with Glass Morphism
 ======================================== */
 
-/* Base Styles */
-body, html {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: "Segoe UI", "Roboto", "Montserrat", Arial, sans-serif;
-  background: #f8fafc;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-}
+/* Base Styles — font/background overridden by cinema-theme.css */
 
 /* Main Background - Soft & Comfortable Gradient */
 .main-bg {
@@ -83,15 +74,24 @@ header .lead {
   border-top: 1px solid rgba(139, 92, 246, 0.2);
 }
 
-/* Main Card */
+/* Main Card — contrast-safe in light & dark */
 .main-card {
-  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px) saturate(180%);
   border-radius: 1.5rem;
-  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
-  border: 1px solid rgba(255, 255, 255, 0.3);
   margin: 0 auto;
   padding: 2.5rem 2rem !important;
+}
+
+[data-theme='dark'] .main-card,
+.main-bg:not([data-theme='light']) .main-card {
+  background: rgba(30, 41, 59, 0.92) !important;
+  color: #f1f5f9;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+[data-theme='light'] .main-card {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #0f172a;
 }
 
 /* Input Section */
@@ -142,31 +142,24 @@ header .lead {
 
 /* Result Card */
 #single-result .result-card {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 1rem;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
-  padding: 16px 20px;
-  margin-top: 10px;
-  text-align: center;
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  text-align: left;
 }
 
 #single-result .pos {
-  color: #10b981;
-  font-weight: 600;
-}
-  background: #e3fcec;
-  border-radius: 1rem;
+  color: #3dd68c;
+  background: rgba(61, 214, 140, 0.12);
+  border-radius: 4px;
   padding: 4px 12px;
-  font-weight: 600;
+  font-weight: 700;
   display: inline-block;
 }
+
 #single-result .neg {
-  color: #c00;
-  background: #ffe4ec;
-  border-radius: 1rem;
+  color: #ff6b6b;
+  background: rgba(229, 9, 20, 0.12);
+  border-radius: 4px;
   padding: 4px 12px;
-  font-weight: 600;
+  font-weight: 700;
   display: inline-block;
 }
 #file-label {
@@ -182,13 +175,11 @@ header .lead {
   border: 1px solid #e3e6f3;
 }
 .batch-section h3 {
-  font-family: "Montserrat", Arial, sans-serif;
   font-size: 1.3rem;
-  color: #232946;
   margin-bottom: 10px;
 }
 .progress {
-  background: #eebbc3;
+  background: rgba(232, 197, 71, 0.15);
   border-radius: 1rem;
   height: 12px;
   overflow: hidden;
@@ -197,7 +188,7 @@ header .lead {
 #upload-bar {
   display: block;
   height: 100%;
-  background: #6c63ff;
+  background: linear-gradient(90deg, #c9a227, #e8c547);
   border-radius: 1rem;
   width: 0%;
   transition: width 0.3s;
@@ -225,8 +216,8 @@ header .lead {
   border-bottom: none;
 }
 .badge {
-  background: #eebbc3;
-  color: #232946;
+  background: rgba(232, 197, 71, 0.2);
+  color: #e8c547;
   border-radius: 1rem;
   padding: 4px 10px;
   font-size: 0.95rem;
@@ -246,20 +237,21 @@ header .lead {
   border-bottom: 1px solid #e3e6f3;
 }
 #result-section th {
-  background: #eebbc3;
-  color: #232946;
+  background: rgba(232, 197, 71, 0.12);
+  color: #f5f0e6;
   font-weight: 700;
 }
 #result-section td {
-  background: #fff;
+  background: rgba(12, 12, 18, 0.6);
+  color: #b8b4a8;
   vertical-align: middle;
 }
 #result-section td.pos {
-  color: #2563eb;
+  color: #3dd68c;
   font-weight: 600;
 }
 #result-section td.neg {
-  color: #c00;
+  color: #ff6b6b;
   font-weight: 600;
 }
 #result-section tr:last-child td {
@@ -282,4 +274,29 @@ header .lead {
     font-size: 0.95rem;
     min-width: 80px;
   }
+  .input-section .d-flex {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+  .input-section .d-flex .btn {
+    width: 100%;
+  }
+  .batch-section .d-flex {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .batch-section .btn {
+    width: 100%;
+  }
+}
+
+.table-wrap.batch-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0.5rem 0;
+}
+
+.batch-results-table {
+  width: 100%;
+  min-width: 480px;
 }

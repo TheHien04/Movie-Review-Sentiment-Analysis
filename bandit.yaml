@@ -1,0 +1,8 @@
+exclude_dirs:
+  - tests
+  - venv
+  - .venv
+  - scripts
+# B615: revision pinned via HF_MODEL_REVISION; local loads use local_files_only=True
+skips:
+  - B615

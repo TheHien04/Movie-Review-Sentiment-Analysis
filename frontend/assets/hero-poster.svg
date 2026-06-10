@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1520"/>
+      <stop offset="50%" stop-color="#0c0c12"/>
+      <stop offset="100%" stop-color="#050508"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f5d76e"/>
+      <stop offset="100%" stop-color="#9a7b2a"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="600" fill="url(#bg)"/>
+  <path d="M0 0 Q80 120 0 280 V0Z" fill="#2a1520" opacity=".85"/>
+  <path d="M400 0 Q320 120 400 280 V0Z" fill="#2a1520" opacity=".85"/>
+  <ellipse cx="200" cy="180" rx="140" ry="100" fill="#e8c547" opacity=".08"/>
+  <circle cx="200" cy="220" r="70" stroke="url(#gold)" stroke-width="3" fill="none" opacity=".6"/>
+  <circle cx="200" cy="220" r="50" stroke="url(#gold)" stroke-width="2" fill="#14141c"/>
+  <circle cx="200" cy="220" r="12" fill="#e8c547"/>
+  <rect x="185" y="120" width="30" height="200" fill="#0c0c12" rx="4"/>
+  <g transform="translate(120 320)">
+    <rect width="160" height="100" rx="4" fill="#1a1a24" stroke="#e8c547" stroke-width="2"/>
+    <path d="M0 0 L160 0 L140 28 H20Z" fill="#e8c547"/>
+    <path d="M25 0 L45 28 M55 0 L75 28 M85 0 L105 28 M115 0 L135 28" stroke="#0c0c12" stroke-width="4"/>
+    <text x="80" y="68" text-anchor="middle" fill="#e8c547" font-family="system-ui,sans-serif" font-size="14" font-weight="bold">REVIEW</text>
+    <text x="80" y="88" text-anchor="middle" fill="#9ca3af" font-family="system-ui,sans-serif" font-size="11">SENTIMENT AI</text>
+  </g>
+  <g fill="#e8c547" transform="translate(200 468)">
+    <polygon points="0,-14 4,-4 14,-4 6,2 9,12 0,6 -9,12 -6,2 -14,-4 -4,-4"/>
+    <polygon points="32,-14 36,-4 46,-4 38,2 41,12 32,6 23,12 26,2 18,-4 28,-4"/>
+    <polygon points="64,-14 68,-4 78,-4 70,2 73,12 64,6 55,12 58,2 50,-4 60,-4"/>
+    <polygon points="96,-14 100,-4 110,-4 102,2 105,12 96,6 87,12 90,2 82,-4 92,-4"/>
+    <polygon points="128,-10 131,-2 139,-2 133,3 135,10 128,6 121,10 123,3 117,-2 125,-2" fill="#4b5563"/>
+  </g>
+  <text x="200" y="520" text-anchor="middle" fill="#9ca3af" font-family="system-ui,sans-serif" font-size="13" letter-spacing="2">IMDB - 50K REVIEWS</text>
+  <rect y="560" width="400" height="40" fill="#e8c547" opacity=".15"/>
+</svg>

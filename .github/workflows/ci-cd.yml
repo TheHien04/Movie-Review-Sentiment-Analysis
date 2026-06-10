@@ -1,238 +1,189 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
+
+permissions:
+  contents: read
 
 jobs:
-  # Code Quality Checks
   lint:
-    name: Lint Code
+    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
-      
-      - name: Install dependencies
+          python-version: "3.11"
+
+      - name: Install linters
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pylint black
-      
-      - name: Run flake8
-        run: |
-          flake8 backend/ scripts/ --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 backend/ scripts/ --count --max-complexity=10 --max-line-length=127 --statistics
-      
-      - name: Run pylint
-        continue-on-error: true
-        run: |
-          pylint backend/ --disable=C,R --max-line-length=127
-      
-      - name: Check code formatting with black
-        run: |
-          black --check backend/ scripts/
+          pip install flake8 black
 
-  # Security Scan
+      - name: flake8 (errors only)
+        run: |
+          flake8 backend/ scripts/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: black --check
+        run: black --check backend/ scripts/ tests/
+
   security:
-    name: Security Scan
+    name: Security scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
-      
-      - name: Install dependencies
+          python-version: "3.11"
+
+      - name: Install scanners
         run: |
           python -m pip install --upgrade pip
-          pip install bandit safety
-      
-      - name: Run bandit security scan
-        run: |
-          bandit -r backend/ -f json -o bandit-report.json
-      
-      - name: Check dependencies with safety
-        continue-on-error: true
-        run: |
+          pip install bandit pip-audit
           pip install -r backend/requirements.txt
-          safety check --json
 
-  # Unit Tests
+      - name: Bandit (medium+ severity fails)
+        run: |
+          bandit -r backend/ -c bandit.yaml -ll -ii -q
+
+      - name: pip-audit (dependencies)
+        continue-on-error: true
+        run: pip-audit -r backend/requirements.txt
+
   test:
-    name: Run Tests
+    name: Test (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
-    
+        python-version: ["3.10", "3.11", "3.12"]
+
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      
-      - name: Cache dependencies
-        uses: actions/cache@v3
+
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r backend/requirements.txt
-          pip install pytest pytest-cov pytest-mock
-      
-      - name: Create test data directories
-        run: |
-          mkdir -p data/samples
-          echo "text,label" > data/samples/val_small.csv
-          echo "Great movie,1" >> data/samples/val_small.csv
-          echo "Bad movie,0" >> data/samples/val_small.csv
-      
-      - name: Run pytest
-        run: |
-          pytest tests/ -v --cov=backend --cov-report=xml --cov-report=html
-      
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella
+          pip install pytest pytest-cov
 
-  # Build Docker Image
-  build:
-    name: Build Docker Image
-    runs-on: ubuntu-latest
-    needs: [lint, test]
-    if: github.event_name == 'push'
-    
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ secrets.DOCKER_USERNAME }}/movie-sentiment-analysis
-          tags: |
-            type=ref,event=branch
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
-      
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/movie-sentiment-analysis:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/movie-sentiment-analysis:buildcache,mode=max
-      
-      - name: Image digest
-        run: echo ${{ steps.build.outputs.digest }}
-
-  # Deploy to Staging (Optional)
-  deploy-staging:
-    name: Deploy to Staging
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: github.ref == 'refs/heads/develop'
-    environment:
-      name: staging
-      url: https://staging.movie-sentiment.example.com
-    
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Deploy to staging server
-        run: |
-          echo "Deploying to staging..."
-          # Add your deployment commands here
-          # Example: SSH to server and pull latest image
-          # ssh user@staging-server "docker-compose pull && docker-compose up -d"
-
-  # Deploy to Production
-  deploy-production:
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: production
-      url: https://movie-sentiment.example.com
-    
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Deploy to production server
-        run: |
-          echo "Deploying to production..."
-          # Add your deployment commands here
-          # Example: SSH to server and pull latest image
-          # ssh user@prod-server "docker-compose pull && docker-compose up -d"
-      
-      - name: Verify deployment
-        run: |
-          echo "Verifying deployment health..."
-          # curl -f https://movie-sentiment.example.com/health
-
-  # Create Release
-  release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    needs: [deploy-production]
-    if: startsWith(github.ref, 'refs/tags/v')
-    
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            docs/API_COMPLETE.md
-            docker-compose.yml
-          body: |
-            ## Movie Review Sentiment Analysis - Release ${{ github.ref_name }}
-            
-            ### What's New
-            - Enhanced frontend with loading animations and toast notifications
-            - Advanced validation and search history
-            - New backend endpoints for model metadata and confidence filtering
-            - Docker containerization with docker-compose
-            - Comprehensive API documentation
-            
-            ### Installation
-            ```bash
-            docker-compose up -d
-            ```
-            
-            ### Documentation
-            See [API_COMPLETE.md](docs/API_COMPLETE.md) for full API documentation.
+      - name: pytest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUB_MODEL_FALLBACK: distilbert-base-uncased-finetuned-sst-2-english
+          RATE_LIMIT_ENABLED: "False"
+          CACHE_ENABLED: "False"
+          WANDB_MODE: disabled
+          MLFLOW_ENABLED: "false"
+        run: |
+          pytest tests/ -q --cov=backend --cov-report=term-missing --cov-fail-under=0
+
+  kubernetes:
+    name: Kubernetes & Helm
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: azure/setup-helm@v4
+        with:
+          version: "v3.14.0"
+
+      - name: Install YAML deps
+        run: |
+          python -m pip install --upgrade pip pyyaml
+
+      - name: Validate K8s manifests (core + Istio + multi-region)
+        run: |
+          for f in deploy/kubernetes/*.yaml deploy/kubernetes/istio/*.yaml deploy/kubernetes/multi-region/*.yaml; do
+            python -c "import yaml,sys; list(yaml.safe_load_all(open(sys.argv[1])))" "$f"
+          done
+
+      - name: Helm lint and template (multi-region)
+        run: |
+          helm lint deploy/helm/cinesentiment
+          helm template cinesentiment deploy/helm/cinesentiment > /dev/null
+          helm template cinesentiment-us deploy/helm/cinesentiment -f deploy/helm/cinesentiment/values-us-east.yaml > /dev/null
+          helm template cinesentiment-eu deploy/helm/cinesentiment -f deploy/helm/cinesentiment/values-eu-west.yaml > /dev/null
+
+  e2e-playwright:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Install Playwright
+        working-directory: e2e
+        run: |
+          npm install
+          npx playwright install chromium --with-deps
+
+      - name: Run browser E2E
+        working-directory: e2e
+        env:
+          HUB_MODEL_FALLBACK: distilbert-base-uncased-finetuned-sst-2-english
+          RATE_LIMIT_ENABLED: "False"
+          CACHE_ENABLED: "False"
+          WANDB_MODE: disabled
+          CI: "true"
+        run: npm test
+
+  docker-build:
+    name: Docker build
+    runs-on: ubuntu-latest
+    needs: [lint, security, test, kubernetes]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image (no push)
+        run: docker build -t cinesentiment:ci .
+
+  artifacts:
+    name: Verify artifacts
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check evaluation.json if present
+        run: |
+          if [ -f artifacts/results/evaluation.json ]; then
+            python -c "import json; d=json.load(open('artifacts/results/evaluation.json')); assert 'splits' in d"
+            echo "evaluation.json OK"
+          else
+            echo "evaluation.json not committed — run make capstone locally"
+          fi

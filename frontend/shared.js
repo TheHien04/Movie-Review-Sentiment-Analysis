@@ -6,17 +6,16 @@
  * Initialize the navbar and set active link based on current page
  */
 function initNavbar() {
-  const currentPath = window.location.pathname;
+  const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
   const currentFile = currentPath.split('/').pop() || 'index.html';
-  
-  const navLinks = document.querySelectorAll('.navbar-links a');
+
+  const navLinks = document.querySelectorAll('.navbar-links a, .nav-links a');
   navLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === currentFile || (currentFile === '' && href === 'index.html')) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
-    }
+    const href = link.getAttribute('href') || '';
+    const linkFile = href.split('/').pop() || 'index.html';
+    const isHome = (currentFile === '' || currentFile === 'index.html') && linkFile === 'index.html';
+    const isMatch = linkFile === currentFile || isHome;
+    link.classList.toggle('active', isMatch);
   });
 }
 

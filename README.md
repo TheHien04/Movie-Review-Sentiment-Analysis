@@ -1,427 +1,185 @@
-# Movie Review Sentiment Analysis
+# CineSentiment — Phân loại cảm xúc đánh giá phim (IMDB)
 
-A **production-ready**, professional ML web application for analyzing movie review sentiments using transformer-based NLP models with an interactive dashboard.
+[![CI](https://github.com/TheHien04/Movie-Review-Sentiment-Analysis/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/TheHien04/Movie-Review-Sentiment-Analysis/actions/workflows/ci-cd.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 
+Ứng dụng học máy và kỹ thuật phần mềm cho **môn Học Thống Kê / Statistical Machine Learning**: phân loại nhị phân đánh giá phim (Fresh vs Rotten) bằng **DistilBERT** fine-tune, đánh giá bằng chỉ số có **khoảng tin cậy bootstrap 95%**, so sánh với baseline **TF-IDF + logistic regression**, và triển khai qua API REST cùng giao diện web.
 
-## 🌟 Features
-
-### Core Features
-- **Sentiment Analysis**: Analyze single movie reviews or batch process CSV files
-- **Real-time Processing**: Instant predictions with confidence scores
-- **Model Evaluation**: Comprehensive metrics (accuracy, F1, precision, recall, confusion matrix)
-- **Interactive Dashboard**: Beautiful charts and statistics with Chart.js
-- **Dataset Explorer**: Browse and search sample data
-- **Batch Processing**: Process multiple reviews with progress tracking
-- **Responsive Design**: Professional UI with glass morphism and purple gradient theme
-
-### Production Features ✨
-- **Unit Testing**: Comprehensive test suite with pytest
-- **Logging System**: Structured logging with timestamps and request tracking
-- **Rate Limiting**: Protect API from abuse (configurable)
-- **Caching**: 50x faster responses with intelligent caching
-- **Security**: Input validation, file type checking, secure filename handling
-- **Health Check**: `/health` endpoint for monitoring
-- **Accessibility**: WCAG 2.1 compliant with screen reader support
-- **Environment Config**: `.env` file for easy deployment configuration
-
-### Enhanced Features 🔥 NEW (v3.0)
-- **🌙 Dark Mode**: Toggle between light/dark themes with automatic system detection
-- **🎨 Confidence Gradient**: Visual color-coded confidence bars with smooth animations
-- **📜 History Tracker**: Persistent sentiment analysis history with statistics and CSV export
-- **⚡ Keyboard Shortcuts**: Power user features (Ctrl+Enter to analyze, Ctrl+H for history, Ctrl+/ for help)
-- **⚖️ Compare Mode**: Side-by-side review comparison with visual charts
-- **🎯 Smart Visualizations**: Enhanced result cards with dynamic gradient indicators
-
-### Advanced AI Features 🚀 NEW (v4.0)
-- **🧠 Explainable AI**: Word importance heatmap showing which words contribute to sentiment
-  - Color-coded word highlighting (positive/negative/neutral)
-  - Attention weights visualization
-  - Detailed insights and explanations
-  - Interactive hover tooltips
-- **🎤 Voice Input**: Real-time speech-to-text with waveform visualization
-  - Hands-free review input
-  - Live audio waveform animation
-  - Support for multiple visualization styles (bars/circular)
-  - Automatic transcription to text
-- **📱 Social Share**: Share analysis results on social media
-  - Twitter, Facebook, LinkedIn, Email integration
-  - Beautiful Open Graph cards
-  - One-click link copying
-  - Viral marketing features
-- **✨ Particle Effects**: Celebratory animations for analysis results
-  - Success confetti for positive sentiments
-  - Star burst effects for negative sentiments
-  - Smooth particle physics animations
-  - Premium visual feedback
-
-### Utility Enhancements 💎
-- **Loading Spinners**: Glass morphism design with progress tracking
-- **Toast Notifications**: 4 types (success/error/warning/info) with auto-dismiss
-- **Excel Export**: Multi-sheet exports with auto-sizing and formatting
-- **Input Validation**: Real-time character/word counting with strength indicators
-- **Chart Animations**: Smooth transitions and gradient coloring
-- **Search History**: localStorage persistence with export/import
-
-## 📸 Screenshots & Features Showcase
-
-### 🏠 Home Page
-Beautiful landing page with modern glass morphism design and gradient effects.
-
-![Home Page - Hero Section](Images/Home1.jpg)
-*Main landing page with hero section and feature highlights*
-
-![Home Page - Features](Images/Home2.jpg)
-*Overview of key features and capabilities*
-
-### 🎯 Sentiment Analysis
-Real-time sentiment analysis with confidence scores and visual feedback.
-
-![Sentiment Analysis Page](Images/Sentiment%20Analysis.jpg)
-*Main sentiment analysis interface with text input and instant results*
-
-![Analysis Results - Detailed View](Images/Analysis%202.jpg)
-*Detailed analysis results with confidence visualization and word importance*
-
-![Analysis with Explainable AI](Images/Analysis%203.jpg)
-*Word-level sentiment heatmap showing contribution to overall sentiment*
-
-### 🎤 Voice Input Feature
-Hands-free review input with real-time speech-to-text transcription.
-
-![Voice Analysis](Images/Analyze%20voice.jpg)
-*Voice input interface with live waveform visualization and audio feedback*
-
-### 📜 Analysis History
-Track and manage all your previous sentiment analyses with statistics.
-
-![Analysis History](Images/Analyze%20history.jpg)
-*Complete history tracker with search, filter, export capabilities, and analytics dashboard*
-
-### ⚖️ Compare Reviews
-Side-by-side comparison of multiple reviews with visual charts.
-
-![Compare Mode](Images/Compare.jpg)
-*Compare two reviews simultaneously with detailed sentiment breakdown and comparison charts*
-
-### 📊 Dataset Explorer
-Browse and explore the training dataset with interactive filters.
-
-![Dataset Overview](Images/Dataset%201.jpg)
-*Dataset explorer showing sample reviews with sentiment distribution*
-
-![Dataset Statistics](Images/Dataset%202.jpg)
-*Detailed dataset statistics, charts, and sample data visualization*
-
-### 📈 Model Evaluation
-Comprehensive model performance metrics and visualizations.
-
-![Evaluation Metrics](Images/Evaluation%201.jpg)
-*Model performance dashboard with accuracy, F1 score, precision, and recall metrics*
-
-![Confusion Matrix](Images/Evaluation%202.jpg)
-*Interactive confusion matrix and detailed performance analytics with ROC curve*
-
-## ⚙️ Installation
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/TheHien04/Movie-Review-Sentiment-Analysis.git
-cd Movie-Review-Sentiment-Analysis
-
-# 2. Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # macOS/Linux
-# or
-venv\Scripts\activate      # Windows
-
-# 3. Install dependencies
-pip install -r backend/requirements.txt
-
-# 4. Configure environment (optional)
-cp .env.example .env
-# Edit .env with your settings
-```
-
-## 🚀 Quick Start
-
-### Development Mode
-```bash
-# Start the backend server
-python backend/app.py
-
-# Server will run on http://localhost:8000
-# Open http://localhost:8000 in your browser
-```
-
-### Production Mode
-```bash
-# Set environment variables
-export FLASK_ENV=production
-export DEBUG=False
-export SECRET_KEY=your-secure-random-key
-
-# Run with Gunicorn (4 workers)
-gunicorn -w 4 -b 0.0.0.0:8000 backend.app:app
-```
-
-## 🧪 Running Tests
-
-```bash
-# Activate virtual environment
-source venv/bin/activate
-
-# Run all tests
-pytest tests/
-
-# Run with coverage report
-pytest tests/ --cov=backend --cov-report=html
-
-# Run specific test
-pytest tests/test_api.py::TestPredictAPI -v
-```
-
-## 📚 Pages
-
-- **Home**: http://localhost:8000/
-- **Sentiment Analysis**: http://localhost:8000/batch.html
-- **Model Evaluation**: http://localhost:8000/evaluation.html
-- **Dataset Overview**: http://localhost:8000/dataset.html
-
-## 🎯 Using Advanced Features
-
-### Explainable AI
-1. Navigate to Sentiment Analysis page
-2. Enter or paste a movie review
-3. Click "Analyze Sentiment"
-4. Scroll down to see the **Word Importance Analysis**
-   - Words are color-coded by contribution
-   - Hover over words to see importance scores
-   - Read AI-generated insights below the heatmap
-
-### Voice Input
-1. Click the **🎤 Voice** button next to the textarea
-2. Allow microphone access when prompted
-3. Start speaking your review
-4. Watch the real-time waveform animation
-5. Click "Stop Recording" when finished
-6. Your speech is automatically transcribed to text
-7. Analyze normally!
-
-**Tip**: Works in Chrome, Edge, Safari (iOS 15+)
-
-### Social Sharing
-1. After analyzing a review, scroll down
-2. Find the "Share this Analysis" section
-3. Choose your platform:
-   - **Twitter**: Share with hashtags
-   - **Facebook**: Post to timeline
-   - **LinkedIn**: Professional sharing
-   - **Email**: Send via email client
-   - **Copy Link**: Get shareable URL
-
-### Particle Effects
-- Automatically triggered on analysis completion
-- **Positive sentiment** → Green confetti 🎉
-- **Negative sentiment** → Purple star burst ⭐
-- Beautiful physics-based animations
-
-### Keyboard Shortcuts
-- `Ctrl/Cmd + Enter` - Analyze current review
-- `Ctrl/Cmd + K` - Focus on textarea
-- Use these to speed up your workflow!
-
-## 🤖 Model
-
-- **Architecture**: DistilBERT (distilbert-base-uncased)
-- **Task**: Binary sentiment classification
-- **Accuracy**: ~89%
-- **Training Data**: 35,000 movie reviews
-
-## 📚 API Endpoints
-
-### `GET /health`
-Health check for monitoring
-```bash
-curl http://localhost:8000/health
-```
-Response:
-```json
-{
-  "status": "healthy",
-  "timestamp": 1708003845.123,
-  "model_loaded": true,
-  "cache_enabled": true,
-  "rate_limit_enabled": true
-}
-```
-
-### `POST /api/predict`
-Analyze single review or batch upload
-
-Single review:
-```bash
-curl -X POST http://localhost:8000/api/predict \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Great movie!"}'
-```
-
-Batch CSV:
-```bash
-curl -X POST http://localhost:8000/api/predict \
-  -F "file=@reviews.csv"
-```
-
-### `GET /api/metrics`
-Get model evaluation metrics
-```bash
-curl "http://localhost:8000/api/metrics?threshold=0.5"
-```
-- Query param: `threshold` (default: 0.5, range: 0.0-1.0)
-- Cached for 10 minutes
-
-### `GET /api/dataset-info`  
-Get dataset statistics
-```bash
-curl http://localhost:8000/api/dataset-info
-```
-- Cached for 1 hour
-
-## 🎨 Technologies
-
-### Backend
-- **Flask 3.0+**: Web framework
-- **PyTorch 2.0+**: Deep learning
-- **Transformers**: Hugging Face models
-- **Scikit-learn**: Metrics & evaluation
-- **Flask-Limiter**: Rate limiting
-- **Flask-Caching**: Response caching
-- **python-dotenv**: Environment variables
-
-### Frontend
-- **HTML5 & CSS3**: Markup & styling
-- **JavaScript ES6+**: Interactivity
-- **Bootstrap 5.3**: UI framework
-- **Chart.js 4.4**: Data visualization
-
-### Testing & Quality
-- **pytest**: Unit testing
-- **pytest-flask**: Flask testing utilities
-- **pytest-cov**: Code coverage
-
-## 📊 Performance
-
-- **Model Inference**: ~0.5s per review
-- **Batch Processing**: 500 reviews/chunk
-- **API Response (cached)**: ~0.05s (50x faster!)
-- **Rate Limit**: 60 req/min (configurable)
-
-## 🔒 Security Features
-
-- ✅ Input validation & sanitization
-- ✅ File type validation (CSV only)
-- ✅ File size limits (10MB max)
-- ✅ Rate limiting per IP
-- ✅ Secure filename handling
-- ✅ Environment-based configuration
-- ✅ CORS configuration
-- ✅ Error message sanitization
-
-## ♿ Accessibility
-
-- ✅ WCAG 2.1 compliant
-- ✅ Screen reader support
-- ✅ Keyboard navigation
-- ✅ Skip-to-content links
-- ✅ ARIA labels & semantic HTML
-- ✅ Focus indicators
-
-## 📈 Monitoring & Logging
-
-### Health Check
-```bash
-# Check service status
-curl http://localhost:8000/health
-
-# Use in Kubernetes
-livenessProbe:
-  httpGet:
-    path: /health
-    port: 8000
-```
-
-### Logs
-All requests logged with:
-- Timestamp
-- Client IP
-- Endpoint
-- Response time
-- Status (success/error)
-
-View logs:
-```bash
-tail -f app.log
-```
-
-## 🚀 Deployment
-
-### Environment Variables
-```bash
-# Copy template
-cp .env.example .env
-
-# Edit configuration
-nano .env
-```
-
-Key settings:
-- `FLASK_ENV`: development/production
-- `DEBUG`: True/False
-- `SECRET_KEY`: Random secure key
-- `RATE_LIMIT_ENABLED`: True/False
-- `CACHE_ENABLED`: True/False
-- `LOG_LEVEL`: DEBUG/INFO/WARNING/ERROR
-
-### Docker (Optional)
-```dockerfile
-FROM python:3.9-slim
-WORKDIR /app
-COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-HEALTHCHECK CMD curl -f http://localhost:8000/health || exit 1
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "backend.app:app"]
-```
-
-## 📖 Documentation
-
-- **[API_COMPLETE.md](docs/API_COMPLETE.md)**: Complete API documentation
-- **[DEPLOYMENT.md](docs/DEPLOYMENT.md)**: Deployment guidelines
-- **[CHANGELOG.md](docs/CHANGELOG.md)**: Version history
-- **[SETUP_GUIDE.md](SETUP_GUIDE.md)**: Detailed setup instructions
-- **[CONTRIBUTING.md](CONTRIBUTING.md)**: Contribution guidelines
-
-## 🧪 Testing Checklist
-
-- [ ] Run `pytest tests/ -v` (all tests pass)
-- [ ] Check coverage > 80%
-- [ ] Test rate limiting
-- [ ] Test file upload validation
-- [ ] Test accessibility (keyboard nav)
-- [ ] Run Lighthouse audit (score > 95)
-
-## 🎓 Learning Outcomes
-
-This project demonstrates:
-- ✅ Production-ready ML deployment
-- ✅ RESTful API design
-- ✅ Modern web development practices
-- ✅ Security best practices
-- ✅ Accessibility compliance
-- ✅ Professional documentation
-- ✅ Testing & quality assurance
+**Tác giả:** The Hien · **Phiên bản:** 2.3.0 · **Giấy phép:** MIT
 
 ---
 
-**Version**: 2.0.0 | **Status**: Production Ready | **Last Updated**: February 2026
+## Tóm tắt
 
-Made with ❤️ by **The Hien** for Statistical Machine Learning Project
+| Hạng mục | Nội dung |
+|----------|----------|
+| Bài toán | Phân loại sentiment nhị phân trên review phim tiếng Anh |
+| Dữ liệu | IMDB 50 000 mẫu, chia 70% / 15% / 15% (stratified, seed 42) |
+| Mô hình chính | DistilBERT (`distilbert-base-uncased`) fine-tune |
+| Baseline | TF-IDF + logistic regression (cùng protocol) |
+| Kết quả test (n = 7 500) | Accuracy 91,76%, F1 91,80%, ROC-AUC 97,35% |
+| Bất định | Bootstrap 500 lần, percentile CI 95% |
+| Kiểm định | McNemar (DistilBERT vs TF-IDF) — báo cáo trong `docs/STATS_REPORT.md` |
+
+Tài liệu thống kê đầy đủ: [docs/STATS_REPORT.md](docs/STATS_REPORT.md) · Phương pháp: [docs/METHODOLOGY.md](docs/METHODOLOGY.md) · Mô tả từng hình: [docs/HINH_ANH_MO_TA.md](docs/HINH_ANH_MO_TA.md)
+
+---
+
+## Câu hỏi nghiên cứu
+
+Một bộ phân loại **DistilBERT** fine-tune có dự đoán sentiment review phim trên **tập test hold-out** với hiệu năng báo cáo được (điểm ước lượng + CI) và có vượt baseline cổ điển **TF-IDF + logistic regression** trên cùng phân hoạch dữ liệu hay không?
+
+---
+
+## Minh họa hệ thống (screenshots)
+
+Mỗi hình kèm chú thích học thuật; mô tả chi tiết bằng tiếng Việt: [docs/HINH_ANH_MO_TA.md](docs/HINH_ANH_MO_TA.md).
+
+### Giao diện người dùng
+
+**Hình 1.** Trang chủ — tóm tắt bài toán và chỉ số hiệu năng mô hình trên IMDB.
+
+![Trang chủ — hero và chỉ số mô hình](Images/home-landing-hero.jpg)
+
+**Hình 2.** Trang chủ — ví dụ đầu ra và các luồng nghiệp vụ (đơn lẻ, batch, XAI, so sánh, API).
+
+![Trang chủ — workflows](Images/home-workflows.jpg)
+
+**Hình 3.** Phân tích đơn lẻ — nhập review, live draft inference, Rottenmeter.
+
+![Phân tích đơn lẻ](Images/analyze-single-review.jpg)
+
+**Hình 4.** Phân tích batch — upload CSV, bảng verdict và confidence, xuất CSV/Excel.
+
+![Phân tích batch CSV](Images/analyze-batch-csv.jpg)
+
+**Hình 5.** Nhập liệu giọng nói — speech-to-text trước bước phân loại.
+
+![Voice input](Images/analyze-voice-input.jpg)
+
+**Hình 6.** So sánh hai review — nhãn, confidence, attribution theo token (input × gradient).
+
+![So sánh song song](Images/compare-side-by-side.jpg)
+
+**Hình 7.** So sánh hai review — biểu đồ confidence và tóm tắt đối lập Fresh/Rotten.
+
+![Biểu đồ so sánh](Images/compare-charts.jpg)
+
+### Đánh giá mô hình và thống kê
+
+**Hình 8.** Tổng quan dữ liệu — quy mô train / validation / test (35k / 7,5k / 7,5k).
+
+![Tổng quan dataset](Images/metrics-dataset-overview.jpg)
+
+**Hình 9.** So sánh DistilBERT vs TF-IDF trên test, kèm CI 95% và error analysis (FP/FN).
+
+![So sánh mô hình](Images/metrics-model-comparison.jpg)
+
+**Hình 10.** Chỉ số validation, statistical summary (sensitivity, specificity, PPV, NPV).
+
+![Validation metrics](Images/metrics-validation-summary.jpg)
+
+**Hình 11.** Confusion matrix, phân bố nhãn (50/50), biểu đồ so sánh metric.
+
+![Confusion matrix và biểu đồ](Images/metrics-confusion-label-bars.jpg)
+
+**Hình 12–14.** Modal chi tiết: metrics, confusion matrix, phân bố nhãn (bootstrap CI).
+
+| Metrics | Confusion | Label distribution |
+|---------|-----------|-------------------|
+| ![Metrics modal](Images/metrics-detail-modal.jpg) | ![Confusion modal](Images/metrics-confusion-modal.jpg) | ![Label modal](Images/metrics-label-modal.jpg) |
+
+**Hình 15.** Summary & Actions — ngưỡng 0,5, xuất PDF, xem chi tiết.
+
+![Summary and actions](Images/metrics-summary-actions.jpg)
+
+**Hình 16.** Minh bạch methodology và quy trình Analyze → Compare → Integrate.
+
+![Pricing và transparency](Images/pricing-transparency.jpg)
+
+---
+
+## Cài đặt và tái lập kết quả
+
+```bash
+git clone https://github.com/TheHien04/Movie-Review-Sentiment-Analysis.git
+cd Movie-Review-Sentiment-Analysis
+make install
+make capstone    # baseline → train → evaluate → tests → báo cáo
+make serve       # http://127.0.0.1:8000
+```
+
+Pipeline capstone ghi log tái lập: `artifacts/results/capstone_run_log.json`.
+
+Trước khi push: `make github-check`
+
+---
+
+## Cấu trúc dự án
+
+| Thư mục | Vai trò |
+|---------|---------|
+| `backend/` | Flask API, inference, ML core |
+| `frontend/` | Giao diện cinema (HTML/JS) |
+| `scripts/` | Huấn luyện, đánh giá, baseline, kiểm định giả thuyết |
+| `notebooks/` | EDA, error analysis, so sánh mô hình (nbconvert → HTML) |
+| `artifacts/results/` | `evaluation.json`, báo cáo, biểu đồ |
+| `docs/` | Methodology, stats report, model card, mô tả hình |
+| `tests/` | 102+ pytest (API, capstone, modern stack) |
+
+Chi tiết: [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)
+
+---
+
+## API chính
+
+| Endpoint | Mô tả |
+|----------|--------|
+| `GET /health` | Trạng thái dịch vụ và model |
+| `POST /api/predict` | Suy luận đơn hoặc batch CSV |
+| `GET /api/metrics` | Metric theo split và ngưỡng |
+| `GET /api/model-comparison` | Bảng so sánh mô hình |
+| `GET /artifacts/results/evaluation.json` | Artifact đánh giá đầy đủ |
+
+OpenAPI: `/api/docs` · File: [docs/openapi.yaml](docs/openapi.yaml)
+
+---
+
+## Kiểm thử
+
+```bash
+make test                 # pytest toàn bộ
+make e2e-playwright       # E2E trình duyệt (tùy chọn)
+```
+
+---
+
+## Tài liệu học thuật
+
+| Tài liệu | Mục đích |
+|----------|----------|
+| [docs/STATS_REPORT.md](docs/STATS_REPORT.md) | Bảng kết quả test, CI, confusion matrix |
+| [docs/METHODOLOGY.md](docs/METHODOLOGY.md) | Thiết kế thực nghiệm |
+| [docs/MODEL_CARD.md](docs/MODEL_CARD.md) | Thẻ mô hình |
+| [docs/DEFENSE_SLIDE_LIMITATIONS.md](docs/DEFENSE_SLIDE_LIMITATIONS.md) | Hạn chế (McNemar, chọn DistilBERT) |
+| [docs/HINH_ANH_MO_TA.md](docs/HINH_ANH_MO_TA.md) | Chú thích từng screenshot |
+| [docs/SILICON_VALLEY_STACK.md](docs/SILICON_VALLEY_STACK.md) | MLflow, RAG, K8s (mở rộng SE) |
+
+---
+
+## Trích dẫn
+
+```bibtex
+@misc{cinesentiment2026,
+  author = {The Hien},
+  title  = {CineSentiment: IMDB Movie Review Sentiment Analysis with DistilBERT},
+  year   = {2026},
+  url    = {https://github.com/TheHien04/Movie-Review-Sentiment-Analysis}
+}
+```
+
+---
+
+**Môn học:** Học Thống Kê / Statistical Machine Learning — Đồ án cuối kỳ  
+**Cập nhật:** June 2026

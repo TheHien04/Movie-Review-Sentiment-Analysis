@@ -1,0 +1,43 @@
+# Multi-region ingress — geo DNS routes to regional clusters (active-active pattern)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cinesentiment-geo
+  namespace: cinesentiment
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    cinesentiment.io/region: "global"
+    cinesentiment.io/failover-policy: "active-active"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: cinesentiment.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cinesentiment-backend
+                port:
+                  number: 8000
+    - host: us-east.cinesentiment.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cinesentiment-backend
+                port:
+                  number: 8000
+    - host: eu-west.cinesentiment.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cinesentiment-backend
+                port:
+                  number: 8000

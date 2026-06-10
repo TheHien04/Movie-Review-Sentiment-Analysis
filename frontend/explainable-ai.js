@@ -9,9 +9,9 @@ class ExplainableAI {
         this.currentText = '';
         this.currentScores = [];
         this.colorScale = {
-            positive: ['#e8f5e9', '#81c784', '#4caf50', '#2e7d32'],
-            negative: ['#ffebee', '#e57373', '#f44336', '#c62828'],
-            neutral: ['#f5f5f5', '#e0e0e0', '#bdbdbd', '#757575']
+            positive: ['#1a3d2e', '#2a9d63', '#3dd68c', '#3dd68c'],
+            negative: ['#3d1518', '#c62828', '#e50914', '#ff6b6b'],
+            neutral: ['#1a1a24', '#4b5563', '#9ca3af', '#b8b4a8']
         };
     }
 
@@ -28,8 +28,78 @@ class ExplainableAI {
     }
 
     /**
-     * Calculate word importance scores (simple heuristic-based approach)
-     * In production, this would come from model attention weights
+     * Fetch model-derived token importance from /api/explain (input × gradient).
+     * Falls back to lexicon heuristic if API unavailable.
+     */
+    async fetchModelExplanation(text) {
+        try {
+            const res = await fetch(window.apiUrl('/api/explain'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text }),
+            });
+            if (!res.ok) return null;
+            return await res.json();
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * Render model-derived explanation (input × gradient tokens).
+     */
+    renderModelExplanation(container, explanation) {
+        const { tokens, label, probability, method } = explanation;
+        const header = document.createElement('div');
+        header.innerHTML = `
+            <h4 style="margin: 0 0 12px 0; color: #e8c547; display: flex; align-items: center; gap: 8px;">
+                Word Importance Analysis
+            </h4>
+            <p style="margin: 0 0 10px 0; font-size: 13px; color: var(--cinema-muted, #9ca3af);">
+                <strong>Input × Gradient</strong> — model-derived token importance from DistilBERT.
+                ${label === 1 ? 'Green' : 'Red'} = pushes toward predicted class; opposite = pushes away.
+            </p>
+        `;
+        container.appendChild(header);
+
+        const heatmap = document.createElement('div');
+        heatmap.style.cssText = 'background: var(--bg-secondary, #12121a); padding: 16px; border-radius: 8px; border: 1px solid rgba(232,197,71,0.2); line-height: 2.2; font-size: 15px; word-wrap: break-word;';
+
+        tokens.forEach(t => {
+            const span = document.createElement('span');
+            const absScore = Math.abs(t.score);
+            let bg, color;
+            if (t.score > 0.05) {
+                const a = Math.min(absScore * 0.6 + 0.1, 0.8);
+                bg = label === 1 ? `rgba(61, 214, 140, ${a})` : `rgba(229, 9, 20, ${a})`;
+                color = a > 0.4 ? '#fff' : 'var(--text-primary, #f5f0e6)';
+            } else if (t.score < -0.05) {
+                const a = Math.min(absScore * 0.6 + 0.1, 0.8);
+                bg = label === 1 ? `rgba(229, 9, 20, ${a})` : `rgba(61, 214, 140, ${a})`;
+                color = a > 0.4 ? '#fff' : 'var(--text-primary, #f5f0e6)';
+            } else {
+                bg = 'transparent';
+                color = 'var(--cinema-muted, #9ca3af)';
+            }
+            span.textContent = (t.is_subword ? '' : ' ') + t.token;
+            span.style.cssText = `background: ${bg}; color: ${color}; padding: 2px 4px; border-radius: 3px; cursor: default;`;
+            span.title = `score: ${t.score.toFixed(3)}`;
+            heatmap.appendChild(span);
+        });
+        container.appendChild(heatmap);
+
+        const legend = document.createElement('div');
+        legend.style.cssText = 'display: flex; gap: 16px; margin-top: 10px; font-size: 12px; color: var(--cinema-muted, #9ca3af);';
+        legend.innerHTML = `
+            <span>Method: <strong>${method}</strong></span>
+            <span>Confidence: <strong>${(probability * 100).toFixed(1)}%</strong></span>
+        `;
+        container.appendChild(legend);
+    }
+
+    /**
+     * Lexicon-based word importance heuristic — fallback when API is unavailable.
+     * Not model attention or SHAP — see docs/METHODOLOGY.md.
      */
     calculateWordImportance(text, sentiment, confidence) {
         const words = text.toLowerCase().split(/\s+/);
@@ -131,11 +201,20 @@ class ExplainableAI {
     }
 
     /**
-     * Render word importance heatmap
+     * Render word importance heatmap.
+     * Tries model-derived explanation first; falls back to lexicon heuristic.
      */
-    render(text, sentiment, confidence) {
+    async render(text, sentiment, confidence) {
         if (!this.container) {
             console.error('Container not initialized');
+            return;
+        }
+
+        this.container.innerHTML = '';
+
+        const modelExplanation = await this.fetchModelExplanation(text);
+        if (modelExplanation && modelExplanation.tokens && modelExplanation.tokens.length > 0) {
+            this.renderModelExplanation(this.container, modelExplanation);
             return;
         }
 
@@ -154,8 +233,8 @@ class ExplainableAI {
                 Word Importance Analysis
             </h4>
             <p style="margin: 0 0 10px 0; font-size: 14px; color: #666;">
-                Words are colored by their contribution to the ${sentiment === 1 ? 'positive' : 'negative'} sentiment.
-                Darker colors indicate stronger influence.
+                <strong>Lexicon heuristic</strong> (not neural attention): words are colored by a rule-based lexicon
+                aligned with the predicted ${sentiment === 1 ? 'positive' : 'negative'} label.
             </p>
         `;
 

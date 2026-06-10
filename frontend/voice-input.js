@@ -13,17 +13,84 @@ class VoiceInput {
         this.animationId = null;
         this.onResult = null;
         this.onError = null;
+        this.onAutoStop = null;
         this.canvas = null;
         this.canvasCtx = null;
+        this._startedAt = 0;
+        this._restartTimer = null;
+        this._silenceTimer = null;
+        this._sessionFinal = '';
+        this._currentInterim = '';
+        this._benignErrors = new Set(['no-speech', 'aborted', 'network']);
         
         this.initRecognition();
+    }
+
+    _resolveRecognitionLang() {
+        const lang = (navigator.language || 'en-US').toLowerCase();
+        if (lang.startsWith('vi')) return 'vi-VN';
+        if (lang.startsWith('en')) return 'en-US';
+        return navigator.language || 'en-US';
+    }
+
+    getFullTranscript() {
+        const parts = [this._sessionFinal, this._currentInterim].filter(Boolean);
+        return parts.join(' ').trim();
+    }
+
+    flushTranscript() {
+        if (this._currentInterim) {
+            this._sessionFinal = (this._sessionFinal ? this._sessionFinal + ' ' : '') + this._currentInterim.trim();
+            this._currentInterim = '';
+        }
+        const combined = this.getFullTranscript();
+        if (combined && this.onResult) {
+            this.onResult({
+                final: this._sessionFinal,
+                interim: '',
+                combined: combined,
+                flush: true,
+            });
+        }
+        return combined;
+    }
+
+    _emitResult() {
+        const combined = this.getFullTranscript();
+        if (this.onResult && combined) {
+            this.onResult({
+                final: this._sessionFinal,
+                interim: this._currentInterim,
+                combined: combined,
+            });
+        }
+    }
+
+    _resetSilenceTimer() {
+        if (this._silenceTimer) {
+            clearTimeout(this._silenceTimer);
+            this._silenceTimer = null;
+        }
+        if (!this.isRecording) return;
+        this._silenceTimer = setTimeout(() => {
+            if (!this.isRecording) return;
+            if (this.getFullTranscript() && this.onAutoStop) {
+                this.onAutoStop();
+            }
+        }, 2800);
+    }
+
+    /**
+     * Browser supports Web Speech API
+     */
+    isSupported() {
+        return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
     }
 
     /**
      * Initialize Speech Recognition
      */
     initRecognition() {
-        // Check browser support
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         
         if (!SpeechRecognition) {
@@ -34,43 +101,49 @@ class VoiceInput {
         this.recognition = new SpeechRecognition();
         this.recognition.continuous = true;
         this.recognition.interimResults = true;
-        this.recognition.lang = 'en-US';
+        this.recognition.lang = this._resolveRecognitionLang();
+        this.recognition.maxAlternatives = 1;
 
-        // Event handlers
         this.recognition.onresult = (event) => {
-            let interimTranscript = '';
-            let finalTranscript = '';
-
+            let interim = '';
             for (let i = event.resultIndex; i < event.results.length; i++) {
-                const transcript = event.results[i][0].transcript;
+                const piece = event.results[i][0].transcript;
                 if (event.results[i].isFinal) {
-                    finalTranscript += transcript + ' ';
+                    const chunk = piece.trim();
+                    if (chunk) {
+                        this._sessionFinal = this._sessionFinal
+                            ? this._sessionFinal + ' ' + chunk
+                            : chunk;
+                    }
+                    this._currentInterim = '';
                 } else {
-                    interimTranscript += transcript;
+                    interim += piece;
                 }
             }
-
-            if (this.onResult) {
-                this.onResult({
-                    final: finalTranscript.trim(),
-                    interim: interimTranscript.trim(),
-                    isFinal: finalTranscript.length > 0
-                });
+            if (interim) {
+                this._currentInterim = interim.trim();
             }
+            this._emitResult();
+            this._resetSilenceTimer();
         };
 
         this.recognition.onerror = (event) => {
-            console.error('Speech recognition error:', event.error);
+            const code = event.error || 'unknown';
+            // Chrome fires no-speech quickly if the user has not talked yet — keep listening
+            if (this._benignErrors.has(code) && this.isRecording) {
+                this._scheduleRecognitionRestart(120);
+                return;
+            }
+            console.error('Speech recognition error:', code);
             if (this.onError) {
-                this.onError(event.error);
+                this.onError(code);
             }
             this.stop();
         };
 
         this.recognition.onend = () => {
             if (this.isRecording) {
-                // Restart if it stops unexpectedly
-                this.recognition.start();
+                this._scheduleRecognitionRestart(80);
             }
         };
 
@@ -99,9 +172,6 @@ class VoiceInput {
             return true;
         } catch (error) {
             console.error('Microphone access denied:', error);
-            if (this.onError) {
-                this.onError('Microphone access denied');
-            }
             return false;
         }
     }
@@ -124,8 +194,8 @@ class VoiceInput {
         
         // Draw gradient background
         const gradient = this.canvasCtx.createLinearGradient(0, 0, 0, height);
-        gradient.addColorStop(0, 'rgba(106, 27, 154, 0.1)');
-        gradient.addColorStop(1, 'rgba(156, 39, 176, 0.05)');
+        gradient.addColorStop(0, 'rgba(201, 162, 39, 0.15)');
+        gradient.addColorStop(1, 'rgba(201, 162, 39, 0.05)');
         this.canvasCtx.fillStyle = gradient;
         this.canvasCtx.fillRect(0, 0, width, height);
 
@@ -139,9 +209,9 @@ class VoiceInput {
             
             // Create gradient for each bar
             const barGradient = this.canvasCtx.createLinearGradient(0, height - barHeight, 0, height);
-            barGradient.addColorStop(0, '#9c27b0');
-            barGradient.addColorStop(0.5, '#ba68c8');
-            barGradient.addColorStop(1, '#ce93d8');
+            barGradient.addColorStop(0, '#c9a227');
+            barGradient.addColorStop(0.5, '#e8c547');
+            barGradient.addColorStop(1, '#a8841a');
             
             this.canvasCtx.fillStyle = barGradient;
             this.canvasCtx.fillRect(x, height - barHeight, barWidth, barHeight);
@@ -212,50 +282,102 @@ class VoiceInput {
         this.animationId = requestAnimationFrame(() => this.drawCircularWaveform());
     }
 
+    _scheduleRecognitionRestart(delayMs) {
+        if (!this.isRecording || !this.recognition) return;
+        if (this._restartTimer) clearTimeout(this._restartTimer);
+        this._restartTimer = setTimeout(() => {
+            this._restartTimer = null;
+            if (!this.isRecording || !this.recognition) return;
+            try {
+                this.recognition.start();
+            } catch (err) {
+                if (String(err).indexOf('already started') === -1) {
+                    this._scheduleRecognitionRestart(200);
+                }
+            }
+        }, delayMs);
+    }
+
     /**
      * Start voice recording
      */
-    async start(canvasElement, visualizationType = 'bars') {
+    async start(canvasElement, visualizationType = 'bars', initialText = '') {
         if (this.isRecording) {
             console.warn('Already recording');
             return false;
         }
 
         if (!this.recognition) {
-            if (this.onError) {
-                this.onError('Speech recognition not supported');
-            }
             return false;
         }
 
-        // Initialize audio visualization
-        if (canvasElement && !this.audioContext) {
-            const success = await this.initAudioVisualization(canvasElement);
-            if (!success) return false;
+        if (this._restartTimer) {
+            clearTimeout(this._restartTimer);
+            this._restartTimer = null;
+        }
+        try {
+            this.recognition.abort();
+        } catch (_) { /* ignore */ }
+
+        this._sessionFinal = String(initialText || '').trim();
+        this._currentInterim = '';
+        if (this._silenceTimer) {
+            clearTimeout(this._silenceTimer);
+            this._silenceTimer = null;
+        }
+        if (this._sessionFinal) {
+            this._emitResult();
+        }
+
+        let vizReady = false;
+        if (canvasElement) {
+            this.canvas = canvasElement;
+            this.canvasCtx = canvasElement.getContext('2d');
+            if (!this.audioContext) {
+                vizReady = await this.initAudioVisualization(canvasElement);
+                if (!vizReady) {
+                    if (this.onError) {
+                        this.onError('not-allowed');
+                    }
+                    return false;
+                }
+            } else {
+                vizReady = true;
+            }
+            if (this.audioContext && this.audioContext.state === 'suspended') {
+                try {
+                    await this.audioContext.resume();
+                } catch (_) { /* ignore */ }
+            }
         }
 
         try {
             this.isRecording = true;
+            this._startedAt = Date.now();
             this.recognition.start();
-            
-            // Start visualization
-            if (this.canvas && this.analyser) {
-                if (visualizationType === 'circular') {
-                    this.drawCircularWaveform();
-                } else {
-                    this.drawWaveform();
-                }
-            }
-            
-            return true;
         } catch (error) {
             console.error('Failed to start recording:', error);
             this.isRecording = false;
+            var errMsg = String(error.message || error);
+            if (errMsg.indexOf('already started') !== -1) {
+                this._scheduleRecognitionRestart(300);
+                return true;
+            }
             if (this.onError) {
-                this.onError('Failed to start recording');
+                this.onError(errMsg || 'Failed to start recording');
             }
             return false;
         }
+
+        if (vizReady && this.canvas && this.analyser) {
+            if (visualizationType === 'circular') {
+                this.drawCircularWaveform();
+            } else {
+                this.drawWaveform();
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -264,8 +386,17 @@ class VoiceInput {
     stop() {
         if (!this.isRecording) return;
 
+        this.flushTranscript();
         this.isRecording = false;
-        
+        if (this._restartTimer) {
+            clearTimeout(this._restartTimer);
+            this._restartTimer = null;
+        }
+        if (this._silenceTimer) {
+            clearTimeout(this._silenceTimer);
+            this._silenceTimer = null;
+        }
+
         if (this.recognition) {
             try {
                 this.recognition.stop();
@@ -305,6 +436,10 @@ class VoiceInput {
      */
     setOnError(callback) {
         this.onError = callback;
+    }
+
+    setOnAutoStop(callback) {
+        this.onAutoStop = callback;
     }
 
     /**

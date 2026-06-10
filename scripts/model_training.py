@@ -1,147 +1,229 @@
-import pandas as pd
-from datasets import Dataset
-from transformers import (
-    AutoTokenizer, 
-    AutoModelForSequenceClassification, 
-    Trainer, 
-    TrainingArguments,
-    DataCollatorWithPadding
-)
+"""
+Fine-tune DistilBERT on data/raw splits; save weights + evaluation artifact.
+Run from project root: python scripts/model_training.py
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
 import numpy as np
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
+import pandas as pd
+import torch
+from datasets import Dataset
+from sklearn.metrics import confusion_matrix
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    DataCollatorWithPadding,
+    Trainer,
+    TrainingArguments,
+)
 
-# Load CSVs
-train_df = pd.read_csv("data/raw/train.csv")
-val_df = pd.read_csv("data/raw/val.csv")
-test_df = pd.read_csv("data/raw/test.csv")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
 
-# Convert pandas DataFrames to Hugging Face Datasets
-train_ds = Dataset.from_pandas(train_df[['text', 'label']])
-val_ds = Dataset.from_pandas(val_df[['text', 'label']])
-test_ds = Dataset.from_pandas(test_df[['text', 'label']])
+from backend.ml_core import (  # noqa: E402
+    ARTIFACTS_DIR,
+    compute_classification_metrics,
+    load_evaluation_artifact,
+    save_evaluation_artifact,
+)
+from backend.experiment_tracking import experiment_run, log_artifact, log_metrics, log_params  # noqa: E402
 
-# Initialize tokenizer using AutoTokenizer (more robust)
-tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+DATA_DIR = PROJECT_ROOT / "data" / "raw"
+MODEL_OUT = PROJECT_ROOT / "sentiment_model"
 
-def tokenize_function(examples):
-    """Updated tokenization function"""
-    return tokenizer(
-        examples['text'], 
-        padding=False,
-        truncation=True,
-        max_length=512
+
+def load_splits():
+    train_df = pd.read_csv(DATA_DIR / "train.csv")
+    val_df = pd.read_csv(DATA_DIR / "val.csv")
+    test_df = pd.read_csv(DATA_DIR / "test.csv")
+    return train_df, val_df, test_df
+
+
+def build_trainer(model, tokenizer, train_ds, val_ds, output_dir: Path, epochs: int, seed: int):
+    data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
+
+    import torch
+
+    def compute_metrics(eval_pred):
+        logits, labels = eval_pred
+        probs = torch.softmax(torch.tensor(logits), dim=1)[:, 1].numpy()
+        m = compute_classification_metrics(np.array(labels), probs)
+        return {k: m[k] for k in ("accuracy", "f1", "precision", "recall")}
+
+    training_args = TrainingArguments(
+        output_dir=str(output_dir / "checkpoints"),
+        eval_strategy="epoch",
+        save_strategy="epoch",
+        learning_rate=2e-5,
+        per_device_train_batch_size=16,
+        per_device_eval_batch_size=16,
+        num_train_epochs=epochs,
+        weight_decay=0.01,
+        logging_dir=str(output_dir / "logs"),
+        logging_steps=100,
+        load_best_model_at_end=True,
+        metric_for_best_model="f1",
+        greater_is_better=True,
+        save_total_limit=2,
+        report_to="none",
+        seed=seed,
+        data_seed=seed,
+        remove_unused_columns=True,
     )
 
-# Tokenize the datasets
-train_ds = train_ds.map(tokenize_function, batched=True)
-val_ds = val_ds.map(tokenize_function, batched=True)
-test_ds = test_ds.map(tokenize_function, batched=True)
+    return Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=train_ds,
+        eval_dataset=val_ds,
+        tokenizer=tokenizer,
+        data_collator=data_collator,
+        compute_metrics=compute_metrics,
+    )
 
-# Remove the original text column to avoid issues
-train_ds = train_ds.remove_columns(['text'])
-val_ds = val_ds.remove_columns(['text'])
-test_ds = test_ds.remove_columns(['text'])
 
-# Load pre-trained model using AutoModel
-model = AutoModelForSequenceClassification.from_pretrained(
-    "distilbert-base-uncased", 
-    num_labels=2
-)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--epochs", type=int, default=3)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--max-train-rows", type=int, default=0, help="0 = full train set")
+    parser.add_argument("--model-out", type=Path, default=MODEL_OUT)
+    args = parser.parse_args()
 
-# Data collator for dynamic padding
-data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
+    train_df, val_df, test_df = load_splits()
+    if args.max_train_rows > 0:
+        train_df = train_df.sample(n=min(args.max_train_rows, len(train_df)), random_state=args.seed)
 
-def compute_metrics(eval_pred):
-    """Manual metrics computation without sklearn"""
-    predictions, labels = eval_pred
-    predictions = np.argmax(predictions, axis=1)
-    
-    # Convert to numpy arrays if they aren't already
-    predictions = np.array(predictions)
-    labels = np.array(labels)
-    
-    # Initialize counters
-    TP = FP = TN = FN = 0
-    
-    for pred, true in zip(predictions, labels):
-        if pred == 1 and true == 1:
-            TP += 1
-        elif pred == 1 and true == 0:
-            FP += 1
-        elif pred == 0 and true == 0:
-            TN += 1
-        elif pred == 0 and true == 1:
-            FN += 1
-    
-    # Compute metrics with safe division
-    total = TP + TN + FP + FN
-    accuracy = (TP + TN) / total if total > 0 else 0.0
-    precision = TP / (TP + FP) if (TP + FP) > 0 else 0.0
-    recall = TP / (TP + FN) if (TP + FN) > 0 else 0.0
-    f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-    
-    return {
-        'accuracy': accuracy,
-        'precision': precision,
-        'recall': recall,
-        'f1': f1
+    tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+    model = AutoModelForSequenceClassification.from_pretrained(
+        "distilbert-base-uncased", num_labels=2
+    )
+
+    max_length = int(os.getenv("MAX_SEQUENCE_LENGTH", "256"))
+
+    def tokenize(batch):
+        return tokenizer(batch["text"], truncation=True, max_length=max_length)
+
+    train_ds = Dataset.from_pandas(train_df[["text", "label"]]).map(tokenize, batched=True)
+    val_ds = Dataset.from_pandas(val_df[["text", "label"]]).map(tokenize, batched=True)
+    test_ds = Dataset.from_pandas(test_df[["text", "label"]]).map(tokenize, batched=True)
+
+    train_ds = train_ds.remove_columns(["text"])
+    val_ds = val_ds.remove_columns(["text"])
+    test_ds = test_ds.remove_columns(["text"])
+
+    ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    run_params = {
+        "model": "distilbert-base-uncased",
+        "epochs": args.epochs,
+        "seed": args.seed,
+        "max_train_rows": args.max_train_rows or len(train_df),
+        "max_length": max_length,
     }
+    with experiment_run(
+        "cinesentiment-distilbert",
+        run_name=f"epochs{args.epochs}-seed{args.seed}",
+        params=run_params,
+    ):
+        trainer = build_trainer(
+            model, tokenizer, train_ds, val_ds, ARTIFACTS_DIR, args.epochs, args.seed
+        )
 
-training_args = TrainingArguments(
-    output_dir="./results",
-    eval_strategy="epoch",
-    save_strategy="epoch",
-    learning_rate=2e-5,
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=16,
-    num_train_epochs=3,
-    weight_decay=0.01,
-    logging_dir="./logs",
-    logging_steps=100,
-    load_best_model_at_end=True,
-    metric_for_best_model="f1",  # Using f1 for better model selection
-    greater_is_better=True,
-    save_total_limit=2,  # Only keep 2 best checkpoints
-    report_to=None,  # Disable wandb/tensorboard logging
-    dataloader_pin_memory=False,  # Helps with memory issues
-    remove_unused_columns=True,
-)
+        print("Starting training...")
+        trainer.train()
 
-# Initialize trainer with data collator
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=train_ds,
-    eval_dataset=val_ds,
-    tokenizer=tokenizer,
-    data_collator=data_collator,  # Add data collator for dynamic padding
-    compute_metrics=compute_metrics
-)
+        def _eval_split(dataset, split_name):
+            out = trainer.predict(dataset)
+            probs = torch.softmax(torch.tensor(out.predictions), dim=1)[:, 1].numpy()
+            metrics = compute_classification_metrics(np.array(out.label_ids), probs)
+            return metrics
 
-# Train the model
-print("Starting training...")
-trainer.train()
+        print("Evaluating on validation set...")
+        val_metrics = _eval_split(val_ds, "val")
 
-# Evaluate on test set
-print("Evaluating on test set...")
-preds_output = trainer.predict(test_ds)
-metrics = compute_metrics((preds_output.predictions, preds_output.label_ids))
-print("Test metrics:", metrics)
+        print("Evaluating on test set...")
+        test_metrics = _eval_split(test_ds, "test")
 
-# Confusion Matrix
-preds = np.argmax(preds_output.predictions, axis=1)
-cm = confusion_matrix(preds_output.label_ids, preds)
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Negative", "Positive"])
-disp.plot(cmap='Blues')
-plt.savefig("artifacts/results/confusion_matrix.png")
+        preds_output = trainer.predict(test_ds)
+        preds = np.argmax(preds_output.predictions, axis=1)
+        cm = confusion_matrix(preds_output.label_ids, preds, labels=[0, 1])
 
-# Save metrics
-with open("artifacts/results/metrics.txt", "w") as f:
-    for k, v in metrics.items():
-        f.write(f"{k}: {v:.4f}\n")
+        try:
+            import matplotlib.pyplot as plt
+            from sklearn.metrics import ConfusionMatrixDisplay
 
-# Save the model and tokenizer
-print("Saving model...")
-trainer.save_model("./sentiment_model")
-tokenizer.save_pretrained("./sentiment_model")
+            disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Negative", "Positive"])
+            disp.plot(cmap="Blues")
+            plt.savefig(ARTIFACTS_DIR / "confusion_matrix.png", bbox_inches="tight")
+            plt.close()
+        except ImportError:
+            print("matplotlib not installed; skipping confusion matrix plot")
+
+        log_metrics(
+            {
+                "val_accuracy": val_metrics.get("accuracy"),
+                "val_f1": val_metrics.get("f1"),
+                "test_accuracy": test_metrics.get("accuracy"),
+                "test_f1": test_metrics.get("f1"),
+            }
+        )
+        cm_path = ARTIFACTS_DIR / "confusion_matrix.png"
+        if cm_path.is_file():
+            log_artifact(cm_path)
+
+    args.model_out.mkdir(parents=True, exist_ok=True)
+    trainer.save_model(str(args.model_out))
+    tokenizer.save_pretrained(str(args.model_out))
+
+    report = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "model_dir": str(args.model_out),
+        "model_source": "imdb_finetuned_local",
+        "training": {
+            "epochs": args.epochs,
+            "seed": args.seed,
+            "max_train_rows": args.max_train_rows or len(train_df),
+        },
+        "splits": {
+            "val": {
+                "split": "val",
+                "metrics": val_metrics,
+                "threshold": 0.5,
+            },
+            "test": {
+                "split": "test",
+                "metrics": test_metrics,
+                "threshold": 0.5,
+            },
+        },
+        "summary": {
+            "val_accuracy": val_metrics["accuracy"],
+            "val_f1": val_metrics["f1"],
+            "test_accuracy": test_metrics["accuracy"],
+            "test_f1": test_metrics["f1"],
+        },
+    }
+    existing = load_evaluation_artifact() or {}
+    if existing.get("baselines"):
+        report["baselines"] = existing["baselines"]
+    save_evaluation_artifact(report)
+
+    with open(ARTIFACTS_DIR / "metrics.txt", "w", encoding="utf-8") as f:
+        for k, v in test_metrics.items():
+            if isinstance(v, float):
+                f.write(f"{k}: {v:.4f}\n")
+
+    print("Test metrics:", test_metrics)
+    print(f"Model saved to {args.model_out}")
+
+
+if __name__ == "__main__":
+    main()

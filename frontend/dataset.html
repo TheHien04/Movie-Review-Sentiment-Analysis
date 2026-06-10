@@ -2,78 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <base href="/" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="Movie Sentiment Analysis - Dataset Overview"/>
-  <meta name="theme-color" content="#6366f1"/>
-  <title>Dataset Overview | Movie Sentiment Analysis</title>
+  <meta name="theme-color" content="#050508"/>
+  <title>IMDB Dataset | CineSentiment</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="dataset.css"/>
-  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="design-system.css"/>
+  <link rel="stylesheet" href="cinema-theme.css"/>
   <link rel="stylesheet" href="theme.css"/>
-  <link rel="stylesheet" href="premium-effects.css"/>
-  <style>
-    .skip-link {
-      position: absolute;
-      left: -9999px;
-      z-index: 999;
-      padding: 1em;
-      background-color: #000;
-      color: white;
-      text-decoration: none;
-    }
-    .skip-link:focus {
-      left: 50%;
-      transform: translateX(-50%);
-      top: 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="data-viz.css"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="loading.css"/>
+  <link rel="stylesheet" href="toast.css"/>
+  <link rel="stylesheet" href="layout-polish.css"/>
+  <link rel="stylesheet" href="cinema-unified.css"/>
 </head>
-<body class="main-bg" style="font-family: 'Montserrat', Arial, sans-serif;">
+<body class="main-bg" data-page="dataset">
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  <!-- Navigation Bar -->
-  <nav class="navbar-custom" role="navigation" aria-label="Main navigation">
-    <div class="navbar-content">
-      <a href="index.html" class="navbar-logo">
-        <span>🎬</span>
-        <span>Movie Sentiment AI</span>
-      </a>
-      <ul class="navbar-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="batch.html">Sentiment Analysis</a></li>
-        <li><a href="compare.html">Compare</a></li>
-        <li><a href="evaluation.html">Evaluation</a></li>
-        <li><a href="dataset.html" class="active">Dataset</a></li>
-      </ul>
-    </div>
-  </nav>
+  <nav data-cinema-nav></nav>
+  <script src="/layout.js"></script>
 
-  <header class="header-gradient" role="banner">
-    <h1 class="fw-bold display-5 text-white mb-1">
-      <span class="me-2" aria-hidden="true">📚</span>Dataset Overview
-    </h1>
-    <p class="lead text-white mb-0" style="font-size: 1rem; margin-top: 4px; opacity: 0.85;">Key statistics about the movie review dataset</p>
-  </header>
+  <section class="page-hero" role="banner">
+    <p class="page-hero__eyebrow">Train · Val · Test</p>
+    <h1>IMDB ARCHIVE</h1>
+    <p class="page-hero__sub">50,000 movie reviews — explore splits, label balance, and sample critic excerpts.</p>
+  </section>
+  <div class="film-strip" aria-hidden="true"></div>
 
-  <main id="main-content" role="main">
+  <main id="main-content" class="dataset-page" role="main">
     <section class="card dataset-stats-section">
       <h2>Dataset Statistics</h2>
       <div class="section-desc">Key statistics about the movie review dataset.</div>
       <div id="dataset-stats" style="min-height: 120px;">
-        <div style="font-size:1.05rem; margin-bottom:6px;">
-          <span title="Trung bình số ký tự mỗi review">⏳ Loading statistical data...</span>
-        </div>
+        <span class="text-muted-app">Loading dataset…</span>
       </div>
     </section>
 
     <!-- Label Distribution Section -->
     <section class="card">
-      <h2>📊 Label Distribution</h2>
-      <div class="section-desc">Distribution of positive and negative reviews in the dataset.</div>
-      <div style="padding: 20px;">
-        <canvas id="label-chart" width="400" height="250" style="max-width:100%; height:250px; margin:0 auto; display:block;"></canvas>
+      <h2>Label distribution</h2>
+      <div class="section-desc">Class balance on the <strong>training split</strong> (binary sentiment).</div>
+      <div class="chart-card">
+        <div class="chart-wrap chart-wrap--pie" id="label-chart-wrap">
+          <canvas id="label-chart" role="img" aria-label="Pie chart of Rotten vs Fresh labels on training split"></canvas>
+        </div>
+        <p id="label-chart-hint" class="chart-note">Colors encode class only — not performance. 50/50 balance is typical for IMDB.</p>
       </div>
     </section>
 
@@ -81,14 +55,9 @@
       <h2>Sample Data</h2>
       <div class="section-desc">Browse and search sample reviews from the dataset.</div>
       
-      <!-- Export Button -->
-      <div style="margin-bottom: 1rem;">
-        <button onclick="exportDatasetCSV()" class="btn-animated" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">
-          📥 Export CSV
-        </button>
-        <button onclick="exportDatasetJSON()" class="btn-animated" style="padding: 0.5rem 1.5rem; font-size: 0.9rem; margin-left: 0.5rem;">
-          📥 Export JSON
-        </button>
+      <div class="sample-export-row">
+        <button onclick="exportDatasetCSV()" class="btn-soft" type="button">Export CSV</button>
+        <button onclick="exportDatasetJSON()" class="btn-soft" type="button">Export JSON</button>
       </div>
 
       <div class="sample-controls">
@@ -124,116 +93,17 @@
     </section>
   </main>
 
-  <footer class="py-3 text-center footer-gradient text-white-50 mt-4">
-    <small>&copy; 2025 Movie Sentiment AI | For Statistical Machine Learning Project</small>
-  </footer>
+  <footer data-cinema-footer></footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="theme.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="shared.js"></script>
-  <script>
-    // Inline dataset loader - ensures data loads regardless of main.js cache issues
-    (function() {
-      const API_URL = 'http://localhost:8000/api/dataset-info';
-      const statsEl = document.getElementById('dataset-stats');
-      const tableBody = document.querySelector('#sample-table tbody');
-      const labelCanvas = document.getElementById('label-chart');
-      let labelChartInstance = null;
-
-      function loadDataset() {
-        console.log('[Dataset] Fetching from:', API_URL);
-        statsEl.innerHTML = '<span style="color:#aaa;">⏳ Đang tải dữ liệu...</span>';
-
-        fetch(API_URL)
-          .then(response => {
-            console.log('[Dataset] Response:', response.status);
-            if (!response.ok) throw new Error('HTTP ' + response.status);
-            return response.json();
-          })
-          .then(data => {
-            console.log('[Dataset] Data loaded:', data);
-            
-            // Render stats
-            if (data.stats) {
-              let html = '';
-              for (const [key, value] of Object.entries(data.stats)) {
-                const formattedValue = typeof value === 'number' ? value.toLocaleString() : value;
-                html += '<div style="font-size:1.05rem; margin-bottom:6px;"><strong>' + key + ':</strong> ' + formattedValue + '</div>';
-              }
-              statsEl.innerHTML = html;
-            }
-
-            // Render sample table
-            if (data.samples && tableBody) {
-              tableBody.innerHTML = data.samples.map(row => 
-                '<tr><td>' + row.text.substring(0, 200) + (row.text.length > 200 ? '...' : '') + '</td><td>' + (row.label === 1 ? 'Positive' : 'Negative') + '</td></tr>'
-              ).join('');
-            }
-
-            // Render label distribution pie chart
-            if (data.stats && labelCanvas && typeof Chart !== 'undefined') {
-              const neg = data.stats.Negative || 0;
-              const pos = data.stats.Positive || 0;
-              
-              if (labelChartInstance) labelChartInstance.destroy();
-              
-              labelChartInstance = new Chart(labelCanvas.getContext('2d'), {
-                type: 'pie',
-                data: {
-                  labels: ['Negative', 'Positive'],
-                  datasets: [{
-                    data: [neg, pos],
-                    backgroundColor: ['#ff6b6b', '#7b5cff'],
-                    borderWidth: 2,
-                    borderColor: '#fff'
-                  }]
-                },
-                options: {
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: { 
-                      position: 'bottom',
-                      labels: {
-                        font: { size: 14, weight: 'bold' },
-                        padding: 15
-                      }
-                    },
-                    tooltip: {
-                      callbacks: {
-                        label: function(context) {
-                          const total = neg + pos || 1;
-                          const pct = ((context.raw / total) * 100).toFixed(1);
-                          return context.label + ': ' + context.raw.toLocaleString() + ' (' + pct + '%)';
-                        }
-                      }
-                    }
-                  }
-                }
-              });
-            }
-          })
-          .catch(err => {
-            console.error('[Dataset] Error:', err);
-            statsEl.innerHTML = '<div style="color:#ff6b6b; padding:15px; background:rgba(255,107,107,0.1); border-radius:8px;">' +
-              '<strong>❌ Không thể tải dữ liệu</strong><br><br>' +
-              '<strong>Lỗi:</strong> ' + err.message + '<br><br>' +
-              '<strong>Hướng dẫn fix:</strong><br>' +
-              '1. Kiểm tra Backend có chạy (port 8000)<br>' +
-              '2. Mở: <a href="http://localhost:8000/api/dataset-info" target="_blank" style="color:#7b5cff;">http://localhost:8000/api/dataset-info</a><br>' +
-              '3. Hard refresh: <kbd>Cmd+Shift+R</kbd> (Mac) hoặc <kbd>Ctrl+Shift+R</kbd> (Windows)' +
-              '</div>';
-          });
-      }
-
-      // Load on DOMContentLoaded
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadDataset);
-      } else {
-        loadDataset();
-      }
-    })();
-  </script>
+  <script src="/config.js"></script>
+  <script src="/loading.js"></script>
+  <script src="/ui-messages.js"></script>
+  <script src="/theme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+  <script src="/chart-theme.js"></script>
+  <script src="/shared.js"></script>
+  <script src="/dataset-page.js"></script>
+  <script src="/keyboard-shortcuts.js"></script>
 </body>
 </html>

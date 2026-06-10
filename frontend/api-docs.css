@@ -1,0 +1,191 @@
+/* CineSentiment — Swagger UI dark cinema theme */
+.api-docs-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem 3rem;
+}
+
+.api-docs-intro {
+  margin: 1.5rem 0 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid rgba(232, 197, 71, 0.2);
+  background: rgba(18, 18, 26, 0.85);
+  color: var(--cinema-muted, #9ca3af);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.api-docs-intro strong {
+  color: var(--cinema-gold, #e8c547);
+}
+
+#swagger-ui {
+  margin-top: 0.5rem;
+}
+
+/* Swagger UI overrides — dark cinema */
+.swagger-ui {
+  font-family: var(--font-body, 'DM Sans', system-ui, sans-serif);
+}
+
+.swagger-ui .topbar {
+  display: none;
+}
+
+.swagger-ui .info {
+  margin: 1rem 0 1.5rem;
+}
+
+.swagger-ui .info .title {
+  font-family: var(--font-display, 'Bebas Neue', Impact, sans-serif);
+  font-size: 2rem;
+  color: var(--cinema-cream, #f5f0e6);
+  letter-spacing: 0.04em;
+}
+
+.swagger-ui .info .title small {
+  background: rgba(232, 197, 71, 0.15);
+  color: var(--cinema-gold, #e8c547);
+  border: 1px solid rgba(232, 197, 71, 0.35);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+}
+
+.swagger-ui .info .title small.version-stamp {
+  background: rgba(97, 175, 239, 0.12);
+  color: #7eb8f0;
+  border-color: rgba(97, 175, 239, 0.3);
+}
+
+.swagger-ui .info .description,
+.swagger-ui .info p,
+.swagger-ui .info li,
+.swagger-ui .info a {
+  color: var(--cinema-muted, #9ca3af) !important;
+}
+
+.swagger-ui .info a {
+  color: var(--cinema-gold, #e8c547) !important;
+}
+
+.swagger-ui .scheme-container {
+  background: rgba(18, 18, 26, 0.95);
+  box-shadow: none;
+  border: 1px solid rgba(232, 197, 71, 0.12);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.swagger-ui .opblock-tag {
+  color: var(--cinema-cream, #f5f0e6) !important;
+  border-bottom: 1px solid rgba(232, 197, 71, 0.15);
+  font-family: var(--font-display, 'Bebas Neue', Impact, sans-serif);
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+}
+
+.swagger-ui .opblock-tag small {
+  color: var(--cinema-muted, #9ca3af) !important;
+}
+
+.swagger-ui .opblock {
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+  margin-bottom: 0.5rem;
+}
+
+.swagger-ui .opblock .opblock-summary-method {
+  border-radius: 4px;
+  font-weight: 700;
+  min-width: 4.5rem;
+}
+
+.swagger-ui .opblock.opblock-get {
+  background: rgba(97, 175, 239, 0.06);
+  border-color: rgba(97, 175, 239, 0.25);
+}
+
+.swagger-ui .opblock.opblock-post {
+  background: rgba(73, 204, 144, 0.06);
+  border-color: rgba(73, 204, 144, 0.25);
+}
+
+.swagger-ui .opblock .opblock-summary-path,
+.swagger-ui .opblock .opblock-summary-description {
+  color: var(--cinema-cream, #f5f0e6) !important;
+}
+
+.swagger-ui .opblock-body,
+.swagger-ui .opblock-section-header {
+  background: rgba(12, 12, 18, 0.95);
+}
+
+.swagger-ui .opblock-section-header h4 {
+  color: var(--cinema-cream, #f5f0e6);
+}
+
+.swagger-ui table thead tr th,
+.swagger-ui table thead tr td,
+.swagger-ui .parameter__name,
+.swagger-ui .parameter__type,
+.swagger-ui .response-col_status,
+.swagger-ui .response-col_description,
+.swagger-ui .model-title,
+.swagger-ui .prop-type,
+.swagger-ui label {
+  color: var(--cinema-muted, #9ca3af) !important;
+}
+
+.swagger-ui .btn {
+  border-radius: 6px;
+}
+
+.swagger-ui .btn.execute {
+  background: var(--cinema-gold, #e8c547);
+  color: #050508;
+  border: none;
+}
+
+.swagger-ui .btn.execute:hover {
+  background: #f0d060;
+}
+
+.swagger-ui select,
+.swagger-ui input[type=text],
+.swagger-ui textarea {
+  background: rgba(18, 18, 26, 0.9) !important;
+  color: var(--cinema-cream, #f5f0e6) !important;
+  border: 1px solid rgba(232, 197, 71, 0.2) !important;
+  border-radius: 6px;
+}
+
+.swagger-ui .model-box,
+.swagger-ui section.models {
+  background: rgba(18, 18, 26, 0.6);
+  border-radius: 8px;
+}
+
+.swagger-ui section.models h4 {
+  color: var(--cinema-cream, #f5f0e6);
+}
+
+.swagger-ui .markdown code,
+.swagger-ui .renderedMarkdown code {
+  background: rgba(232, 197, 71, 0.1);
+  color: var(--cinema-gold, #e8c547);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+.swagger-ui .response-col_status {
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .swagger-ui .opblock-summary-path {
+    max-width: 100%;
+    word-break: break-all;
+  }
+}

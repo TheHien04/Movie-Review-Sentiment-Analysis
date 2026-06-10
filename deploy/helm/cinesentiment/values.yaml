@@ -1,0 +1,41 @@
+replicaCount: 2
+
+image:
+  repository: cinesentiment
+  tag: "2.3.0"
+  pullPolicy: IfNotPresent
+
+backend:
+  port: 8000
+  workers: 2
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      cpu: 2
+      memory: 4Gi
+
+fastapi:
+  enabled: true
+  replicas: 1
+  port: 8001
+
+ingress:
+  enabled: true
+  host: cinesentiment.local
+  className: nginx
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+config:
+  rateLimitEnabled: true
+  cacheEnabled: true
+  hubModelFallback: distilbert-base-uncased-finetuned-sst-2-english
+
+secrets:
+  secretKey: "change-me-in-production"

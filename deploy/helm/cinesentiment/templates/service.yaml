@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cinesentiment.fullname" . }}-backend
+  labels:
+    {{- include "cinesentiment.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: {{ .Values.backend.port }}
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "cinesentiment.name" . }}
+    app.kubernetes.io/component: backend

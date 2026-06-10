@@ -16,10 +16,10 @@
   --overlay-bg: rgba(0, 0, 0, 0.5);
   
   /* Purple Theme (unchanged) */
-  --purple-primary: #7b5cff;
-  --purple-dark: #6366f1;
-  --purple-light: #a78bfa;
-  --purple-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --purple-primary: #e8c547;
+  --purple-dark: #c9a227;
+  --purple-light: #f5d76e;
+  --purple-gradient: linear-gradient(135deg, #9a7b2a 0%, #e8c547 100%);
   
   /* Status Colors */
   --success-color: #10b981;
@@ -87,7 +87,9 @@ body {
 }
 
 /* Cards with theme support */
-.card {
+.main-card.card,
+.feature-card.card,
+.quickstart-card.card {
   background: var(--bg-card) !important;
   border-color: var(--border-color) !important;
   box-shadow: 0 4px 6px var(--shadow-color) !important;
@@ -187,11 +189,11 @@ input:focus, textarea:focus, select:focus {
   border-radius: 4px;
   background: linear-gradient(
     to right,
-    #ef4444 0%,    /* Red - Very Negative */
-    #f59e0b 25%,   /* Orange - Negative */
-    #94a3b8 50%,   /* Gray - Neutral */
-    #a78bfa 75%,   /* Light Purple - Positive */
-    #7b5cff 100%   /* Purple - Very Positive */
+    #e50914 0%,
+    #9a7b2a 35%,
+    #9ca3af 50%,
+    #c9a227 70%,
+    #3dd68c 100%
   );
   position: relative;
   margin: 10px 0;
@@ -205,7 +207,7 @@ input:focus, textarea:focus, select:focus {
   height: 14px;
   border-radius: 50%;
   background: white;
-  border: 3px solid var(--purple-primary);
+  border: 3px solid #e8c547;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
@@ -219,14 +221,14 @@ input:focus, textarea:focus, select:focus {
   margin-top: 5px;
 }
 
-/* Sentiment colors */
+/* Sentiment colors — Fresh / Rotten */
 .sentiment-positive {
-  color: var(--purple-primary);
+  color: #3dd68c;
   font-weight: bold;
 }
 
 .sentiment-negative {
-  color: var(--error-color);
+  color: #ff6b6b;
   font-weight: bold;
 }
 

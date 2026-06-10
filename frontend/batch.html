@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sentiment Analysis | Movie Reviews</title>
+  <title>Analyze Reviews | CineSentiment</title>
+  <meta name="theme-color" content="#050508">
   
   <!-- Open Graph Meta Tags -->
   <meta property="og:title" content="Movie Review Sentiment Analysis - AI Powered">
@@ -14,78 +16,65 @@
   <meta name="twitter:title" content="Movie Review Sentiment Analysis">
   <meta name="twitter:description" content="AI-powered sentiment analysis with explainable AI and voice input">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="cinema-theme.css">
   <link rel="stylesheet" href="batch.css">
   <link rel="stylesheet" href="shared.css">
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="loading.css">
   <link rel="stylesheet" href="toast.css">
   <link rel="stylesheet" href="validation.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-	<style>
-		.skip-link {
-			position: absolute;
-			left: -9999px;
-			z-index: 999;
-			padding: 1em;
-			background-color: #000;
-			color: white;
-			text-decoration: none;
-		}
-		.skip-link:focus {
-			left: 50%;
-			transform: translateX(-50%);
-			top: 10px;
-		}
-	</style>
+  <link rel="stylesheet" href="layout-polish.css">
+  <link rel="stylesheet" href="cinema-unified.css">
+  <link rel="stylesheet" href="features.css">
 </head>
-<body class="main-bg">
+<body class="main-bg" data-page="analyze">
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  <!-- Navigation Bar -->
-  <nav class="navbar-custom" role="navigation" aria-label="Main navigation">
-    <div class="navbar-content">
-      <a href="index.html" class="navbar-logo">
-        <span>🎬</span>
-        <span>Movie Sentiment AI</span>
-      </a>
-      <ul class="navbar-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="batch.html" class="active">Sentiment Analysis</a></li>
-        <li><a href="compare.html">Compare</a></li>
-        <li><a href="evaluation.html">Evaluation</a></li>
-        <li><a href="dataset.html">Dataset</a></li>
-      </ul>
-    </div>
-  </nav>
+  <nav data-cinema-nav></nav>
+  <script src="/layout.js"></script>
 
-  <header class="header-gradient" role="banner">
-    <h1 class="fw-bold display-5 text-white mb-1">
-      <span class="me-2" aria-hidden="true">🎬</span>Sentiment Analysis
-    </h1>
-  </header>
+  <section class="page-hero" role="banner">
+    <p class="page-hero__eyebrow">Write · Upload · Export</p>
+    <h1>ANALYZE MOVIE REVIEWS</h1>
+    <p class="page-hero__sub">Paste a critic’s paragraph or upload a CSV of thousands — get Fresh or Rotten labels with confidence scores.</p>
+  </section>
+  <div class="film-strip" aria-hidden="true"></div>
   
   <main id="main-content" role="main">
-    <div class="container d-flex justify-content-center">
+    <div class="container analyze-page-wrap">
+      <div id="usage-meter" class="usage-meter" aria-live="polite"></div>
+      <div class="d-flex justify-content-center">
       <div class="main-card card shadow-lg p-4" style="max-width: 900px; width:100%; border-radius: 1.5rem;">
-        <h2 class="fw-bold mb-4 text-center" style="font-family: 'Montserrat', Arial, sans-serif; font-size: 2rem;">Analyze a Movie Review</h2>
-        <section class="input-section mb-4">
-          <label for="single-review" class="visually-hidden">Enter movie review text</label>
-          <div style="position: relative;">
-            <textarea id="single-review" class="form-control mb-2" rows="3" placeholder="Type or paste your movie review here..." aria-label="Movie review text input"></textarea>
-            <button id="voice-btn" class="btn btn-sm" style="position: absolute; right: 10px; top: 10px; background: linear-gradient(135deg, #9c27b0, #ba68c8); color: white; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; transition: all 0.3s;" title="Click to use voice input" aria-label="Voice input">🎤 Voice</button>
+        <h2 class="page-title mb-1">The critic’s desk</h2>
+        <p class="section-desc mb-4">Drop in review text or speak it aloud — live draft preview while typing, Rottenmeter gauge, tone arc, and word-level XAI on full analyze.</p>
+        <section class="input-section mb-4" aria-labelledby="single-review-heading">
+          <h3 id="single-review-heading" class="visually-hidden">Single review</h3>
+          <label for="single-review" class="form-label fw-semibold">Review text</label>
+          <div class="position-relative">
+            <textarea id="single-review" class="form-control mb-2" rows="4" placeholder="e.g. The director weaves tension like a Hitchcock thriller — I was on the edge of my seat…" aria-label="Movie review text input"></textarea>
+            <button type="button" id="voice-btn" class="voice-btn" title="Start voice input (Chrome/Edge). Use Stop recording when finished." aria-label="Start voice input" aria-pressed="false">Voice</button>
+          </div>
+          <div id="live-preview-panel" class="live-preview-panel" aria-hidden="true" aria-live="polite"></div>
+          <div class="demo-chips mb-2" role="group" aria-label="Sample reviews">
+            <span class="demo-chips__label">Try a sample:</span>
+            <button type="button" class="demo-chip demo-chip--pos" data-demo-review="A breathtaking finale — the cast delivers career-best work and every frame belongs on the big screen.">★ Fresh</button>
+            <button type="button" class="demo-chip demo-chip--neg" data-demo-review="Pacing drags for two hours; wooden dialogue and a twist that feels copied from better films.">✕ Rotten</button>
+            <button type="button" class="demo-chip" data-demo-review="Visually stunning but emotionally hollow — worth a matinee, not a premium ticket.">Mixed tone</button>
           </div>
           
-          <!-- Voice Waveform Visualization -->
-          <div id="voice-container" style="display: none; margin-bottom: 15px; background: linear-gradient(135deg, #f3e5f5, #e1bee7); border-radius: 12px; padding: 20px; text-align: center;">
-            <p style="margin: 0 0 10px 0; color: #6a1b9a; font-weight: 600;">🎙️ Listening...</p>
-            <canvas id="voice-waveform" width="600" height="100" style="max-width: 100%; border-radius: 8px; background: white;"></canvas>
-            <button id="stop-voice-btn" class="btn btn-danger btn-sm mt-2">Stop Recording</button>
+          <div id="voice-container" class="voice-panel" aria-live="polite">
+            <p>Tap Voice → speak → text appears live. Auto-stops after ~3s silence, or tap Stop recording.</p>
+            <canvas id="voice-waveform" width="600" height="100" style="max-width: 100%; border-radius: 8px; background: var(--bg-card, #fff);"></canvas>
+            <button type="button" id="stop-voice-btn" class="btn btn-outline-app btn-sm mt-2">Stop recording</button>
           </div>
           
           <div class="d-flex justify-content-center gap-2 mb-2">
-            <button id="analyze-btn" class="btn btn-dark btn-lg shadow btn-animated" aria-label="Analyze sentiment of entered review">Analyze Sentiment</button>
-            <button id="view-history-btn" class="btn btn-soft btn-lg shadow" onclick="showHistoryModal()" aria-label="View analysis history">📜 History</button>
+            <button id="analyze-btn" class="btn btn-primary-app btn-lg" aria-label="Analyze sentiment of entered review">Rate this review</button>
+            <button id="view-history-btn" class="btn btn-soft btn-lg shadow" onclick="showHistoryModal()" aria-label="View analysis history">History</button>
           </div>
-          <div id="single-result" class="mt-2"></div>
+          <div id="single-result" class="mt-2 result-empty-hint">Paste a review above and click <strong>Rate this review</strong> to see your Fresh or Rotten score.</div>
+          <div id="review-arc-container" class="mt-3" style="display: none;"></div>
+          <div id="aspect-viz-container" class="mt-3" style="display: none;"></div>
           
           <!-- Explainable AI Results -->
           <div id="explainable-ai-container" class="mt-3" style="display: none;"></div>
@@ -98,15 +87,21 @@
             <div id="history-list"></div>
           </div>
         </section>
-        <hr>
-        <section class="batch-section mb-4">
-          <h3 class="fw-bold mb-2 text-center">Batch Analysis (Upload CSV)</h3>
+        <hr class="section-divider">
+        <section class="batch-section mb-4" aria-labelledby="batch-heading">
+          <h3 id="batch-heading" class="page-title mb-2" style="font-size:1.25rem;">Batch analysis</h3>
+          <p class="section-desc">Upload a CSV with a <code>text</code> column (optional <code>label</code> for comparison). <a href="/api/sample-batch.csv" download>Download sample CSV</a></p>
           <div class="d-flex flex-column flex-md-row align-items-center gap-2 mb-2">
-            <label for="file-input" class="btn btn-outline-primary btn-lg shadow btn-animated" style="cursor:pointer; min-width:140px;" data-bs-toggle="tooltip" title="Chọn file CSV chứa các review để phân tích hàng loạt.">Choose File</label>
+            <label for="file-input" class="btn btn-secondary-app btn-lg" style="cursor:pointer; min-width:140px;" title="Select a CSV file of reviews">Choose file</label>
             <input type="file" id="file-input" accept=".csv" style="display:none;">
-            <span id="file-label" class="text-muted" style="min-width:140px;">No file chosen</span>
-            <button id="batch-analyze-btn" class="btn btn-danger btn-lg shadow btn-animated" data-bs-toggle="tooltip" title="Nhấn để phân tích cảm xúc cho toàn bộ file CSV.">Analyze File</button>
+            <span id="file-label" class="text-muted-app" style="min-width:140px;">No file chosen</span>
+            <button type="button" id="batch-analyze-btn" class="btn btn-primary-app btn-lg" title="Run sentiment analysis on all rows">Analyze file</button>
           </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="batch-stream-toggle">
+            <label class="form-check-label" for="batch-stream-toggle">Stream progress (SSE) — recommended for large files</label>
+          </div>
+          <p id="batch-stream-status" class="batch-stream-progress" aria-live="polite" style="display:none;"></p>
           <div class="progress" id="upload-progress" style="display:none; width:260px; margin-top:10px;">
             <span id="upload-bar"></span>
           </div>
@@ -118,26 +113,24 @@
               <label for="sentiment-filter" class="me-2">Filter:</label>
               <select id="sentiment-filter" class="form-select form-select-sm d-inline-block" style="width:120px;">
                 <option value="all">All</option>
-                <option value="positive">Positive</option>
-                <option value="negative">Negative</option>
+                <option value="positive">Fresh</option>
+                <option value="negative">Rotten</option>
               </select>
             </div>
-            <button id="download-csv-btn" class="btn btn-outline-success btn-sm">Download CSV</button>
+            <button type="button" id="download-csv-btn" class="btn btn-outline-app btn-sm">Download CSV</button>
           </div>
-          <div id="batch-table-wrap">
-            <!-- Batch results will be rendered here -->
-          </div>
+          <div id="batch-table-wrap" class="result-empty-hint">Upload a CSV and click <strong>Analyze file</strong> — results appear here with export.</div>
         </section>
+      </div>
       </div>
     </div>
   </main>
   
-  <footer class="py-3 text-center footer-gradient text-white-50 mt-4">
-    <small>© 2025 Movie Sentiment AI | For Statistical Machine Learning Project</small>
-  </footer>
+  <footer data-cinema-footer></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="loading.js"></script>
+<script src="/config.js"></script>
+<script src="loading.js"></script>
   <script src="toast.js"></script>
   <script src="history.js"></script>
   <script src="validation.js"></script>
@@ -146,6 +139,11 @@
   <script src="voice-input.js"></script>
   <script src="social-share.js"></script>
   <script src="particle-effects.js"></script>
+  <script src="rottenmeter.js"></script>
+  <script src="review-arc.js"></script>
+  <script src="aspect-viz.js"></script>
+  <script src="batch-stream.js"></script>
+  <script src="live-preview.js"></script>
   <script src="theme.js"></script>
   <script src="shared.js"></script>
   <script>
@@ -162,7 +160,21 @@
       });
     }
   </script>
-  <script src="main.js"></script>
-  <script src="integrate-utils.js"></script>
+  <script src="/ui-messages.js"></script>
+  <script src="/usage-meter.js"></script>
+  <script src="/main.js"></script>
+  <script src="/integrate-utils.js"></script>
+  <script src="/keyboard-shortcuts.js"></script>
+  <script>
+    document.querySelectorAll('[data-demo-review]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var ta = document.getElementById('single-review');
+        if (ta) {
+          ta.value = btn.getAttribute('data-demo-review') || '';
+          ta.focus();
+        }
+      });
+    });
+  </script>
 </body>
 </html>

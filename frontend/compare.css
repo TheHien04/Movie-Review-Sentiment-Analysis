@@ -1,0 +1,93 @@
+.main-card {
+  max-width: 1200px;
+  width: 100%;
+  border-radius: 1.5rem;
+}
+
+.compare-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.compare-side {
+  background: rgba(18, 18, 26, 0.92);
+  border: 1px solid rgba(232, 197, 71, 0.22);
+  border-radius: 6px;
+  padding: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.compare-header {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 15px;
+  color: #e8c547;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-label {
+  background: linear-gradient(135deg, #c9a227, #e8c547);
+  color: #1a1408;
+  padding: 5px 15px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.result-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.comparison-chart {
+  background: rgba(18, 18, 26, 0.92);
+  border: 1px solid rgba(232, 197, 71, 0.22);
+  border-radius: 6px;
+  padding: 1rem 1.25rem 1.25rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.comparison-chart h5 {
+  font-size: 0.95rem;
+  color: #e8c547;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.04em;
+}
+
+.comparison-chart .chart-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.comparison-chart .chart-wrap--bar {
+  height: 240px;
+}
+
+.comparison-chart .chart-wrap--pie {
+  height: 240px;
+}
+
+.comparison-chart .chart-wrap canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 768px) {
+  .compare-container,
+  .result-comparison {
+    grid-template-columns: 1fr;
+  }
+}

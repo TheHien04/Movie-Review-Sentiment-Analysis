@@ -6,6 +6,7 @@ __pycache__/
 .Python
 env/
 venv/
+backend/.venv/
 ENV/
 build/
 develop-eggs/
@@ -45,7 +46,9 @@ logs/*.log
 
 # Jupyter Notebook
 .ipynb_checkpoints
+# Allow committed notebooks in notebooks/
 *.ipynb
+!notebooks/*.ipynb
 
 # Model and Data files (large files)
 *.pt
@@ -67,10 +70,32 @@ artifacts/results/*.png
 artifacts/results/*.txt
 artifacts/checkpoints/
 results/
+!artifacts/results/evaluation.json
 
-# Environment
+# API key registry (provisioned keys — never commit)
+data/api_keys_registry.json
+
+# Environment & secrets (never commit)
 .env
+.env.*
+!.env.example
 .env.local
+*.pem
+*.key
+credentials.json
+secrets.json
+bandit-report.json
+
+# ML caches & temp training
+artifacts/ablation_tmp/
+artifacts/checkpoints/
+artifacts/lora_checkpoints/
+artifacts/mlruns/
+artifacts/models/*.joblib
+data/chroma/
+sentiment_model_lora/
+.huggingface/
+cache/
 
 # Cache
 .cache/

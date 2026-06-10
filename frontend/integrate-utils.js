@@ -40,15 +40,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            if (window.usageMeter && !window.usageMeter.canUse(1)) {
+                window.toast.warning(
+                    'Daily limit reached',
+                    'Free plan allows 50 analyses per day. See Pricing to upgrade.'
+                );
+                return;
+            }
+
             // Show loading
             window.loading.show('Analyzing Sentiment', 'AI is processing your review...');
             window.loading.buttonLoading(newAnalyzeBtn);
 
             try {
-                const res = await fetch('http://localhost:8000/api/predict', {
+                const res = await fetch(window.apiUrl('/api/analyze'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: review })
+                    body: JSON.stringify({ text: review, explain: true, arc: true, aspects: true })
                 });
 
                 if (!res.ok) {
@@ -67,17 +75,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add to history
                 window.historyManager.add({
                     text: review,
-                    sentiment: data.sentiment,
-                    confidence: data.confidence,
+                    sentiment: resolveSentiment(data),
+                    confidence: data.confidence ?? data.probability,
                     scores: data.scores,
                     type: 'single'
                 });
 
                 // Show success toast
-                const sentimentLabel = data.sentiment === 1 || data.sentiment === 'positive' 
-                    ? 'Positive' 
-                    : 'Negative';
-                const confidence = ((data.confidence || 0) * 100).toFixed(1);
+                if (window.usageMeter) window.usageMeter.record(1);
+                const sentimentLabel = resolveSentiment(data) === 1 ? 'Fresh' : 'Rotten';
+                const confidence = ((data.confidence ?? data.probability ?? 0) * 100).toFixed(1);
                 
                 window.toast.success(
                     'Analysis Complete!',
@@ -120,49 +127,108 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            if (window.usageMeter && !window.usageMeter.canUse(1)) {
+                window.toast.warning(
+                    'Daily limit reached',
+                    'Free plan allows 50 analyses per day. See Pricing to upgrade.'
+                );
+                return;
+            }
+
             // Show loading
             window.loading.show('Processing CSV', `Analyzing ${file.name}...`);
 
-            const formData = new FormData();
-            formData.append('file', file);
+            const useStream = document.getElementById('batch-stream-toggle')?.checked !== false
+                && window.BatchStream;
+            const streamStatus = document.getElementById('batch-stream-status');
 
             try {
-                const res = await fetch('http://localhost:8000/api/predict', {
-                    method: 'POST',
-                    body: formData
-                });
+                let predictions = null;
 
-                if (!res.ok) {
-                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                async function runClassicBatch() {
+                    if (window.BatchStream && window.BatchStream.uploadCsvClassic) {
+                        return window.BatchStream.uploadCsvClassic(file);
+                    }
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    const res = await fetch(window.apiUrl('/api/predict'), {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!res.ok) {
+                        throw new Error('HTTP ' + res.status + ': ' + res.statusText);
+                    }
+                    const data = await res.json();
+                    return data.results || data.predictions || (Array.isArray(data) ? data : []);
                 }
 
-                const data = await res.json();
-                
+                if (useStream) {
+                    if (streamStatus) {
+                        streamStatus.style.display = 'block';
+                        streamStatus.textContent = 'Starting stream…';
+                    }
+                    try {
+                        predictions = await window.BatchStream.uploadCsvStream(file, {
+                            onProgress: function (ev) {
+                                if (streamStatus) {
+                                    streamStatus.textContent = 'Processed ' + ev.done + ' reviews…';
+                                }
+                            },
+                            onComplete: function (ev) {
+                                if (streamStatus) {
+                                    streamStatus.textContent = 'Complete — ' + ev.total + ' reviews.';
+                                }
+                            },
+                        });
+                    } catch (streamErr) {
+                        var sm = String(streamErr.message || '');
+                        if (/HTTP 404|HTTP 405|endpoint not found/i.test(sm)) {
+                            if (streamStatus) {
+                                streamStatus.textContent = 'Stream not available — using standard upload…';
+                            }
+                            if (window.toast) {
+                                window.toast.info(
+                                    'Standard batch mode',
+                                    'Restart server (make serve) for stream. Analyzing file now…'
+                                );
+                            }
+                            predictions = await runClassicBatch();
+                        } else {
+                            throw streamErr;
+                        }
+                    }
+                } else {
+                    predictions = await runClassicBatch();
+                }
+
                 window.loading.hide();
 
-                // Check if batch results
-                if (Array.isArray(data.predictions) || Array.isArray(data)) {
-                    const predictions = data.predictions || data;
-                    
-                    // Add to history
-                    window.historyManager.addBatch(predictions, file.name);
-
-                    // Render results (assuming renderBatchResults exists)
-                    if (typeof renderBatchResults === 'function') {
-                        renderBatchResults(predictions);
-                    }
-
-                    // Show success toast
-                    window.toast.success(
-                        'Batch Analysis Complete!',
-                        `Processed ${predictions.length} reviews successfully`
-                    );
-
-                    // Add export button functionality
-                    addExportButton(predictions);
-                } else {
-                    throw new Error('Invalid response format');
+                if (!predictions || !predictions.length) {
+                    throw new Error('No results returned — check your CSV has a text column');
                 }
+
+                if (window.historyManager) {
+                    window.historyManager.addBatch(predictions, file.name);
+                }
+                if (window.usageMeter) {
+                    window.usageMeter.record(predictions.length);
+                }
+
+                if (typeof window.renderBatchResult === 'function') {
+                    window.renderBatchResult({ results: predictions }, 'batch-table-wrap');
+                } else if (typeof renderBatchResult === 'function') {
+                    renderBatchResult({ results: predictions }, 'batch-table-wrap');
+                }
+
+                const fresh = predictions.filter(function (r) {
+                    return r.label === 1 || r.sentiment === 'positive';
+                }).length;
+                const rotten = predictions.length - fresh;
+                window.toast.success(
+                    'Batch complete',
+                    fresh + ' Fresh · ' + rotten + ' Rotten · ' + predictions.length + ' total'
+                );
+                addExportButton(predictions);
             } catch (error) {
                 console.error('Batch analysis error:', error);
                 window.loading.hide();
@@ -254,10 +320,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <p class="mb-1 text-truncate">${item.text}</p>
                                             <small>
                                                 <span class="badge ${item.sentiment === 1 || item.sentiment === 'positive' ? 'bg-success' : 'bg-danger'}">
-                                                    ${item.sentiment === 1 || item.sentiment === 'positive' ? 'Positive' : 'Negative'}
+                                                    ${item.sentiment === 1 || item.sentiment === 'positive' ? 'Fresh' : 'Rotten'}
                                                 </span>
                                                 Confidence: ${((item.confidence || 0) * 100).toFixed(1)}%
                                             </small>
+                                            <button type="button" class="btn btn-sm btn-outline-light history-replay-btn" data-replay-text="${(item.text || '').replace(/"/g, '&quot;')}">Replay analysis</button>
                                         `}
                                     </div>
                                 `).join('')}
@@ -278,7 +345,35 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show modal
         const modal = new bootstrap.Modal(document.getElementById('historyModal'));
         modal.show();
+
+        document.querySelectorAll('[data-replay-text]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const ta = document.getElementById('single-review');
+                const raw = btn.getAttribute('data-replay-text') || '';
+                if (ta) {
+                    ta.value = raw;
+                    ta.focus();
+                }
+                modal.hide();
+                const analyzeBtn = document.getElementById('analyze-btn');
+                if (analyzeBtn) analyzeBtn.click();
+            });
+        });
     };
+
+    // Deep link: batch.html?text=... or ?q=...
+    (function applyDeepLink() {
+        const params = new URLSearchParams(window.location.search);
+        const shared = params.get('text') || params.get('q');
+        if (!shared) return;
+        const ta = document.getElementById('single-review');
+        if (ta) {
+            ta.value = shared;
+            if (window.toast) {
+                window.toast.info('Shared review loaded', 'Click Rate this review or wait for live preview.');
+            }
+        }
+    })();
 
     // Clear history function
     window.clearHistory = function() {
@@ -301,147 +396,245 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Welcome toast on page load (only on home page)
-if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
-    window.addEventListener('load', function() {
-        if (window.toast) {
-            setTimeout(() => {
-                window.toast.info(
-                    'Welcome to Movie Sentiment AI! 🎬',
-                    'Analyze movie reviews with our advanced AI model',
-                    8000
-                );
-            }, 1000);
-        }
-    });
-}
-
-// Show helpful tips after load
-if (window.location.pathname.includes('batch.html')) {
-    window.addEventListener('load', function() {
-        if (window.toast) {
-            setTimeout(() => {
-                window.toast.info(
-                    '💡 Pro Tip',
-                    'Try voice input or see word importance analysis!',
-                    6000
-                );
-            }, 2000);
-        }
-    });
-}
-
 // ============================================
 // NEW FEATURES INTEGRATION
 // ============================================
 
-// Voice Input Integration
-document.addEventListener('DOMContentLoaded', function() {
+// Voice Input Integration (Analyze page)
+function initVoiceInputIntegration() {
     const voiceBtn = document.getElementById('voice-btn');
     const stopVoiceBtn = document.getElementById('stop-voice-btn');
     const voiceContainer = document.getElementById('voice-container');
     const voiceCanvas = document.getElementById('voice-waveform');
     const reviewTextarea = document.getElementById('single-review');
 
-    if (voiceBtn && window.voiceInput) {
-        voiceBtn.addEventListener('click', async function() {
+    if (!voiceBtn || !window.voiceInput) {
+        return;
+    }
+
+    if (voiceBtn.dataset.voiceBound) {
+        return;
+    }
+    voiceBtn.dataset.voiceBound = '1';
+
+    var voiceStatusEl = voiceContainer ? voiceContainer.querySelector('p') : null;
+
+    function stopVoiceUi() {
+        if (window.voiceInput.isActive()) {
+            window.voiceInput.flushTranscript();
+            window.voiceInput.stop();
+        }
+        if (voiceContainer) voiceContainer.classList.remove('is-active');
+        voiceBtn.textContent = 'Voice';
+        voiceBtn.classList.remove('is-recording');
+        voiceBtn.setAttribute('aria-pressed', 'false');
+        voiceBtn.disabled = false;
+    }
+
+    function setVoiceStatus(msg) {
+        if (voiceStatusEl) voiceStatusEl.textContent = msg;
+    }
+
+    function applyVoiceText(text) {
+        if (!reviewTextarea || !text) return;
+        reviewTextarea.value = text.trim();
+        reviewTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    window.voiceInput.setOnResult(function (result) {
+        var text = result.combined || result.final || '';
+        if (!text && result.interim) {
+            text = (result.final ? result.final + ' ' : '') + result.interim;
+        }
+        applyVoiceText(text);
+        if (text) {
+            setVoiceStatus('Heard: “' + text.substring(0, 60) + (text.length > 60 ? '…' : '') + '”');
+        }
+    });
+
+    window.voiceInput.setOnAutoStop(function () {
+        var text = window.voiceInput.getFullTranscript();
+        applyVoiceText(text);
+        stopVoiceUi();
+        if (text && window.toast) {
+            window.toast.success('Voice captured', 'Review added — tap Rate this review or edit.');
+        } else if (window.toast) {
+            window.toast.info('No speech detected', 'Try again or type your review.');
+        }
+    });
+
+    window.voiceInput.setOnError(function (error) {
+        var msg = String(error || 'Voice input error');
+        if (msg === 'no-speech' || msg === 'aborted') {
+            return;
+        }
+        if (msg === 'not-allowed') {
+            msg = 'Microphone blocked — allow mic in browser settings, then try again.';
+        } else if (msg === 'service-not-allowed') {
+            msg = 'Speech recognition unavailable. Use Chrome/Edge on http://127.0.0.1:8000';
+        }
+        if (window.toast) {
+            window.toast.error('Voice input', msg);
+        }
+        stopVoiceUi();
+    });
+
+    voiceBtn.addEventListener('click', async function () {
+        if (window.voiceInput.isActive()) {
+            return;
+        }
+
+        if (!window.voiceInput.isSupported()) {
+            if (window.toast) {
+                window.toast.warning(
+                    'Not supported',
+                    'Voice input needs Chrome or Edge. Safari/Firefox: type or paste your review.'
+                );
+            }
+            return;
+        }
+
+        if (!window.isSecureContext) {
+            if (window.toast) {
+                window.toast.warning(
+                    'Secure connection required',
+                    'Open http://127.0.0.1:8000 (not file://) for voice input.'
+                );
+            }
+            return;
+        }
+
+        var existingText = reviewTextarea ? reviewTextarea.value.trim() : '';
+
+        if (voiceContainer) voiceContainer.classList.add('is-active');
+        voiceBtn.textContent = 'Listening…';
+        voiceBtn.classList.add('is-recording');
+        voiceBtn.setAttribute('aria-pressed', 'true');
+        var recLang = window.voiceInput.recognition
+            ? window.voiceInput.recognition.lang
+            : 'en-US';
+        setVoiceStatus(
+            'Listening (' + recLang + ')… speak now. Auto-stops after a pause, or tap Stop recording.'
+        );
+
+        if (window.toast) {
+            window.toast.info('Microphone on', 'Take your time — tap Stop recording when finished.');
+        }
+
+        voiceBtn.disabled = true;
+        var started = await window.voiceInput.start(voiceCanvas, 'bars', existingText);
+        voiceBtn.disabled = false;
+        if (!started) {
             if (!window.voiceInput.isActive()) {
-                // Start recording
-                const started = await window.voiceInput.start(voiceCanvas, 'bars');
-                if (started) {
-                    voiceContainer.style.display = 'block';
-                    voiceBtn.style.background = 'linear-gradient(135deg, #f44336, #e57373)';
-                    voiceBtn.textContent = '⏹️ Stop';
-                    
-                    // Set up result callback
-                    window.voiceInput.setOnResult((result) => {
-                        if (reviewTextarea) {
-                            reviewTextarea.value = result.final || result.interim;
-                            // Trigger validation
-                            const event = new Event('input', { bubbles: true });
-                            reviewTextarea.dispatchEvent(event);
-                        }
-                    });
-
-                    // Set up error callback
-                    window.voiceInput.setOnError((error) => {
-                        if (window.toast) {
-                            window.toast.error('Voice Input Error', error);
-                        }
-                        voiceContainer.style.display = 'none';
-                        voiceBtn.style.background = 'linear-gradient(135deg, #9c27b0, #ba68c8)';
-                        voiceBtn.textContent = '🎤 Voice';
-                    });
-
-                    if (window.toast) {
-                        window.toast.info('Voice Input Active', 'Start speaking your review!');
-                    }
-                } else {
-                    if (window.toast) {
-                        window.toast.error('Voice Input Failed', 'Microphone access denied or not supported');
-                    }
+                stopVoiceUi();
+                if (window.toast) {
+                    window.toast.error(
+                        'Could not start',
+                        'Allow microphone when prompted. Use Chrome/Edge at http://127.0.0.1:8000'
+                    );
                 }
-            } else {
-                // Stop recording
-                window.voiceInput.stop();
-                voiceContainer.style.display = 'none';
-                voiceBtn.style.background = 'linear-gradient(135deg, #9c27b0, #ba68c8)';
-                voiceBtn.textContent = '🎤 Voice';
+            }
+        }
+    });
+
+    if (stopVoiceBtn) {
+        stopVoiceBtn.addEventListener('click', function () {
+            var text = window.voiceInput.getFullTranscript();
+            applyVoiceText(text);
+            stopVoiceUi();
+            if (text && window.toast) {
+                window.toast.success('Voice captured', text.length + ' characters — tap Rate this review.');
+            } else if (window.toast) {
+                window.toast.info('Voice stopped', 'No speech heard — try again or type manually.');
             }
         });
-
-        if (stopVoiceBtn) {
-            stopVoiceBtn.addEventListener('click', function() {
-                window.voiceInput.stop();
-                voiceContainer.style.display = 'none';
-                voiceBtn.style.background = 'linear-gradient(135deg, #9c27b0, #ba68c8)';
-                voiceBtn.textContent = '🎤 Voice';
-            });
-        }
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVoiceInputIntegration);
+} else {
+    initVoiceInputIntegration();
+}
 
 // Enhanced Result Rendering with Explainable AI and Social Share
+function resolveSentiment(data) {
+    if (!data) return 0;
+    if (data.label === 1 || data.label === '1') return 1;
+    if (data.label === 0 || data.label === '0') return 0;
+    if (data.sentiment === 1 || data.sentiment === 'positive') return 1;
+    if (data.sentiment === 0 || data.sentiment === 'negative') return 0;
+    return data.probability >= 0.5 ? 1 : 0;
+}
+
 function renderEnhancedResult(data, text, containerId = 'single-result') {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const sentiment = data.sentiment === 1 || data.sentiment === 'positive' ? 1 : 0;
-    const confidence = data.confidence || data.probability || 0;
-    const label = sentiment === 1 ? 'Positive' : 'Negative';
-    const emoji = sentiment === 1 ? '😊' : '😔';
-    const color = sentiment === 1 ? '#4caf50' : '#f44336';
-    const bgColor = sentiment === 1 ? '#e8f5e9' : '#ffebee';
+    container.classList.remove('result-empty-hint');
+    const sentiment = resolveSentiment(data);
+    const confidence = data.confidence ?? data.probability ?? 0;
+    const verdict = sentiment === 1 ? 'Fresh' : 'Rotten';
+    const icon = sentiment === 1 ? '★' : '✕';
+    const cls = sentiment === 1 ? 'pos sentiment-positive' : 'neg sentiment-negative';
+    const uncertainty = data.uncertainty
+        ? '<div class="uncertainty-callout" role="note">' + data.uncertainty.message + '</div>'
+        : '';
 
-    // Render result card
-    container.innerHTML = `
-        <div class="alert" style="background: ${bgColor}; border-left: 5px solid ${color}; border-radius: 12px; padding: 20px; animation: fadeIn 0.5s ease;">
-            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                <div style="font-size: 48px;">${emoji}</div>
-                <div style="flex: 1;">
-                    <h4 style="margin: 0; color: ${color}; font-weight: 700;">${label} Sentiment</h4>
-                    <p style="margin: 5px 0 0 0; color: #666;">Confidence: ${(confidence * 100).toFixed(1)}%</p>
-                </div>
-            </div>
-            <div style="background: white; padding: 12px; border-radius: 8px; font-style: italic; color: #555;">
-                "${text.substring(0, 150)}${text.length > 150 ? '...' : ''}"
-            </div>
-        </div>
-    `;
+    container.innerHTML =
+        '<div class="result-card" style="animation:pop .18s ease;">' +
+        '<h3>Verdict</h3>' +
+        '<div id="rottenmeter-slot"></div>' +
+        '<p><strong>Rating:</strong> <span class="' + cls + '">' + icon + ' ' + verdict + '</span></p>' +
+        '<p><strong>Confidence:</strong> ' + (confidence * 100).toFixed(1) + '%</p>' +
+        uncertainty +
+        (data.language
+            ? '<p class="chart-note"><span class="lang-badge">Lang: ' +
+              data.language +
+              (data.language_confidence != null
+                  ? ' (' + Math.round(data.language_confidence * 100) + '%)'
+                  : '') +
+              '</span></p>'
+            : '') +
+        (text
+            ? '<p class="chart-note mt-2">“' +
+              text.substring(0, 180).replace(/</g, '&lt;') +
+              (text.length > 180 ? '…' : '') +
+              '”</p>'
+            : '') +
+        '</div>';
 
-    // Show Explainable AI
+    if (window.Rottenmeter) {
+        const slot = document.getElementById('rottenmeter-slot');
+        window.Rottenmeter.render(slot, sentiment, confidence, data.probability);
+    }
+
+    if (window.ReviewArc && data.arc) {
+        window.ReviewArc.render('review-arc-container', data.arc, data.arc_summary);
+    }
+
+    if (window.AspectViz && data.aspects) {
+        window.AspectViz.render('aspect-viz-container', data.aspects);
+    }
+
+    // Show Explainable AI (reuse bundled explanation when available)
     const explainableContainer = document.getElementById('explainable-ai-container');
     if (explainableContainer && window.explainableAI) {
         explainableContainer.style.display = 'block';
         window.explainableAI.init('explainable-ai-container');
-        window.explainableAI.render(text, sentiment, confidence);
+        if (data.explanation && data.explanation.tokens) {
+            explainableContainer.innerHTML = '';
+            window.explainableAI.renderModelExplanation(explainableContainer, data.explanation);
+        } else {
+            window.explainableAI.render(text, sentiment, confidence);
+        }
     }
 
     // Show Social Share
     const socialContainer = document.getElementById('social-share-container');
     if (socialContainer && window.socialShare) {
         socialContainer.style.display = 'block';
-        window.socialShare.setResult(text, sentiment, confidence, label);
+        window.socialShare.setResult(text, sentiment, confidence, verdict);
         socialContainer.innerHTML = window.socialShare.createShareButtons();
     }
 
@@ -491,5 +684,4 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-console.log('✨ Enhanced features loaded: Voice Input, Explainable AI, Social Share, Particle Effects');
 

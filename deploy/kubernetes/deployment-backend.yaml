@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cinesentiment-backend
+  namespace: cinesentiment
+  labels:
+    app: cinesentiment-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cinesentiment-backend
+  template:
+    metadata:
+      labels:
+        app: cinesentiment-backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: backend
+          image: cinesentiment:2.2.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: cinesentiment-config
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cinesentiment-secrets
+                  key: SECRET_KEY
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "2Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+          volumeMounts:
+            - name: model-weights
+              mountPath: /app/sentiment_model
+              readOnly: true
+      volumes:
+        - name: model-weights
+          persistentVolumeClaim:
+            claimName: cinesentiment-model-pvc

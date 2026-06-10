@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CineSentiment REST API reference — OpenAPI 3.0">
+  <meta name="theme-color" content="#050508">
+  <title>API Reference | CineSentiment</title>
+  <link rel="stylesheet" href="/design-system.css">
+  <link rel="stylesheet" href="/cinema-theme.css">
+  <link rel="stylesheet" href="/shared.css">
+  <link rel="stylesheet" href="/layout-polish.css">
+  <link rel="stylesheet" href="/cinema-unified.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.11.0/swagger-ui.css">
+  <link rel="stylesheet" href="/api-docs.css">
+</head>
+<body class="main-bg" data-page="api-docs">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav data-cinema-nav></nav>
+  <script src="/layout.js"></script>
+
+  <section class="page-hero" role="banner">
+    <p class="page-hero__eyebrow">v2.0.0 · OpenAPI 3.0</p>
+    <h1>API REFERENCE</h1>
+    <p class="page-hero__sub">Interactive documentation for the CineSentiment sentiment analysis service.</p>
+  </section>
+  <div class="film-strip" aria-hidden="true"></div>
+
+  <main id="main-content" class="cinema-landing api-docs-page" role="main">
+    <p class="api-docs-intro">
+      <strong>Try it live:</strong> expand an endpoint, click <em>Try it out</em>, then <em>Execute</em>.
+      Prediction and explain endpoints accept JSON <code>{"text": "your review"}</code>.
+      For batch CSV upload, use <code>POST /api/predict</code> with <code>multipart/form-data</code>.
+    </p>
+    <div id="swagger-ui" aria-label="OpenAPI interactive documentation"></div>
+  </main>
+
+  <footer data-cinema-footer></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
+  <script>
+    window.onload = function () {
+      SwaggerUIBundle({
+        url: '/api/openapi.yaml',
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        displayRequestDuration: true,
+        filter: true,
+        tryItOutEnabled: true,
+        persistAuthorization: true,
+        defaultModelsExpandDepth: 1,
+        docExpansion: 'list',
+        syntaxHighlight: { theme: 'monokai' },
+      });
+    };
+  </script>
+  <script src="/config.js"></script>
+  <script src="/theme.js"></script>
+</body>
+</html>

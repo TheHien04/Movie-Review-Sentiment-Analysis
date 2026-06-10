@@ -1,0 +1,21 @@
+replicaCount: 3
+
+region: us-east-1
+cluster: cinesentiment-us-east
+
+ingress:
+  enabled: true
+  host: us-east.cinesentiment.example.com
+  className: nginx
+  annotations:
+    cinesentiment.io/region: us-east-1
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 65
+
+config:
+  rateLimitEnabled: true
+  cacheEnabled: true

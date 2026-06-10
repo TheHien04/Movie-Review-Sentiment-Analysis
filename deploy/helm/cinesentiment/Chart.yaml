@@ -1,0 +1,6 @@
+apiVersion: v2
+name: cinesentiment
+description: CineSentiment ML sentiment API — Flask + FastAPI
+type: application
+version: 2.3.0
+appVersion: "2.3.0"

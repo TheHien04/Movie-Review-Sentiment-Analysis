@@ -33,7 +33,7 @@ class ChartEnhancer {
                     backgroundColor: 'rgba(0, 0, 0, 0.8)',
                     titleColor: '#fff',
                     bodyColor: '#fff',
-                    borderColor: 'rgba(138, 43, 226, 0.5)',
+                    borderColor: 'rgba(232, 197, 71, 0.4)',
                     borderWidth: 1,
                     padding: 12,
                     cornerRadius: 8,
@@ -44,22 +44,29 @@ class ChartEnhancer {
         };
 
         this.colorSchemes = {
+            cinema: {
+                primary: '#e8c547',
+                secondary: '#c9a227',
+                gradient: ['#9a7b2a', '#c9a227', '#e8c547', '#f5d76e'],
+                positive: '#3dd68c',
+                negative: '#e50914'
+            },
             purple: {
-                primary: '#8a2be2',
-                secondary: '#9333ea',
-                gradient: ['#8a2be2', '#9333ea', '#a855f7'],
-                positive: '#10b981',
-                negative: '#ef4444'
+                primary: '#e8c547',
+                secondary: '#c9a227',
+                gradient: ['#9a7b2a', '#c9a227', '#e8c547'],
+                positive: '#3dd68c',
+                negative: '#e50914'
             },
             ocean: {
-                primary: '#3b82f6',
-                secondary: '#06b6d4',
-                gradient: ['#3b82f6', '#06b6d4', '#8b5cf6']
+                primary: '#c9a227',
+                secondary: '#3dd68c',
+                gradient: ['#9a7b2a', '#c9a227', '#3dd68c']
             },
             sunset: {
-                primary: '#f59e0b',
-                secondary: '#ef4444',
-                gradient: ['#f59e0b', '#ef4444', '#ec4899']
+                primary: '#e8c547',
+                secondary: '#e50914',
+                gradient: ['#e8c547', '#e50914', '#ff6b6b']
             }
         };
     }
@@ -79,8 +86,8 @@ class ChartEnhancer {
             datasets: data.datasets.map((dataset, index) => ({
                 label: dataset.label,
                 data: dataset.data,
-                backgroundColor: this.createGradient(ctx, 'vertical', dataset.color || 'purple'),
-                borderColor: dataset.borderColor || this.colorSchemes.purple.primary,
+                backgroundColor: this.createGradient(ctx, 'vertical', dataset.color || 'cinema'),
+                borderColor: dataset.borderColor || this.colorSchemes.cinema.primary,
                 borderWidth: 2,
                 borderRadius: 8,
                 barThickness: dataset.barThickness || 'flex',
@@ -93,7 +100,7 @@ class ChartEnhancer {
                 y: {
                     beginAtZero: true,
                     grid: {
-                        color: 'rgba(0, 0, 0, 0.05)',
+                        color: 'rgba(232, 197, 71, 0.12)',
                         drawBorder: false
                     },
                     ticks: {
@@ -138,8 +145,8 @@ class ChartEnhancer {
         if (!ctx) return null;
 
         const colors = data.colors || [
-            this.colorSchemes.purple.positive,
-            this.colorSchemes.purple.negative
+            this.colorSchemes.cinema.positive,
+            this.colorSchemes.cinema.negative
         ];
 
         const chartData = {
@@ -147,7 +154,7 @@ class ChartEnhancer {
             datasets: [{
                 data: data.values || [],
                 backgroundColor: colors,
-                borderColor: '#fff',
+                borderColor: 'rgba(245, 240, 230, 0.85)',
                 borderWidth: 3,
                 hoverOffset: 15
             }]
@@ -196,8 +203,8 @@ class ChartEnhancer {
             datasets: data.datasets.map((dataset, index) => ({
                 label: dataset.label,
                 data: dataset.data,
-                borderColor: dataset.color || this.colorSchemes.purple.primary,
-                backgroundColor: this.createGradient(ctx, 'vertical', dataset.color || 'purple', 0.1),
+                borderColor: dataset.color || this.colorSchemes.cinema.primary,
+                backgroundColor: this.createGradient(ctx, 'vertical', dataset.color || 'cinema', 0.1),
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
@@ -214,7 +221,7 @@ class ChartEnhancer {
                 y: {
                     beginAtZero: true,
                     grid: {
-                        color: 'rgba(0, 0, 0, 0.05)',
+                        color: 'rgba(232, 197, 71, 0.12)',
                         drawBorder: false
                     }
                 },
@@ -251,8 +258,8 @@ class ChartEnhancer {
             datasets: data.datasets.map((dataset, index) => ({
                 label: dataset.label,
                 data: dataset.data,
-                backgroundColor: dataset.bgColor || 'rgba(138, 43, 226, 0.2)',
-                borderColor: dataset.color || this.colorSchemes.purple.primary,
+                backgroundColor: dataset.bgColor || 'rgba(232, 197, 71, 0.2)',
+                borderColor: dataset.color || this.colorSchemes.cinema.primary,
                 borderWidth: 2,
                 pointRadius: 4,
                 pointHoverRadius: 6
@@ -316,7 +323,7 @@ class ChartEnhancer {
      * Create gradient
      */
     createGradient(ctx, direction = 'vertical', colorScheme = 'purple', alpha = 1) {
-        const colors = this.colorSchemes[colorScheme] || this.colorSchemes.purple;
+        const colors = this.colorSchemes[colorScheme] || this.colorSchemes.cinema;
         
         let gradient;
         if (direction === 'vertical') {
@@ -358,8 +365,8 @@ class ChartEnhancer {
      * Add center text to doughnut chart
      */
     addDoughnutCenter(chart) {
-        const originalDraw = Chart.overrides.doughnut.plugins.legend.onClick;
-        
+        if (typeof Chart === 'undefined') return;
+        if (!Chart.registry.plugins.get('doughnutCenterText')) {
         Chart.register({
             id: 'doughnutCenterText',
             beforeDraw: function(chart) {
@@ -375,17 +382,18 @@ class ChartEnhancer {
                     const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
                     
                     ctx.font = 'bold 28px sans-serif';
-                    ctx.fillStyle = '#1f2937';
+                    ctx.fillStyle = '#e8c547';
                     ctx.fillText(total.toString(), centerX, centerY - 10);
                     
                     ctx.font = '14px sans-serif';
-                    ctx.fillStyle = '#6b7280';
+                    ctx.fillStyle = '#9ca3af';
                     ctx.fillText('Total', centerX, centerY + 15);
                     
                     ctx.restore();
                 }
             }
         });
+        }
     }
 
     /**

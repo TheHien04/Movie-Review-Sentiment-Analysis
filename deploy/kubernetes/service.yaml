@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cinesentiment-backend
+  namespace: cinesentiment
+spec:
+  selector:
+    app: cinesentiment-backend
+  ports:
+    - port: 80
+      targetPort: 8000
+      name: http
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cinesentiment-fastapi
+  namespace: cinesentiment
+spec:
+  selector:
+    app: cinesentiment-fastapi
+  ports:
+    - port: 80
+      targetPort: 8001
+      name: http
+  type: ClusterIP

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050508">
+  <meta name="description" content="Page not found — CineSentiment Movie Review Sentiment Analysis">
+  <title>Page not found | CineSentiment</title>
+  <link rel="stylesheet" href="/design-system.css">
+  <link rel="stylesheet" href="/cinema-theme.css">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/shared.css">
+  <link rel="stylesheet" href="/cinema-unified.css">
+  <style>
+    .error-page { padding: 6rem 1.5rem; text-align: center; }
+    .error-page__code { font-size: 5rem; line-height: 1; margin-bottom: 0.5rem; color: #e8c547; font-family: 'Bebas Neue', Impact, sans-serif; }
+    .error-page__title { font-size: 1.8rem; margin-bottom: 1rem; }
+    .error-page__desc { max-width: 40ch; margin: 0 auto 2rem; color: var(--cinema-muted, #9ca3af); }
+  </style>
+</head>
+<body class="main-bg" data-page="404">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav data-cinema-nav></nav>
+  <script src="/layout.js"></script>
+  <main id="main-content" class="cinema-landing error-page" role="main">
+    <p class="error-page__code">404</p>
+    <h1 class="page-title error-page__title">Scene not found</h1>
+    <p class="section-desc error-page__desc">
+      This reel is missing from the archive. Check the URL or head back to the lobby.
+    </p>
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+      <a href="/index.html" class="btn btn-primary-app btn-lg">Back to home</a>
+      <a href="/batch.html" class="btn btn-secondary-app btn-lg">Analyze</a>
+      <a href="/compare.html" class="btn btn-soft btn-lg">Compare</a>
+    </div>
+  </main>
+  <footer data-cinema-footer></footer>
+  <script src="/config.js"></script>
+  <script src="/theme.js"></script>
+</body>
+</html>

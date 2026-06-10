@@ -56,7 +56,12 @@ class LoadingManager {
         }
         
         this.overlay.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent background scroll
+        document.body.style.overflow = 'hidden';
+
+        clearTimeout(this._safetyTimer);
+        this._safetyTimer = setTimeout(() => {
+            this.hide();
+        }, 120000);
     }
 
     /**
@@ -64,9 +69,12 @@ class LoadingManager {
      */
     hide() {
         if (!this.overlay) return;
+
+        clearTimeout(this._safetyTimer);
+        this._safetyTimer = null;
         
         this.overlay.classList.remove('active');
-        document.body.style.overflow = ''; // Restore scroll
+        document.body.style.overflow = '';
     }
 
     /**
@@ -124,6 +132,17 @@ class LoadingManager {
 
 // Global loading instance
 window.loading = new LoadingManager();
+
+window.addEventListener('pageshow', function () {
+  document.body.style.overflow = '';
+  window.loading.hide();
+});
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && window.loading) {
+    window.loading.hide();
+  }
+});
 
 /**
  * Wrapper for fetch with automatic loading

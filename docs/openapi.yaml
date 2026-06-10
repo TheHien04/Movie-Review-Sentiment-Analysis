@@ -1,0 +1,1590 @@
+openapi: 3.0.3
+info:
+  title: CineSentiment API
+  version: 2.0.0
+  description: |
+    REST API for IMDB movie-review binary sentiment classification using a fine-tuned
+    DistilBERT model. v2 adds `/api/analyze`, ML aspect tagging, multilingual detection,
+    SSE batch streaming, Developer API keys, Stripe billing, and outbound webhooks.
+    Includes explainability, evaluation metrics, bootstrap CIs, hypothesis tests, and
+    capstone readiness endpoints for coursework.
+  contact:
+    name: CineSentiment
+  license:
+    name: MIT
+
+servers:
+  - url: http://127.0.0.1:8000
+    description: Local development server
+  - url: http://localhost:8000
+    description: Local development (alternate host)
+
+tags:
+  - name: Health
+    description: Service health and discovery
+  - name: Prediction
+    description: Sentiment inference and explainability
+  - name: Evaluation
+    description: Metrics, curves, and model comparison
+  - name: Data
+    description: Dataset and artifact access
+  - name: Reports
+    description: Statistics, capstone status, and dashboards
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Returns service status, model load state, and runtime configuration flags.
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is running
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/openapi.yaml:
+    get:
+      tags: [Health]
+      summary: OpenAPI specification
+      description: Serves this OpenAPI 3.0.3 document as YAML.
+      operationId: getOpenApiSpec
+      responses:
+        '200':
+          description: OpenAPI YAML document
+          content:
+            text/yaml:
+              schema:
+                type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/docs:
+    get:
+      tags: [Health]
+      summary: Swagger UI
+      description: Interactive API documentation powered by Swagger UI.
+      operationId: getApiDocs
+      responses:
+        '200':
+          description: Swagger UI HTML page
+          content:
+            text/html:
+              schema:
+                type: string
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/aspects:
+    post:
+      tags: [Prediction]
+      summary: Aspect-based sentiment (acting, plot, visuals, pacing, sound)
+      operationId: analyzeAspects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+      responses:
+        '200':
+          description: Per-aspect Fresh/Rotten aggregates
+
+  /api/predict/stream:
+    post:
+      tags: [Prediction]
+      summary: Batch CSV with SSE progress stream
+      description: multipart/form-data file upload; returns text/event-stream
+      responses:
+        '200':
+          description: SSE stream (started, progress, complete)
+
+  /api/developer/me:
+    get:
+      tags: [Developer]
+      summary: Validate API key and return tier usage
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Key valid
+        '403':
+          description: Invalid key
+
+  /api/analyze:
+    post:
+      tags: [Prediction]
+      summary: Full analysis (predict + explain + sentence arc)
+      description: |
+        One-shot analysis for the web app: sentiment label, optional input×gradient explanation,
+        and per-sentence tone arc when the review has 2+ sentences.
+      operationId: analyzeReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+                explain:
+                  type: boolean
+                  default: true
+                arc:
+                  type: boolean
+                  default: true
+      responses:
+        '200':
+          description: Analysis result with optional explanation and arc
+        '400':
+          description: Invalid input
+
+  /api/sample.csv:
+    get:
+      tags: [Data]
+      summary: Download labeled sample CSV
+      responses:
+        '200':
+          description: CSV file
+
+  /api/sample-batch.csv:
+    get:
+      tags: [Data]
+      summary: Download batch demo CSV (text column)
+      responses:
+        '200':
+          description: CSV file
+
+  /api/predict:
+    post:
+      tags: [Prediction]
+      summary: Predict sentiment
+      description: |
+        Classify sentiment for a single review (JSON) or a batch of reviews (multipart CSV).
+        CSV uploads must include a `text` column. Returns a single `PredictionResult` for JSON
+        or a `results` array for batch CSV.
+      operationId: predictSentiment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+                  description: Movie review text (truncated to server max length).
+                  example: This movie was absolutely fantastic! Amazing acting and plot.
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: CSV file with a required `text` column.
+      responses:
+        '200':
+          description: Prediction result(s)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - allOf:
+                      - $ref: '#/components/schemas/PredictionResult'
+                      - type: object
+                        properties:
+                          model_source:
+                            type: string
+                            example: imdb_finetuned_local
+                  - $ref: '#/components/schemas/BatchPredictionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/explain:
+    post:
+      tags: [Prediction]
+      summary: Explain prediction
+      description: |
+        Token-level importance scores via input × gradient on the embedding layer.
+        Model-derived attributions (not lexicon-based).
+      operationId: explainSentiment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+                  description: Movie review text to explain.
+                  example: This movie was fantastic and wonderfully acted.
+      responses:
+        '200':
+          description: Explainability result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExplainResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/predict/confidence:
+    post:
+      tags: [Prediction]
+      summary: Predict with confidence threshold
+      description: |
+        Predict sentiment and indicate whether confidence meets `min_confidence`.
+        Returns HTTP 206 when the prediction is below the threshold (body still included).
+      operationId: predictWithConfidence
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+                  description: Movie review text.
+                min_confidence:
+                  type: number
+                  format: float
+                  minimum: 0.0
+                  maximum: 1.0
+                  default: 0.5
+                  description: Minimum confidence required for a confident prediction.
+      responses:
+        '200':
+          description: Prediction meets confidence threshold
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfidencePredictionResult'
+        '206':
+          description: Prediction below confidence threshold
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfidencePredictionResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/predict/batch/export:
+    post:
+      tags: [Prediction]
+      summary: Batch predict and export CSV
+      description: |
+        Upload a CSV with a `text` column; returns a downloadable CSV with predictions,
+        probabilities, and optional `original_label` when present in the input.
+      operationId: batchPredictExport
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: CSV file with a required `text` column.
+      responses:
+        '200':
+          description: Predictions CSV attachment
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename=predictions.csv
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/metrics:
+    get:
+      tags: [Evaluation]
+      summary: Classification metrics
+      description: |
+        Returns accuracy, F1, precision, recall, confusion matrix, and related metrics
+        for the validation or test split. By default serves precomputed metrics from
+        `evaluation.json`. Set `recompute=true` to run live inference on the split.
+      operationId: getMetrics
+      parameters:
+        - $ref: '#/components/parameters/splitParam'
+        - $ref: '#/components/parameters/thresholdParam'
+        - $ref: '#/components/parameters/recomputeParam'
+        - $ref: '#/components/parameters/maxRowsParam'
+      responses:
+        '200':
+          description: Classification metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/dataset-info:
+    get:
+      tags: [Data]
+      summary: Dataset statistics and samples
+      description: Row counts, label distribution, and random sample reviews from the training split.
+      operationId: getDatasetInfo
+      responses:
+        '200':
+          description: Dataset overview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetInfoResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/model-info:
+    get:
+      tags: [Evaluation]
+      summary: Model and system metadata
+      description: Model architecture, training status, evaluation artifact summary, and runtime info.
+      operationId: getModelInfo
+      responses:
+        '200':
+          description: Model metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelInfoResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/model-comparison:
+    get:
+      tags: [Evaluation]
+      summary: DistilBERT vs TF-IDF baseline
+      description: |
+        Side-by-side metrics for the fine-tuned DistilBERT model and TF-IDF + Logistic
+        Regression baseline on the chosen split, including point-estimate deltas.
+      operationId: getModelComparison
+      parameters:
+        - name: split
+          in: query
+          description: Data split for comparison.
+          schema:
+            type: string
+            enum: [val, test]
+            default: test
+      responses:
+        '200':
+          description: Model comparison
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelComparisonResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/threshold-curve:
+    get:
+      tags: [Evaluation]
+      summary: Threshold curve
+      description: Precision, recall, F1, and accuracy across decision thresholds.
+      operationId: getThresholdCurve
+      parameters:
+        - $ref: '#/components/parameters/splitParam'
+        - $ref: '#/components/parameters/recomputeParam'
+        - $ref: '#/components/parameters/maxRowsParamDefault1500'
+      responses:
+        '200':
+          description: Threshold curve points
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThresholdCurveResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/roc-curve:
+    get:
+      tags: [Evaluation]
+      summary: ROC curve
+      description: False-positive and true-positive rates with AUC for the chosen split.
+      operationId: getRocCurve
+      parameters:
+        - $ref: '#/components/parameters/splitParam'
+        - $ref: '#/components/parameters/recomputeParam'
+        - $ref: '#/components/parameters/maxRowsParamDefault1500'
+      responses:
+        '200':
+          description: ROC curve coordinates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RocCurveResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/pr-curve:
+    get:
+      tags: [Evaluation]
+      summary: Precision-recall curve
+      description: Precision and recall arrays with average precision for the chosen split.
+      operationId: getPrCurve
+      parameters:
+        - $ref: '#/components/parameters/splitParam'
+        - $ref: '#/components/parameters/recomputeParam'
+        - $ref: '#/components/parameters/maxRowsParamDefault1500'
+      responses:
+        '200':
+          description: PR curve coordinates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrCurveResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/insights-curves:
+    get:
+      tags: [Evaluation]
+      summary: Combined insights curves
+      description: ROC, threshold, PR, and calibration curves in a single response for the Insights page.
+      operationId: getInsightsCurves
+      parameters:
+        - $ref: '#/components/parameters/splitParam'
+        - $ref: '#/components/parameters/recomputeParam'
+        - $ref: '#/components/parameters/maxRowsParamDefault1500'
+      responses:
+        '200':
+          description: Combined curve bundle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsightsCurvesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/calibration-curve:
+    get:
+      tags: [Evaluation]
+      summary: Calibration (reliability) curve
+      description: Reliability diagram coordinates with Brier score and expected calibration error (ECE).
+      operationId: getCalibrationCurve
+      parameters:
+        - $ref: '#/components/parameters/splitParam'
+        - $ref: '#/components/parameters/recomputeParam'
+        - $ref: '#/components/parameters/maxRowsParamDefault1500'
+      responses:
+        '200':
+          description: Calibration curve data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalibrationCurveResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /api/stats-report:
+    get:
+      tags: [Reports]
+      summary: Coursework statistics report
+      description: Structured statistics report derived from the evaluation artifact (test split primary).
+      operationId: getStatsReport
+      responses:
+        '200':
+          description: Statistics report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsReportResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/capstone-status:
+    get:
+      tags: [Reports]
+      summary: Capstone readiness checklist
+      description: Artifact and documentation checklist for capstone / defense readiness.
+      operationId: getCapstoneStatus
+      responses:
+        '200':
+          description: Capstone readiness status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapstoneStatusResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/statistical-summary:
+    get:
+      tags: [Reports]
+      summary: Statistical summary
+      description: |
+        Derived classification rates, bootstrap CIs, optimal threshold, model deltas,
+        and error-analysis metadata for a split.
+      operationId: getStatisticalSummary
+      parameters:
+        - $ref: '#/components/parameters/splitParam'
+      responses:
+        '200':
+          description: Statistical summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatisticalSummaryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/error-analysis:
+    get:
+      tags: [Reports]
+      summary: Misclassified reviews
+      description: |
+        Returns misclassified test reviews as JSON for the in-app error viewer.
+        Optionally filter by `error_type` (false_positive, false_negative).
+      operationId: getErrorAnalysis
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of rows to return (1–500).
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 200
+        - name: error_type
+          in: query
+          description: Filter by error type.
+          schema:
+            type: string
+            enum: [all, false_positive, false_negative]
+            default: all
+      responses:
+        '200':
+          description: Error analysis rows
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAnalysisResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/dashboard-summary:
+    get:
+      tags: [Reports]
+      summary: Dashboard feature summary
+      description: API version, model status, enabled features, and evaluation artifact summary.
+      operationId: getDashboardSummary
+      responses:
+        '200':
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardSummaryResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /artifacts/results/evaluation.json:
+    get:
+      tags: [Data]
+      summary: Evaluation artifact (JSON)
+      description: Precomputed evaluation report for frontend fallback (strict JSON, no Infinity).
+      operationId: getEvaluationArtifact
+      responses:
+        '200':
+          description: Evaluation artifact
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                description: Full evaluation.json contents including splits, baselines, and curves.
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /artifacts/results/insights_curves.json:
+    get:
+      tags: [Data]
+      summary: Insights curves artifact (JSON)
+      description: Precomputed ROC, threshold, PR, and calibration curves (strict JSON).
+      operationId: getInsightsCurvesArtifact
+      responses:
+        '200':
+          description: Insights curves artifact
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /artifacts/results/calibration.json:
+    get:
+      tags: [Data]
+      summary: Calibration artifact (JSON)
+      description: Precomputed calibration / reliability diagram data for the Insights page.
+      operationId: getCalibrationArtifact
+      responses:
+        '200':
+          description: Calibration artifact
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /artifacts/results/dataset_info.json:
+    get:
+      tags: [Data]
+      summary: Dataset info artifact (JSON)
+      description: Dataset overview snapshot for frontend fallback when the API is unavailable.
+      operationId: getDatasetInfoArtifact
+      responses:
+        '200':
+          description: Dataset info artifact
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /artifacts/results/error_analysis_test.csv:
+    get:
+      tags: [Data]
+      summary: Error analysis export (CSV)
+      description: CSV export of misclassified test reviews (false positives and false negatives).
+      operationId: getErrorAnalysisCsv
+      responses:
+        '200':
+          description: Error analysis CSV
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  parameters:
+    splitParam:
+      name: split
+      in: query
+      description: Dataset split to evaluate.
+      schema:
+        type: string
+        enum: [val, test]
+        default: val
+    thresholdParam:
+      name: threshold
+      in: query
+      description: Decision threshold applied to P(positive).
+      schema:
+        type: number
+        format: float
+        minimum: 0.0
+        maximum: 1.0
+        default: 0.5
+    recomputeParam:
+      name: recompute
+      in: query
+      description: When true, run live inference instead of serving cached or artifact data.
+      schema:
+        type: boolean
+        default: false
+    maxRowsParam:
+      name: max_rows
+      in: query
+      description: Maximum rows to subsample during live recomputation (0 or omitted uses server default).
+      schema:
+        type: integer
+        minimum: 0
+    maxRowsParamDefault1500:
+      name: max_rows
+      in: query
+      description: Maximum rows to subsample during live recomputation.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1500
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters or body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            missingText:
+              value:
+                error: Text is required
+            invalidSplit:
+              value:
+                error: split must be "val" or "test"
+            invalidThreshold:
+              value:
+                error: Threshold must be between 0.0 and 1.0
+    Forbidden:
+      description: Cross-origin request blocked (CSRF origin check)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: Cross-origin request blocked
+    NotFound:
+      description: Resource or dataset not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            dataset:
+              value:
+                error: Dataset not found
+            artifact:
+              value:
+                error: evaluation.json not found
+    ServiceUnavailable:
+      description: Model or evaluation artifact not ready
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            modelNotReady:
+              value:
+                error: Model not ready for inference
+                detail: Train the model (scripts/model_training.py) or set HUB_MODEL_FALLBACK.
+                model_source: untrained_base
+            noArtifact:
+              value:
+                error: No evaluation artifact found.
+                hint: "Run: make evaluate  (or make train-fast && make evaluate)"
+    InternalServerError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: Internal server error
+
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+        detail:
+          type: string
+        hint:
+          type: string
+        model_source:
+          type: string
+        split:
+          type: string
+        path:
+          type: string
+
+    HealthStatus:
+      type: object
+      required:
+        - status
+        - timestamp
+        - model_loaded
+        - model_is_finetuned
+        - model_source
+        - has_evaluation_artifact
+        - version
+        - cache_enabled
+        - rate_limit_enabled
+      properties:
+        status:
+          type: string
+          example: healthy
+        timestamp:
+          type: number
+          format: double
+          description: Unix epoch seconds.
+        model_loaded:
+          type: boolean
+        model_is_finetuned:
+          type: boolean
+        model_source:
+          type: string
+          example: imdb_finetuned_local
+        has_evaluation_artifact:
+          type: boolean
+        version:
+          type: string
+          example: 2.0.0
+        cache_enabled:
+          type: boolean
+        rate_limit_enabled:
+          type: boolean
+
+    PredictionResult:
+      type: object
+      required:
+        - label
+        - probability
+        - probability_positive
+        - probability_negative
+        - confidence
+        - sentiment
+      properties:
+        label:
+          type: integer
+          enum: [0, 1]
+          description: Predicted class (0 = negative, 1 = positive).
+        probability:
+          type: number
+          format: float
+          description: P(positive); same as probability_positive.
+        probability_positive:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+        probability_negative:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+        confidence:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+          description: Max class probability for the predicted label.
+        sentiment:
+          type: string
+          enum: [positive, negative]
+        model_source:
+          type: string
+        text:
+          type: string
+          description: Present on batch CSV prediction rows.
+
+    BatchPredictionResponse:
+      type: object
+      required: [results, model_source]
+      properties:
+        results:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/PredictionResult'
+              - type: object
+                required: [text]
+        model_source:
+          type: string
+
+    ConfidencePredictionResult:
+      allOf:
+        - $ref: '#/components/schemas/PredictionResult'
+        - type: object
+          required:
+            - meets_threshold
+            - min_confidence_required
+            - model_source
+          properties:
+            meets_threshold:
+              type: boolean
+            min_confidence_required:
+              type: number
+              format: float
+            warning:
+              type: string
+              example: Prediction confidence below threshold
+            model_source:
+              type: string
+
+    ExplainResult:
+      type: object
+      required:
+        - text
+        - label
+        - probability
+        - method
+        - tokens
+      properties:
+        text:
+          type: string
+        label:
+          type: integer
+          enum: [0, 1]
+        probability:
+          type: number
+          format: float
+        method:
+          type: string
+          example: input_x_gradient
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExplainToken'
+
+    ExplainToken:
+      type: object
+      required:
+        - token
+        - is_subword
+        - score
+        - char_start
+        - char_end
+      properties:
+        token:
+          type: string
+        is_subword:
+          type: boolean
+        score:
+          type: number
+          format: float
+          description: Normalized importance score in [-1, 1].
+        char_start:
+          type: integer
+        char_end:
+          type: integer
+
+    MetricsResponse:
+      type: object
+      properties:
+        accuracy:
+          type: number
+          format: float
+        f1:
+          type: number
+          format: float
+        precision:
+          type: number
+          format: float
+        recall:
+          type: number
+          format: float
+        roc_auc:
+          type: number
+          format: float
+          nullable: true
+        average_precision:
+          type: number
+          format: float
+          nullable: true
+        confusion_matrix:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+        label_distribution:
+          type: array
+          items:
+            type: integer
+        threshold:
+          type: number
+          format: float
+        n_samples:
+          type: integer
+        split:
+          type: string
+          enum: [val, test]
+        data_source:
+          type: string
+          enum: [evaluation_artifact, computed]
+        model_source:
+          type: string
+        dataset_path:
+          type: string
+        confidence_intervals:
+          type: object
+          additionalProperties: true
+        threshold_note:
+          type: string
+        note:
+          type: string
+
+    DatasetInfoResponse:
+      type: object
+      properties:
+        stats:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: integer
+              - type: string
+        statistics:
+          type: object
+          properties:
+            total_samples:
+              type: integer
+            train_samples:
+              type: integer
+            val_samples:
+              type: integer
+            test_samples:
+              type: integer
+        label_counts:
+          type: object
+          properties:
+            negative:
+              type: integer
+            positive:
+              type: integer
+        samples:
+          type: array
+          items:
+            type: object
+            properties:
+              text:
+                type: string
+              label:
+                type: integer
+        paths:
+          type: object
+          properties:
+            train:
+              type: string
+            val:
+              type: string
+            test:
+              type: string
+        data_source:
+          type: string
+          example: measured
+
+    ModelInfoResponse:
+      type: object
+      properties:
+        model:
+          type: object
+          properties:
+            model_name:
+              type: string
+            model_type:
+              type: string
+            num_labels:
+              type: integer
+            vocab_size:
+              type: integer
+              nullable: true
+            max_length:
+              type: integer
+            model_parameters:
+              type: integer
+            device:
+              type: string
+              enum: [cpu, cuda]
+        training:
+          type: object
+          properties:
+            model_dir:
+              type: string
+            has_trained_weights:
+              type: boolean
+            is_finetuned:
+              type: boolean
+            model_source:
+              type: string
+            training_status:
+              type: string
+              enum: [finetuned, not_finetuned]
+        evaluation_artifact:
+          type: object
+          properties:
+            path:
+              type: string
+            exists:
+              type: boolean
+            summary:
+              type: object
+              nullable: true
+              additionalProperties: true
+        system:
+          type: object
+          properties:
+            python_version:
+              type: string
+            torch_version:
+              type: string
+            cuda_available:
+              type: boolean
+            timestamp:
+              type: number
+              format: double
+        status:
+          type: string
+          example: operational
+
+    ModelComparisonResponse:
+      type: object
+      properties:
+        split:
+          type: string
+          enum: [val, test]
+        models:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModelComparisonRow'
+        deltas:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+            nullable: true
+        delta_note:
+          type: string
+        training:
+          type: object
+          additionalProperties: true
+        methodology:
+          type: object
+          additionalProperties: true
+        data_source:
+          type: string
+          example: evaluation_artifact
+
+    ModelComparisonRow:
+      type: object
+      properties:
+        model:
+          type: string
+        accuracy:
+          type: number
+          format: float
+        f1:
+          type: number
+          format: float
+        precision:
+          type: number
+          format: float
+        recall:
+          type: number
+          format: float
+        roc_auc:
+          type: number
+          format: float
+          nullable: true
+        average_precision:
+          type: number
+          format: float
+          nullable: true
+        confidence_intervals:
+          type: object
+          additionalProperties: true
+
+    ThresholdCurvePoint:
+      type: object
+      properties:
+        threshold:
+          type: number
+          format: float
+        accuracy:
+          type: number
+          format: float
+        precision:
+          type: number
+          format: float
+        recall:
+          type: number
+          format: float
+        f1:
+          type: number
+          format: float
+
+    ThresholdCurveResponse:
+      type: object
+      properties:
+        split:
+          type: string
+          enum: [val, test]
+        data_source:
+          type: string
+        n_samples:
+          type: integer
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThresholdCurvePoint'
+
+    RocCurveResponse:
+      type: object
+      properties:
+        split:
+          type: string
+          enum: [val, test]
+        data_source:
+          type: string
+        n_samples:
+          type: integer
+        fpr:
+          type: array
+          items:
+            type: number
+            format: float
+        tpr:
+          type: array
+          items:
+            type: number
+            format: float
+        auc:
+          type: number
+          format: float
+          nullable: true
+
+    PrCurveResponse:
+      type: object
+      properties:
+        split:
+          type: string
+          enum: [val, test]
+        data_source:
+          type: string
+        n_samples:
+          type: integer
+        precision:
+          type: array
+          items:
+            type: number
+            format: float
+        recall:
+          type: array
+          items:
+            type: number
+            format: float
+        average_precision:
+          type: number
+          format: float
+          nullable: true
+
+    CalibrationCurveResponse:
+      type: object
+      properties:
+        split:
+          type: string
+          enum: [val, test]
+        data_source:
+          type: string
+        n_samples:
+          type: integer
+        mean_predicted:
+          type: array
+          items:
+            type: number
+            format: float
+        fraction_positive:
+          type: array
+          items:
+            type: number
+            format: float
+        brier_score:
+          type: number
+          format: float
+          nullable: true
+        ece:
+          type: number
+          format: float
+          nullable: true
+        n_bins:
+          type: integer
+
+    InsightsCurvesResponse:
+      type: object
+      properties:
+        split:
+          type: string
+          enum: [val, test]
+        data_source:
+          type: string
+        n_samples:
+          type: integer
+        roc_curve:
+          type: object
+          additionalProperties: true
+        threshold_curve:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThresholdCurvePoint'
+        pr_curve:
+          type: object
+          additionalProperties: true
+        calibration_curve:
+          type: object
+          additionalProperties: true
+
+    StatsReportResponse:
+      type: object
+      properties:
+        version:
+          type: string
+        data_source:
+          type: string
+        generated_at:
+          type: string
+          nullable: true
+        methodology:
+          type: object
+          additionalProperties: true
+        training:
+          type: object
+          additionalProperties: true
+        protocol:
+          type: object
+          additionalProperties: true
+        splits:
+          type: object
+          additionalProperties: true
+        model_comparison:
+          type: object
+          nullable: true
+          additionalProperties: true
+        calibration:
+          type: object
+          additionalProperties: true
+        hypothesis_tests:
+          type: object
+          additionalProperties: true
+        optimal_threshold_test:
+          type: object
+          additionalProperties: true
+
+    CapstoneStatusResponse:
+      type: object
+      properties:
+        version:
+          type: string
+        ready:
+          type: boolean
+        passed:
+          type: integer
+        total:
+          type: integer
+        score_label:
+          type: string
+          example: 8/9
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapstoneCheckItem'
+        test_summary:
+          type: string
+          nullable: true
+        hypothesis_summary:
+          type: string
+          nullable: true
+        pipeline:
+          type: string
+          example: make capstone
+
+    CapstoneCheckItem:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        ok:
+          type: boolean
+        hint:
+          type: string
+        required:
+          type: boolean
+
+    StatisticalSummaryResponse:
+      type: object
+      properties:
+        version:
+          type: string
+        split:
+          type: string
+          enum: [val, test]
+        methodology:
+          type: object
+          additionalProperties: true
+        generated_at:
+          type: string
+          nullable: true
+        n_samples:
+          type: integer
+        threshold:
+          type: number
+          format: float
+        metrics:
+          type: object
+          additionalProperties: true
+        derived:
+          type: object
+          additionalProperties: true
+        optimal_threshold:
+          type: object
+          additionalProperties: true
+        model_comparison:
+          type: object
+          nullable: true
+          additionalProperties: true
+        error_analysis:
+          type: object
+          additionalProperties: true
+        data_source:
+          type: string
+
+    ErrorAnalysisResponse:
+      type: object
+      properties:
+        summary:
+          type: object
+          additionalProperties: true
+        rows:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        counts:
+          type: object
+          properties:
+            false_positive:
+              type: integer
+            false_negative:
+              type: integer
+            total_exported:
+              type: integer
+        data_source:
+          type: string
+          example: error_analysis_test.csv
+
+    DashboardSummaryResponse:
+      type: object
+      properties:
+        version:
+          type: string
+        model_source:
+          type: string
+        model_is_finetuned:
+          type: boolean
+        has_evaluation_artifact:
+          type: boolean
+        features:
+          type: array
+          items:
+            type: string
+        generated_at:
+          type: string
+          nullable: true
+        metrics_summary:
+          type: object
+          additionalProperties: true
+        has_baselines:
+          type: boolean
+        has_curves:
+          type: boolean

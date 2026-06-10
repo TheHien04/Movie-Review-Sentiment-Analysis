@@ -1,0 +1,21 @@
+replicaCount: 2
+
+region: eu-west-1
+cluster: cinesentiment-eu-west
+
+ingress:
+  enabled: true
+  host: eu-west.cinesentiment.example.com
+  className: nginx
+  annotations:
+    cinesentiment.io/region: eu-west-1
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 70
+
+config:
+  rateLimitEnabled: true
+  cacheEnabled: true

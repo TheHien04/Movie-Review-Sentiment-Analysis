@@ -2,121 +2,238 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<base href="/">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Movie Sentiment Analysis - Analyze movie reviews using AI">
-	<meta name="theme-color" content="#6366f1">
-	<title>Movie Review Sentiment Analysis</title>
+	<meta name="description" content="CineSentiment — AI movie review sentiment for studios, marketers, and researchers. Analyze reviews in seconds, batch CSV export, REST API.">
+	<meta name="theme-color" content="#050508">
+	<title>CineSentiment — Movie Review Sentiment AI</title>
+	<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+	<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="index.css">
-	<link rel="stylesheet" href="shared.css">
+	<link rel="stylesheet" href="design-system.css">
+	<link rel="stylesheet" href="cinema-theme.css">
 	<link rel="stylesheet" href="theme.css">
+	<link rel="stylesheet" href="shared.css">
 	<link rel="stylesheet" href="loading.css">
 	<link rel="stylesheet" href="toast.css">
-	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="layout-polish.css">
+	<link rel="stylesheet" href="cinema-unified.css">
 </head>
-<body>
-<div class="main-bg">
-	<!-- Navigation Bar -->
-	<nav class="navbar-custom" role="navigation" aria-label="Main navigation">
-		<div class="navbar-content">
-			<a href="index.html" class="navbar-logo" aria-label="Movie Sentiment AI - Home">
-				<span aria-hidden="true">🎬</span>
-				<span>Movie Sentiment AI</span>
-			</a>
-			<ul class="navbar-links">
-				<li><a href="index.html" class="active">Home</a></li>
-				<li><a href="batch.html">Sentiment Analysis</a></li>
-				<li><a href="compare.html">Compare</a></li>
-				<li><a href="evaluation.html">Evaluation</a></li>
-				<li><a href="dataset.html">Dataset</a></li>
-			</ul>
-		</div>
-	</nav>
+<body class="main-bg" data-page="home">
+	<a href="#main-content" class="skip-link">Skip to main content</a>
+	<nav data-cinema-nav></nav>
+	<script src="/layout.js"></script>
 
-	<!-- Header -->
-	<header class="header-gradient" role="banner">
-		<h1 class="fw-bold display-5 text-white mb-1">
-			<span class="me-2" aria-hidden="true">🎬</span>Movie Review Sentiment Analysis
-		</h1>
-	</header>
-	
-	<main id="main-content" role="main">
-		<!-- Main Card -->
-		<div class="container d-flex justify-content-center">
-			<div class="main-card card shadow-lg p-4" style="max-width: 1000px; width:100%; border-radius: 1.5rem;">
-				<div class="welcome-section mb-4">
-					<div style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-						<img src="assets/Hero.jpg" alt="Movie theater seats illustration" class="hero-img" />
-						<h2 class="fw-bold mb-2">Welcome to Movie Sentiment AI!</h2>
-				<p class="mb-3" style="line-height: 1.8; max-width: 750px; text-align: center;">Instantly analyze the sentiment of any movie review using advanced AI and natural language processing. Our state-of-the-art machine learning model helps you understand emotions, opinions, and attitudes in movie reviews. Visualize comprehensive model performance metrics, explore detailed dataset statistics with interactive charts, and experience a modern, intuitive dashboard designed for both professionals and enthusiasts. Whether you're analyzing a single review or processing batches, our platform delivers accurate sentiment analysis with beautiful visualizations and insights.</p>
-						<div class="d-flex gap-2 flex-wrap justify-content-center">
-							<a href="batch.html" class="btn btn-dark btn-lg shadow btn-animated" aria-label="Go to sentiment analysis page">Start Sentiment Analysis</a>
-							<a href="evaluation.html" class="btn btn-outline-dark btn-lg shadow btn-animated" aria-label="View model evaluation metrics">Model Evaluation</a>
-							<a href="dataset.html" class="btn btn-outline-danger btn-lg shadow btn-animated" aria-label="Explore dataset statistics">Dataset Overview</a>
-						</div>
-					</div>
-				</div>
-				<!-- Features Section -->
-				<h3 class="fw-bold mb-3 mt-2 text-start">✨ Key Features</h3>
-				<div class="row g-3 mb-4">
-					<div class="col-12">
-						<div class="feature-list">
-							<div class="feature-card card border-0 shadow-sm mb-3">
-								<div class="card-body d-flex align-items-center">
-									<img src="https://img.icons8.com/color/48/000000/star.png" alt="Star" class="me-3" style="width:32px;">
-									<div>
-										<h5 class="card-title mb-1">Analyze Reviews</h5>
-										<p class="card-text mb-0">Check the sentiment of single or batch movie reviews in seconds.</p>
-									</div>
-								</div>
-							</div>
-							<div class="feature-card card border-0 shadow-sm mb-3">
-								<div class="card-body d-flex align-items-center">
-									<img src="https://img.icons8.com/color/48/000000/combo-chart.png" alt="Chart" class="me-3" style="width:32px;">
-									<div>
-										<h5 class="card-title mb-1">Model Evaluation</h5>
-										<p class="card-text mb-0">Visualize accuracy, F1, confusion matrix, and more with a modern dashboard.</p>
-									</div>
-								</div>
-							</div>
-							<div class="feature-card card border-0 shadow-sm mb-3">
-								<div class="card-body d-flex align-items-center">
-									<img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Dataset" class="me-3" style="width:32px;">
-									<div>
-										<h5 class="card-title mb-1">Dataset Insights</h5>
-										<p class="card-text mb-0">Explore dataset statistics, label distribution, and sample data easily.</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- Quick Start Section -->
-				<div class="quickstart-card card bg-light border-0 shadow-sm p-3 mb-2">
-					<h4 class="fw-bold mb-2 text-danger">🚀 Quick Start</h4>
-					<ol class="mb-0">
-						<li>Go to <b>Sentiment Analysis</b> to enter or upload your movie reviews.</li>
-						<li>View instant results and download batch predictions.</li>
-						<li>Check <b>Model Evaluation</b> for performance metrics and confusion matrix.</li>
-						<li>Explore <b>Dataset Overview</b> for data stats and samples.</li>
-					</ol>
+	<section class="page-hero" role="banner">
+		<p class="page-hero__eyebrow">For studios · marketers · researchers</p>
+		<h1>MOVIE REVIEW SENTIMENT</h1>
+		<p class="page-hero__sub">Turn critic and audience reviews into Fresh or Rotten scores — single review, bulk CSV, or API. Built for film text, not generic chatbots.</p>
+	</section>
+	<div class="film-strip" aria-hidden="true"></div>
+
+	<main id="main-content" class="cinema-landing" role="main">
+		<section class="cinema-hero">
+			<div class="cinema-hero__poster">
+				<img src="/assets/hero-poster.svg" alt="Movie poster style illustration with film reel and clapperboard" width="280" height="420" decoding="async" />
+				<div class="cinema-hero__rating">
+					<span class="cinema-hero__stars" aria-hidden="true">★★★★☆</span>
+					<span>~91% accuracy on IMDB reviews</span>
 				</div>
 			</div>
-		</div>
-	</main>
-	
-	<!-- Footer -->
-	<footer class="py-3 text-center footer-gradient text-white-50 mt-4">
-		<small>© 2025 Movie Sentiment AI | For Statistical Machine Learning Project</small>
-	</footer>
-</div>
+			<div>
+				<div class="cinema-badges">
+					<span class="ticket-badge">IMDB-trained</span>
+					<span class="ticket-badge">Batch CSV</span>
+					<span class="ticket-badge">REST API</span>
+				</div>
+				<h2 class="cinema-hero__title">Know if the <span>audience loved it</span> — in seconds</h2>
+				<p class="cinema-hero__lead">
+					Fine-tuned DistilBERT classifies movie reviews with confidence scores, word-level explanations, and export-ready reports for your team.
+				</p>
+				<div class="cinema-hero__actions cinema-hero__actions--product">
+					<a href="/batch.html" class="btn btn-primary-app btn-lg">Analyze free</a>
+					<a href="/compare.html" class="btn btn-secondary-app btn-lg">Compare reviews</a>
+					<a href="/index.html#pricing" class="btn btn-soft btn-lg">See pricing</a>
+				</div>
+				<p id="home-system-status" class="home-status" aria-live="polite">Checking service…</p>
+			</div>
+		</section>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="loading.js"></script>
-<script src="toast.js"></script>
-<script src="theme.js"></script>
-<script src="shared.js"></script>
-<script src="premium-utils.js"></script>
+		<section aria-labelledby="samples-heading">
+			<h2 id="samples-heading" class="section-heading">EXAMPLE OUTPUT</h2>
+			<p class="chart-note text-center mb-3">Illustrative scores — try your own text on <a href="/batch.html">Analyze</a>.</p>
+			<div class="review-tickets">
+				<article class="review-ticket review-ticket--pos">
+					<p class="review-ticket__label">★ Fresh</p>
+					<p class="review-ticket__quote">“A masterclass in tension — the final act had the whole theater breathless.”</p>
+					<p class="review-ticket__meta">Example · high confidence</p>
+				</article>
+				<article class="review-ticket review-ticket--neg">
+					<p class="review-ticket__label">✕ Rotten</p>
+					<p class="review-ticket__quote">“Flat performances and a script that feels stitched together in post.”</p>
+					<p class="review-ticket__meta">Example · high confidence</p>
+				</article>
+				<article class="review-ticket review-ticket--pos">
+					<p class="review-ticket__label">★ Fresh</p>
+					<p class="review-ticket__quote">“The cinematography alone is worth the ticket — pure big-screen magic.”</p>
+					<p class="review-ticket__meta"><a href="/batch.html">Analyze yours →</a></p>
+				</article>
+			</div>
+		</section>
+
+		<section aria-labelledby="features-heading">
+			<h2 id="features-heading" class="section-heading">BUILT FOR REAL WORKFLOWS</h2>
+			<div class="poster-grid">
+				<div class="poster-card">
+					<svg class="poster-card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+						<rect x="6" y="10" width="36" height="28" rx="2" stroke="currentColor" stroke-width="2"/>
+						<path d="M14 18h20M14 24h14M14 30h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+					<h3>Single &amp; batch</h3>
+					<p>Paste one review or upload thousands via CSV — download results for slides and dashboards.</p>
+				</div>
+				<div class="poster-card">
+					<svg class="poster-card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+						<path d="M8 36V12l16 12 16-12v24" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+					</svg>
+					<h3>Explainable AI</h3>
+					<p>See which words drove Fresh vs Rotten — build trust with stakeholders and clients.</p>
+				</div>
+				<div class="poster-card">
+					<svg class="poster-card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+						<circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="2"/>
+						<path d="M24 16v8l6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+					<h3>A/B compare</h3>
+					<p>Side-by-side sentiment for rival critic takes, trailer copy, or social posts.</p>
+				</div>
+				<div class="poster-card">
+					<svg class="poster-card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+						<path d="M12 8h24v32H12z" stroke="currentColor" stroke-width="2"/>
+						<path d="M18 16h12M18 24h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+					<h3>API &amp; export</h3>
+					<p>REST API with OpenAPI docs — integrate into your pipeline or marketing stack.</p>
+				</div>
+				<div class="poster-card">
+					<svg class="poster-card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+						<path d="M8 28h6l4-12 6 20 4-10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					<h3>Live draft preview</h3>
+					<p>See Fresh / Rotten while you type — like a real-time critic meter before you publish.</p>
+				</div>
+				<div class="poster-card">
+					<svg class="poster-card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+						<path d="M6 38V14l8 4 8-8 8 8 8-4v24" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+					</svg>
+					<h3>Review tone arc</h3>
+					<p>Sentence-by-sentence timeline — spot mixed reviews and spoiler-tone shifts instantly.</p>
+				</div>
+				<div class="poster-card">
+					<svg class="poster-card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+						<rect x="8" y="8" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+						<rect x="26" y="8" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+						<rect x="8" y="26" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+						<rect x="26" y="26" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+					</svg>
+					<h3>Aspect breakdown</h3>
+					<p>Acting, plot, visuals, pacing, score — scored separately like a studio research report.</p>
+				</div>
+				<div class="poster-card">
+					<svg class="poster-card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+						<path d="M10 14h28v20H10z" stroke="currentColor" stroke-width="2"/>
+						<path d="M16 22h16M16 28h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+					<h3>Developer API</h3>
+					<p>API keys, SSE batch streaming, 500+ req/day — <a href="/developer.html">playground</a> included.</p>
+				</div>
+			</div>
+		</section>
+
+		<section id="pricing" class="pricing-section card" aria-labelledby="pricing-heading">
+			<h2 id="pricing-heading" class="section-heading">PRICING</h2>
+			<p class="pricing-section__intro">Start free on the web app. Scale with API access when you need volume.</p>
+			<div class="pricing-grid">
+				<article class="pricing-card">
+					<h3>Free</h3>
+					<p class="pricing-card__price">$0</p>
+					<ul>
+						<li>50 analyses / day on web</li>
+						<li>Single + batch CSV</li>
+						<li>Compare two reviews</li>
+					</ul>
+					<a href="/batch.html" class="btn btn-primary-app">Get started</a>
+				</article>
+				<article class="pricing-card pricing-card--featured">
+					<p class="pricing-card__badge">Popular</p>
+					<h3>Pro / API</h3>
+					<p class="pricing-card__price">Contact</p>
+					<ul>
+						<li>500+ analyses / day (API key)</li>
+						<li>SSE batch streaming</li>
+						<li>Aspect + arc endpoints</li>
+					</ul>
+					<a href="/developer.html" class="btn btn-secondary-app">Developer portal</a>
+				</article>
+				<article class="pricing-card">
+					<h3>Enterprise</h3>
+					<p class="pricing-card__price">Custom</p>
+					<ul>
+						<li>On-prem or VPC deploy</li>
+						<li>Custom model fine-tune</li>
+						<li>SLA &amp; dedicated support</li>
+					</ul>
+					<a href="mailto:support@cinesentiment.app?subject=Enterprise%20inquiry" class="btn btn-soft">Talk to sales</a>
+				</article>
+			</div>
+		</section>
+
+		<section class="stats-hub card" aria-labelledby="stats-hub-heading">
+			<h2 id="stats-hub-heading" class="section-heading">MODEL TRANSPARENCY</h2>
+			<p class="stats-hub__intro">Validated on IMDB — held-out test metrics, calibration, and reproducible methodology for teams that need proof.</p>
+			<div class="insights-related__links stats-hub__links">
+				<a class="insights-related__chip" href="/evaluation.html">
+					<span class="insights-related__chip-label">Accuracy dashboard</span>
+					<span class="insights-related__chip-desc">Confusion matrix, ROC-AUC, error analysis</span>
+				</a>
+				<a class="insights-related__chip" href="/summary.html">
+					<span class="insights-related__chip-label">Statistics report</span>
+					<span class="insights-related__chip-desc">Bootstrap CIs, baseline comparison</span>
+				</a>
+				<a class="insights-related__chip" href="/insights.html">
+					<span class="insights-related__chip-label">Calibration &amp; curves</span>
+					<span class="insights-related__chip-desc">ROC, PR, reliability diagram</span>
+				</a>
+				<a class="insights-related__chip" href="/dataset.html">
+					<span class="insights-related__chip-label">Dataset explorer</span>
+					<span class="insights-related__chip-desc">IMDB splits and label balance</span>
+				</a>
+			</div>
+		</section>
+
+		<section class="marquee-steps" aria-labelledby="quickstart-heading">
+			<h3 id="quickstart-heading">THREE STEPS</h3>
+			<ol>
+				<li><a href="/batch.html"><strong>Analyze</strong></a> — paste a review or upload CSV.</li>
+				<li><a href="/compare.html"><strong>Compare</strong></a> — pick the stronger critic take.</li>
+				<li><a href="/api/docs"><strong>Integrate</strong></a> — use the REST API in your product.</li>
+			</ol>
+		</section>
+	</main>
+
+	<footer data-cinema-footer></footer>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="/config.js"></script>
+	<script src="/ui-messages.js"></script>
+	<script src="/loading.js"></script>
+	<script src="/toast.js"></script>
+	<script src="/shared.js"></script>
+	<script src="/theme.js"></script>
+	<script src="/home-stats.js"></script>
+	<script src="/keyboard-shortcuts.js"></script>
+	<script src="/home-status.js"></script>
+	<script src="/onboarding.js"></script>
 </body>
 </html>
-

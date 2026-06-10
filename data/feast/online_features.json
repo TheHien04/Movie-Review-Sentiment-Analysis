@@ -1,0 +1,3502 @@
+{
+  "rev_0": {
+    "char_count": 1078.0,
+    "word_count": 196.0,
+    "avg_word_len": 4.505102040816326,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_1": {
+    "char_count": 1219.0,
+    "word_count": 204.0,
+    "avg_word_len": 4.980392156862745,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_2": {
+    "char_count": 584.0,
+    "word_count": 117.0,
+    "avg_word_len": 4.0,
+    "exclamation_count": 7.0,
+    "question_count": 0.0
+  },
+  "rev_3": {
+    "char_count": 1029.0,
+    "word_count": 174.0,
+    "avg_word_len": 4.919540229885057,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_4": {
+    "char_count": 2945.0,
+    "word_count": 554.0,
+    "avg_word_len": 4.317689530685921,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_5": {
+    "char_count": 786.0,
+    "word_count": 143.0,
+    "avg_word_len": 4.503496503496503,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_6": {
+    "char_count": 192.0,
+    "word_count": 34.0,
+    "avg_word_len": 4.676470588235294,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_7": {
+    "char_count": 894.0,
+    "word_count": 154.0,
+    "avg_word_len": 4.811688311688312,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_8": {
+    "char_count": 3741.0,
+    "word_count": 623.0,
+    "avg_word_len": 5.006420545746389,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_9": {
+    "char_count": 882.0,
+    "word_count": 149.0,
+    "avg_word_len": 4.926174496644295,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_10": {
+    "char_count": 882.0,
+    "word_count": 156.0,
+    "avg_word_len": 4.660256410256411,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_11": {
+    "char_count": 1707.0,
+    "word_count": 308.0,
+    "avg_word_len": 4.545454545454546,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_12": {
+    "char_count": 905.0,
+    "word_count": 156.0,
+    "avg_word_len": 4.8076923076923075,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_13": {
+    "char_count": 1422.0,
+    "word_count": 287.0,
+    "avg_word_len": 3.9581881533101044,
+    "exclamation_count": 3.0,
+    "question_count": 3.0
+  },
+  "rev_14": {
+    "char_count": 697.0,
+    "word_count": 123.0,
+    "avg_word_len": 4.67479674796748,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_15": {
+    "char_count": 1645.0,
+    "word_count": 252.0,
+    "avg_word_len": 5.531746031746032,
+    "exclamation_count": 3.0,
+    "question_count": 1.0
+  },
+  "rev_16": {
+    "char_count": 986.0,
+    "word_count": 166.0,
+    "avg_word_len": 4.945783132530121,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_17": {
+    "char_count": 694.0,
+    "word_count": 126.0,
+    "avg_word_len": 4.515873015873016,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_18": {
+    "char_count": 1320.0,
+    "word_count": 217.0,
+    "avg_word_len": 5.087557603686636,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_19": {
+    "char_count": 440.0,
+    "word_count": 88.0,
+    "avg_word_len": 4.011363636363637,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_20": {
+    "char_count": 625.0,
+    "word_count": 116.0,
+    "avg_word_len": 4.396551724137931,
+    "exclamation_count": 1.0,
+    "question_count": 2.0
+  },
+  "rev_21": {
+    "char_count": 987.0,
+    "word_count": 181.0,
+    "avg_word_len": 4.458563535911602,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_22": {
+    "char_count": 1458.0,
+    "word_count": 236.0,
+    "avg_word_len": 5.182203389830509,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_23": {
+    "char_count": 1696.0,
+    "word_count": 303.0,
+    "avg_word_len": 4.600660066006601,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_24": {
+    "char_count": 4231.0,
+    "word_count": 797.0,
+    "avg_word_len": 4.309912170639899,
+    "exclamation_count": 0.0,
+    "question_count": 3.0
+  },
+  "rev_25": {
+    "char_count": 406.0,
+    "word_count": 68.0,
+    "avg_word_len": 4.985294117647059,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_26": {
+    "char_count": 3517.0,
+    "word_count": 613.0,
+    "avg_word_len": 4.738988580750408,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_27": {
+    "char_count": 840.0,
+    "word_count": 146.0,
+    "avg_word_len": 4.760273972602739,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_28": {
+    "char_count": 756.0,
+    "word_count": 139.0,
+    "avg_word_len": 4.446043165467626,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_29": {
+    "char_count": 1053.0,
+    "word_count": 186.0,
+    "avg_word_len": 4.666666666666667,
+    "exclamation_count": 3.0,
+    "question_count": 2.0
+  },
+  "rev_30": {
+    "char_count": 2611.0,
+    "word_count": 396.0,
+    "avg_word_len": 5.595959595959596,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_31": {
+    "char_count": 681.0,
+    "word_count": 121.0,
+    "avg_word_len": 4.636363636363637,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_32": {
+    "char_count": 4729.0,
+    "word_count": 802.0,
+    "avg_word_len": 4.897755610972569,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_33": {
+    "char_count": 1935.0,
+    "word_count": 321.0,
+    "avg_word_len": 5.031152647975078,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_34": {
+    "char_count": 757.0,
+    "word_count": 140.0,
+    "avg_word_len": 4.414285714285715,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_35": {
+    "char_count": 1403.0,
+    "word_count": 287.0,
+    "avg_word_len": 3.8919860627177703,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_36": {
+    "char_count": 691.0,
+    "word_count": 130.0,
+    "avg_word_len": 4.323076923076923,
+    "exclamation_count": 2.0,
+    "question_count": 2.0
+  },
+  "rev_37": {
+    "char_count": 707.0,
+    "word_count": 113.0,
+    "avg_word_len": 5.265486725663717,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_38": {
+    "char_count": 1696.0,
+    "word_count": 276.0,
+    "avg_word_len": 5.148550724637682,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_39": {
+    "char_count": 630.0,
+    "word_count": 112.0,
+    "avg_word_len": 4.633928571428571,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_40": {
+    "char_count": 1260.0,
+    "word_count": 213.0,
+    "avg_word_len": 4.92018779342723,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_41": {
+    "char_count": 611.0,
+    "word_count": 113.0,
+    "avg_word_len": 4.415929203539823,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_42": {
+    "char_count": 1944.0,
+    "word_count": 383.0,
+    "avg_word_len": 4.078328981723238,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_43": {
+    "char_count": 931.0,
+    "word_count": 169.0,
+    "avg_word_len": 4.514792899408284,
+    "exclamation_count": 3.0,
+    "question_count": 1.0
+  },
+  "rev_44": {
+    "char_count": 642.0,
+    "word_count": 107.0,
+    "avg_word_len": 5.009345794392523,
+    "exclamation_count": 1.0,
+    "question_count": 1.0
+  },
+  "rev_45": {
+    "char_count": 2021.0,
+    "word_count": 349.0,
+    "avg_word_len": 4.793696275071634,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_46": {
+    "char_count": 790.0,
+    "word_count": 138.0,
+    "avg_word_len": 4.731884057971015,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_47": {
+    "char_count": 3962.0,
+    "word_count": 704.0,
+    "avg_word_len": 4.629261363636363,
+    "exclamation_count": 5.0,
+    "question_count": 1.0
+  },
+  "rev_48": {
+    "char_count": 934.0,
+    "word_count": 160.0,
+    "avg_word_len": 4.84375,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_49": {
+    "char_count": 2449.0,
+    "word_count": 418.0,
+    "avg_word_len": 4.861244019138756,
+    "exclamation_count": 1.0,
+    "question_count": 1.0
+  },
+  "rev_50": {
+    "char_count": 751.0,
+    "word_count": 129.0,
+    "avg_word_len": 4.829457364341085,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_51": {
+    "char_count": 458.0,
+    "word_count": 79.0,
+    "avg_word_len": 4.810126582278481,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_52": {
+    "char_count": 959.0,
+    "word_count": 160.0,
+    "avg_word_len": 5.0,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_53": {
+    "char_count": 1942.0,
+    "word_count": 352.0,
+    "avg_word_len": 4.519886363636363,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_54": {
+    "char_count": 779.0,
+    "word_count": 141.0,
+    "avg_word_len": 4.531914893617022,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_55": {
+    "char_count": 4345.0,
+    "word_count": 759.0,
+    "avg_word_len": 4.718050065876153,
+    "exclamation_count": 2.0,
+    "question_count": 35.0
+  },
+  "rev_56": {
+    "char_count": 890.0,
+    "word_count": 162.0,
+    "avg_word_len": 4.5,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_57": {
+    "char_count": 578.0,
+    "word_count": 114.0,
+    "avg_word_len": 4.078947368421052,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_58": {
+    "char_count": 817.0,
+    "word_count": 129.0,
+    "avg_word_len": 5.341085271317829,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_59": {
+    "char_count": 1376.0,
+    "word_count": 266.0,
+    "avg_word_len": 4.176691729323308,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_60": {
+    "char_count": 939.0,
+    "word_count": 159.0,
+    "avg_word_len": 4.911949685534591,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_61": {
+    "char_count": 2604.0,
+    "word_count": 444.0,
+    "avg_word_len": 4.867117117117117,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_62": {
+    "char_count": 470.0,
+    "word_count": 74.0,
+    "avg_word_len": 5.364864864864865,
+    "exclamation_count": 3.0,
+    "question_count": 2.0
+  },
+  "rev_63": {
+    "char_count": 778.0,
+    "word_count": 142.0,
+    "avg_word_len": 4.485915492957746,
+    "exclamation_count": 3.0,
+    "question_count": 5.0
+  },
+  "rev_64": {
+    "char_count": 1217.0,
+    "word_count": 186.0,
+    "avg_word_len": 5.548387096774194,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_65": {
+    "char_count": 354.0,
+    "word_count": 63.0,
+    "avg_word_len": 4.634920634920635,
+    "exclamation_count": 4.0,
+    "question_count": 0.0
+  },
+  "rev_66": {
+    "char_count": 1400.0,
+    "word_count": 256.0,
+    "avg_word_len": 4.47265625,
+    "exclamation_count": 1.0,
+    "question_count": 2.0
+  },
+  "rev_67": {
+    "char_count": 3039.0,
+    "word_count": 507.0,
+    "avg_word_len": 4.996055226824458,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_68": {
+    "char_count": 1365.0,
+    "word_count": 230.0,
+    "avg_word_len": 4.939130434782609,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_69": {
+    "char_count": 583.0,
+    "word_count": 116.0,
+    "avg_word_len": 4.0344827586206895,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_70": {
+    "char_count": 369.0,
+    "word_count": 70.0,
+    "avg_word_len": 4.285714285714286,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_71": {
+    "char_count": 2351.0,
+    "word_count": 406.0,
+    "avg_word_len": 4.793103448275862,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_72": {
+    "char_count": 625.0,
+    "word_count": 114.0,
+    "avg_word_len": 4.491228070175438,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_73": {
+    "char_count": 720.0,
+    "word_count": 126.0,
+    "avg_word_len": 4.722222222222222,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_74": {
+    "char_count": 653.0,
+    "word_count": 119.0,
+    "avg_word_len": 4.495798319327731,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_75": {
+    "char_count": 616.0,
+    "word_count": 115.0,
+    "avg_word_len": 4.3652173913043475,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_76": {
+    "char_count": 685.0,
+    "word_count": 125.0,
+    "avg_word_len": 4.488,
+    "exclamation_count": 4.0,
+    "question_count": 0.0
+  },
+  "rev_77": {
+    "char_count": 371.0,
+    "word_count": 62.0,
+    "avg_word_len": 5.0,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_78": {
+    "char_count": 1041.0,
+    "word_count": 183.0,
+    "avg_word_len": 4.693989071038251,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_79": {
+    "char_count": 2702.0,
+    "word_count": 497.0,
+    "avg_word_len": 4.438631790744467,
+    "exclamation_count": 1.0,
+    "question_count": 4.0
+  },
+  "rev_80": {
+    "char_count": 4831.0,
+    "word_count": 797.0,
+    "avg_word_len": 5.0627352572145545,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_81": {
+    "char_count": 437.0,
+    "word_count": 79.0,
+    "avg_word_len": 4.544303797468355,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_82": {
+    "char_count": 3482.0,
+    "word_count": 624.0,
+    "avg_word_len": 4.581730769230769,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_83": {
+    "char_count": 1287.0,
+    "word_count": 224.0,
+    "avg_word_len": 4.75,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_84": {
+    "char_count": 980.0,
+    "word_count": 190.0,
+    "avg_word_len": 4.163157894736842,
+    "exclamation_count": 9.0,
+    "question_count": 0.0
+  },
+  "rev_85": {
+    "char_count": 1278.0,
+    "word_count": 232.0,
+    "avg_word_len": 4.512931034482759,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_86": {
+    "char_count": 1148.0,
+    "word_count": 210.0,
+    "avg_word_len": 4.4714285714285715,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_87": {
+    "char_count": 930.0,
+    "word_count": 181.0,
+    "avg_word_len": 4.143646408839779,
+    "exclamation_count": 3.0,
+    "question_count": 3.0
+  },
+  "rev_88": {
+    "char_count": 750.0,
+    "word_count": 140.0,
+    "avg_word_len": 4.364285714285714,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_89": {
+    "char_count": 809.0,
+    "word_count": 131.0,
+    "avg_word_len": 5.183206106870229,
+    "exclamation_count": 10.0,
+    "question_count": 2.0
+  },
+  "rev_90": {
+    "char_count": 1036.0,
+    "word_count": 198.0,
+    "avg_word_len": 4.237373737373737,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_91": {
+    "char_count": 332.0,
+    "word_count": 62.0,
+    "avg_word_len": 4.370967741935484,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_92": {
+    "char_count": 865.0,
+    "word_count": 144.0,
+    "avg_word_len": 5.013888888888889,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_93": {
+    "char_count": 2033.0,
+    "word_count": 297.0,
+    "avg_word_len": 5.848484848484849,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_94": {
+    "char_count": 916.0,
+    "word_count": 169.0,
+    "avg_word_len": 4.42603550295858,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_95": {
+    "char_count": 725.0,
+    "word_count": 136.0,
+    "avg_word_len": 4.338235294117647,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_96": {
+    "char_count": 2011.0,
+    "word_count": 378.0,
+    "avg_word_len": 4.322751322751323,
+    "exclamation_count": 4.0,
+    "question_count": 7.0
+  },
+  "rev_97": {
+    "char_count": 1309.0,
+    "word_count": 237.0,
+    "avg_word_len": 4.527426160337553,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_98": {
+    "char_count": 1306.0,
+    "word_count": 226.0,
+    "avg_word_len": 4.783185840707965,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_99": {
+    "char_count": 1514.0,
+    "word_count": 255.0,
+    "avg_word_len": 4.9411764705882355,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_100": {
+    "char_count": 1411.0,
+    "word_count": 227.0,
+    "avg_word_len": 5.220264317180617,
+    "exclamation_count": 3.0,
+    "question_count": 2.0
+  },
+  "rev_101": {
+    "char_count": 742.0,
+    "word_count": 146.0,
+    "avg_word_len": 4.089041095890411,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_102": {
+    "char_count": 1880.0,
+    "word_count": 333.0,
+    "avg_word_len": 4.648648648648648,
+    "exclamation_count": 1.0,
+    "question_count": 4.0
+  },
+  "rev_103": {
+    "char_count": 4418.0,
+    "word_count": 793.0,
+    "avg_word_len": 4.572509457755359,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_104": {
+    "char_count": 866.0,
+    "word_count": 153.0,
+    "avg_word_len": 4.666666666666667,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_105": {
+    "char_count": 1104.0,
+    "word_count": 181.0,
+    "avg_word_len": 5.104972375690608,
+    "exclamation_count": 0.0,
+    "question_count": 4.0
+  },
+  "rev_106": {
+    "char_count": 1243.0,
+    "word_count": 220.0,
+    "avg_word_len": 4.654545454545454,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_107": {
+    "char_count": 634.0,
+    "word_count": 119.0,
+    "avg_word_len": 4.336134453781512,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_108": {
+    "char_count": 3279.0,
+    "word_count": 618.0,
+    "avg_word_len": 4.307443365695793,
+    "exclamation_count": 9.0,
+    "question_count": 4.0
+  },
+  "rev_109": {
+    "char_count": 1061.0,
+    "word_count": 178.0,
+    "avg_word_len": 4.966292134831461,
+    "exclamation_count": 2.0,
+    "question_count": 3.0
+  },
+  "rev_110": {
+    "char_count": 1089.0,
+    "word_count": 196.0,
+    "avg_word_len": 4.561224489795919,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_111": {
+    "char_count": 775.0,
+    "word_count": 125.0,
+    "avg_word_len": 5.208,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_112": {
+    "char_count": 3648.0,
+    "word_count": 644.0,
+    "avg_word_len": 4.666149068322981,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_113": {
+    "char_count": 2266.0,
+    "word_count": 422.0,
+    "avg_word_len": 4.372037914691943,
+    "exclamation_count": 1.0,
+    "question_count": 4.0
+  },
+  "rev_114": {
+    "char_count": 1276.0,
+    "word_count": 227.0,
+    "avg_word_len": 4.6255506607929515,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_115": {
+    "char_count": 691.0,
+    "word_count": 129.0,
+    "avg_word_len": 4.364341085271318,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_116": {
+    "char_count": 445.0,
+    "word_count": 83.0,
+    "avg_word_len": 4.373493975903615,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_117": {
+    "char_count": 906.0,
+    "word_count": 151.0,
+    "avg_word_len": 5.006622516556291,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_118": {
+    "char_count": 1582.0,
+    "word_count": 283.0,
+    "avg_word_len": 4.593639575971731,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_119": {
+    "char_count": 2789.0,
+    "word_count": 489.0,
+    "avg_word_len": 4.705521472392638,
+    "exclamation_count": 5.0,
+    "question_count": 1.0
+  },
+  "rev_120": {
+    "char_count": 1422.0,
+    "word_count": 213.0,
+    "avg_word_len": 5.68075117370892,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_121": {
+    "char_count": 1494.0,
+    "word_count": 285.0,
+    "avg_word_len": 4.245614035087719,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_122": {
+    "char_count": 1202.0,
+    "word_count": 208.0,
+    "avg_word_len": 4.783653846153846,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_123": {
+    "char_count": 864.0,
+    "word_count": 146.0,
+    "avg_word_len": 4.924657534246576,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_124": {
+    "char_count": 1828.0,
+    "word_count": 302.0,
+    "avg_word_len": 5.056291390728477,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_125": {
+    "char_count": 1119.0,
+    "word_count": 218.0,
+    "avg_word_len": 4.137614678899083,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_126": {
+    "char_count": 551.0,
+    "word_count": 98.0,
+    "avg_word_len": 4.63265306122449,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_127": {
+    "char_count": 421.0,
+    "word_count": 63.0,
+    "avg_word_len": 5.698412698412699,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_128": {
+    "char_count": 766.0,
+    "word_count": 153.0,
+    "avg_word_len": 4.0130718954248366,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_129": {
+    "char_count": 763.0,
+    "word_count": 144.0,
+    "avg_word_len": 4.305555555555555,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_130": {
+    "char_count": 651.0,
+    "word_count": 121.0,
+    "avg_word_len": 4.3884297520661155,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_131": {
+    "char_count": 815.0,
+    "word_count": 137.0,
+    "avg_word_len": 4.956204379562044,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_132": {
+    "char_count": 1526.0,
+    "word_count": 275.0,
+    "avg_word_len": 4.552727272727273,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_133": {
+    "char_count": 918.0,
+    "word_count": 153.0,
+    "avg_word_len": 5.006535947712418,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_134": {
+    "char_count": 249.0,
+    "word_count": 51.0,
+    "avg_word_len": 3.9019607843137254,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_135": {
+    "char_count": 1326.0,
+    "word_count": 250.0,
+    "avg_word_len": 4.308,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_136": {
+    "char_count": 1086.0,
+    "word_count": 197.0,
+    "avg_word_len": 4.517766497461929,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_137": {
+    "char_count": 4073.0,
+    "word_count": 698.0,
+    "avg_word_len": 4.836676217765043,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_138": {
+    "char_count": 845.0,
+    "word_count": 135.0,
+    "avg_word_len": 5.266666666666667,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_139": {
+    "char_count": 1627.0,
+    "word_count": 298.0,
+    "avg_word_len": 4.4630872483221475,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_140": {
+    "char_count": 541.0,
+    "word_count": 99.0,
+    "avg_word_len": 4.474747474747475,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_141": {
+    "char_count": 253.0,
+    "word_count": 39.0,
+    "avg_word_len": 5.512820512820513,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_142": {
+    "char_count": 778.0,
+    "word_count": 150.0,
+    "avg_word_len": 4.193333333333333,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_143": {
+    "char_count": 706.0,
+    "word_count": 125.0,
+    "avg_word_len": 4.656,
+    "exclamation_count": 7.0,
+    "question_count": 0.0
+  },
+  "rev_144": {
+    "char_count": 1237.0,
+    "word_count": 240.0,
+    "avg_word_len": 4.158333333333333,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_145": {
+    "char_count": 996.0,
+    "word_count": 174.0,
+    "avg_word_len": 4.7298850574712645,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_146": {
+    "char_count": 1330.0,
+    "word_count": 222.0,
+    "avg_word_len": 4.995495495495495,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_147": {
+    "char_count": 680.0,
+    "word_count": 108.0,
+    "avg_word_len": 5.305555555555555,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_148": {
+    "char_count": 688.0,
+    "word_count": 121.0,
+    "avg_word_len": 4.694214876033058,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_149": {
+    "char_count": 811.0,
+    "word_count": 131.0,
+    "avg_word_len": 5.198473282442748,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_150": {
+    "char_count": 1676.0,
+    "word_count": 272.0,
+    "avg_word_len": 5.165441176470588,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_151": {
+    "char_count": 1727.0,
+    "word_count": 305.0,
+    "avg_word_len": 4.665573770491803,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_152": {
+    "char_count": 1540.0,
+    "word_count": 265.0,
+    "avg_word_len": 4.815094339622641,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_153": {
+    "char_count": 1732.0,
+    "word_count": 308.0,
+    "avg_word_len": 4.626623376623376,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_154": {
+    "char_count": 373.0,
+    "word_count": 68.0,
+    "avg_word_len": 4.5,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_155": {
+    "char_count": 1167.0,
+    "word_count": 207.0,
+    "avg_word_len": 4.642512077294686,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_156": {
+    "char_count": 1082.0,
+    "word_count": 180.0,
+    "avg_word_len": 5.016666666666667,
+    "exclamation_count": 5.0,
+    "question_count": 1.0
+  },
+  "rev_157": {
+    "char_count": 397.0,
+    "word_count": 69.0,
+    "avg_word_len": 4.768115942028985,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_158": {
+    "char_count": 753.0,
+    "word_count": 127.0,
+    "avg_word_len": 4.937007874015748,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_159": {
+    "char_count": 315.0,
+    "word_count": 66.0,
+    "avg_word_len": 3.787878787878788,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_160": {
+    "char_count": 1043.0,
+    "word_count": 186.0,
+    "avg_word_len": 4.612903225806452,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_161": {
+    "char_count": 695.0,
+    "word_count": 123.0,
+    "avg_word_len": 4.658536585365853,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_162": {
+    "char_count": 1966.0,
+    "word_count": 345.0,
+    "avg_word_len": 4.701449275362319,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_163": {
+    "char_count": 901.0,
+    "word_count": 143.0,
+    "avg_word_len": 5.3076923076923075,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_164": {
+    "char_count": 4772.0,
+    "word_count": 879.0,
+    "avg_word_len": 4.4300341296928325,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_165": {
+    "char_count": 920.0,
+    "word_count": 158.0,
+    "avg_word_len": 4.829113924050633,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_166": {
+    "char_count": 310.0,
+    "word_count": 57.0,
+    "avg_word_len": 4.456140350877193,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_167": {
+    "char_count": 247.0,
+    "word_count": 43.0,
+    "avg_word_len": 4.767441860465116,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_168": {
+    "char_count": 932.0,
+    "word_count": 172.0,
+    "avg_word_len": 4.424418604651163,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_169": {
+    "char_count": 1279.0,
+    "word_count": 239.0,
+    "avg_word_len": 4.355648535564853,
+    "exclamation_count": 0.0,
+    "question_count": 3.0
+  },
+  "rev_170": {
+    "char_count": 972.0,
+    "word_count": 200.0,
+    "avg_word_len": 3.865,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_171": {
+    "char_count": 982.0,
+    "word_count": 179.0,
+    "avg_word_len": 4.4916201117318435,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_172": {
+    "char_count": 661.0,
+    "word_count": 107.0,
+    "avg_word_len": 5.186915887850467,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_173": {
+    "char_count": 833.0,
+    "word_count": 151.0,
+    "avg_word_len": 4.52317880794702,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_174": {
+    "char_count": 796.0,
+    "word_count": 149.0,
+    "avg_word_len": 4.348993288590604,
+    "exclamation_count": 5.0,
+    "question_count": 1.0
+  },
+  "rev_175": {
+    "char_count": 902.0,
+    "word_count": 178.0,
+    "avg_word_len": 4.073033707865169,
+    "exclamation_count": 6.0,
+    "question_count": 0.0
+  },
+  "rev_176": {
+    "char_count": 628.0,
+    "word_count": 105.0,
+    "avg_word_len": 4.9904761904761905,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_177": {
+    "char_count": 705.0,
+    "word_count": 119.0,
+    "avg_word_len": 4.932773109243698,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_178": {
+    "char_count": 2463.0,
+    "word_count": 435.0,
+    "avg_word_len": 4.664367816091954,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_179": {
+    "char_count": 608.0,
+    "word_count": 109.0,
+    "avg_word_len": 4.587155963302752,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_180": {
+    "char_count": 726.0,
+    "word_count": 131.0,
+    "avg_word_len": 4.549618320610687,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_181": {
+    "char_count": 254.0,
+    "word_count": 49.0,
+    "avg_word_len": 4.204081632653061,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_182": {
+    "char_count": 851.0,
+    "word_count": 147.0,
+    "avg_word_len": 4.795918367346939,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_183": {
+    "char_count": 662.0,
+    "word_count": 112.0,
+    "avg_word_len": 4.919642857142857,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_184": {
+    "char_count": 761.0,
+    "word_count": 133.0,
+    "avg_word_len": 4.7293233082706765,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_185": {
+    "char_count": 776.0,
+    "word_count": 134.0,
+    "avg_word_len": 4.798507462686567,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_186": {
+    "char_count": 721.0,
+    "word_count": 127.0,
+    "avg_word_len": 4.68503937007874,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_187": {
+    "char_count": 2745.0,
+    "word_count": 495.0,
+    "avg_word_len": 4.547474747474747,
+    "exclamation_count": 0.0,
+    "question_count": 3.0
+  },
+  "rev_188": {
+    "char_count": 703.0,
+    "word_count": 135.0,
+    "avg_word_len": 4.214814814814815,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_189": {
+    "char_count": 3827.0,
+    "word_count": 698.0,
+    "avg_word_len": 4.484240687679083,
+    "exclamation_count": 1.0,
+    "question_count": 3.0
+  },
+  "rev_190": {
+    "char_count": 1017.0,
+    "word_count": 197.0,
+    "avg_word_len": 4.16751269035533,
+    "exclamation_count": 5.0,
+    "question_count": 0.0
+  },
+  "rev_191": {
+    "char_count": 3768.0,
+    "word_count": 643.0,
+    "avg_word_len": 4.861586314152411,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_192": {
+    "char_count": 811.0,
+    "word_count": 152.0,
+    "avg_word_len": 4.342105263157895,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_193": {
+    "char_count": 261.0,
+    "word_count": 53.0,
+    "avg_word_len": 3.943396226415094,
+    "exclamation_count": 4.0,
+    "question_count": 0.0
+  },
+  "rev_194": {
+    "char_count": 3848.0,
+    "word_count": 649.0,
+    "avg_word_len": 4.9306625577812015,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_195": {
+    "char_count": 949.0,
+    "word_count": 171.0,
+    "avg_word_len": 4.555555555555555,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_196": {
+    "char_count": 3350.0,
+    "word_count": 579.0,
+    "avg_word_len": 4.787564766839378,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_197": {
+    "char_count": 1301.0,
+    "word_count": 233.0,
+    "avg_word_len": 4.587982832618025,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_198": {
+    "char_count": 666.0,
+    "word_count": 117.0,
+    "avg_word_len": 4.700854700854701,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_199": {
+    "char_count": 563.0,
+    "word_count": 95.0,
+    "avg_word_len": 4.936842105263158,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_200": {
+    "char_count": 1171.0,
+    "word_count": 217.0,
+    "avg_word_len": 4.400921658986175,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_201": {
+    "char_count": 837.0,
+    "word_count": 146.0,
+    "avg_word_len": 4.739726027397261,
+    "exclamation_count": 1.0,
+    "question_count": 1.0
+  },
+  "rev_202": {
+    "char_count": 2059.0,
+    "word_count": 345.0,
+    "avg_word_len": 4.971014492753623,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_203": {
+    "char_count": 787.0,
+    "word_count": 161.0,
+    "avg_word_len": 3.8944099378881987,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_204": {
+    "char_count": 629.0,
+    "word_count": 109.0,
+    "avg_word_len": 4.779816513761468,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_205": {
+    "char_count": 1325.0,
+    "word_count": 218.0,
+    "avg_word_len": 5.08256880733945,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_206": {
+    "char_count": 579.0,
+    "word_count": 105.0,
+    "avg_word_len": 4.523809523809524,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_207": {
+    "char_count": 643.0,
+    "word_count": 114.0,
+    "avg_word_len": 4.649122807017544,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_208": {
+    "char_count": 605.0,
+    "word_count": 116.0,
+    "avg_word_len": 4.224137931034483,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_209": {
+    "char_count": 3814.0,
+    "word_count": 696.0,
+    "avg_word_len": 4.48132183908046,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_210": {
+    "char_count": 897.0,
+    "word_count": 150.0,
+    "avg_word_len": 4.986666666666666,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_211": {
+    "char_count": 3482.0,
+    "word_count": 657.0,
+    "avg_word_len": 4.301369863013699,
+    "exclamation_count": 4.0,
+    "question_count": 0.0
+  },
+  "rev_212": {
+    "char_count": 1807.0,
+    "word_count": 312.0,
+    "avg_word_len": 4.794871794871795,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_213": {
+    "char_count": 2341.0,
+    "word_count": 380.0,
+    "avg_word_len": 5.163157894736842,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_214": {
+    "char_count": 654.0,
+    "word_count": 108.0,
+    "avg_word_len": 5.064814814814815,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_215": {
+    "char_count": 788.0,
+    "word_count": 126.0,
+    "avg_word_len": 5.261904761904762,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_216": {
+    "char_count": 708.0,
+    "word_count": 116.0,
+    "avg_word_len": 5.112068965517241,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_217": {
+    "char_count": 1018.0,
+    "word_count": 189.0,
+    "avg_word_len": 4.391534391534392,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_218": {
+    "char_count": 1975.0,
+    "word_count": 329.0,
+    "avg_word_len": 5.006079027355623,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_219": {
+    "char_count": 1043.0,
+    "word_count": 193.0,
+    "avg_word_len": 4.409326424870466,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_220": {
+    "char_count": 2007.0,
+    "word_count": 361.0,
+    "avg_word_len": 4.562326869806094,
+    "exclamation_count": 1.0,
+    "question_count": 2.0
+  },
+  "rev_221": {
+    "char_count": 2592.0,
+    "word_count": 426.0,
+    "avg_word_len": 5.086854460093897,
+    "exclamation_count": 1.0,
+    "question_count": 2.0
+  },
+  "rev_222": {
+    "char_count": 1136.0,
+    "word_count": 209.0,
+    "avg_word_len": 4.440191387559809,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_223": {
+    "char_count": 783.0,
+    "word_count": 144.0,
+    "avg_word_len": 4.444444444444445,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_224": {
+    "char_count": 1997.0,
+    "word_count": 358.0,
+    "avg_word_len": 4.581005586592179,
+    "exclamation_count": 0.0,
+    "question_count": 3.0
+  },
+  "rev_225": {
+    "char_count": 2354.0,
+    "word_count": 383.0,
+    "avg_word_len": 5.148825065274152,
+    "exclamation_count": 4.0,
+    "question_count": 0.0
+  },
+  "rev_226": {
+    "char_count": 2135.0,
+    "word_count": 374.0,
+    "avg_word_len": 4.711229946524064,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_227": {
+    "char_count": 570.0,
+    "word_count": 85.0,
+    "avg_word_len": 5.7176470588235295,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_228": {
+    "char_count": 685.0,
+    "word_count": 127.0,
+    "avg_word_len": 4.4015748031496065,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_229": {
+    "char_count": 3951.0,
+    "word_count": 719.0,
+    "avg_word_len": 4.4965229485396385,
+    "exclamation_count": 1.0,
+    "question_count": 9.0
+  },
+  "rev_230": {
+    "char_count": 4220.0,
+    "word_count": 761.0,
+    "avg_word_len": 4.54664914586071,
+    "exclamation_count": 10.0,
+    "question_count": 1.0
+  },
+  "rev_231": {
+    "char_count": 1231.0,
+    "word_count": 203.0,
+    "avg_word_len": 5.068965517241379,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_232": {
+    "char_count": 927.0,
+    "word_count": 163.0,
+    "avg_word_len": 4.693251533742331,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_233": {
+    "char_count": 1245.0,
+    "word_count": 219.0,
+    "avg_word_len": 4.689497716894977,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_234": {
+    "char_count": 597.0,
+    "word_count": 120.0,
+    "avg_word_len": 3.9833333333333334,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_235": {
+    "char_count": 1663.0,
+    "word_count": 310.0,
+    "avg_word_len": 4.367741935483871,
+    "exclamation_count": 1.0,
+    "question_count": 2.0
+  },
+  "rev_236": {
+    "char_count": 727.0,
+    "word_count": 143.0,
+    "avg_word_len": 4.090909090909091,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_237": {
+    "char_count": 1592.0,
+    "word_count": 304.0,
+    "avg_word_len": 4.240131578947368,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_238": {
+    "char_count": 1546.0,
+    "word_count": 270.0,
+    "avg_word_len": 4.729629629629629,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_239": {
+    "char_count": 708.0,
+    "word_count": 123.0,
+    "avg_word_len": 4.764227642276423,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_240": {
+    "char_count": 710.0,
+    "word_count": 124.0,
+    "avg_word_len": 4.733870967741935,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_241": {
+    "char_count": 899.0,
+    "word_count": 152.0,
+    "avg_word_len": 4.921052631578948,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_242": {
+    "char_count": 977.0,
+    "word_count": 183.0,
+    "avg_word_len": 4.344262295081967,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_243": {
+    "char_count": 1488.0,
+    "word_count": 257.0,
+    "avg_word_len": 4.793774319066148,
+    "exclamation_count": 1.0,
+    "question_count": 1.0
+  },
+  "rev_244": {
+    "char_count": 460.0,
+    "word_count": 70.0,
+    "avg_word_len": 5.585714285714285,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_245": {
+    "char_count": 213.0,
+    "word_count": 33.0,
+    "avg_word_len": 5.484848484848484,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_246": {
+    "char_count": 1638.0,
+    "word_count": 286.0,
+    "avg_word_len": 4.730769230769231,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_247": {
+    "char_count": 3590.0,
+    "word_count": 614.0,
+    "avg_word_len": 4.848534201954397,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_248": {
+    "char_count": 1269.0,
+    "word_count": 219.0,
+    "avg_word_len": 4.799086757990867,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_249": {
+    "char_count": 909.0,
+    "word_count": 164.0,
+    "avg_word_len": 4.548780487804878,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_250": {
+    "char_count": 294.0,
+    "word_count": 55.0,
+    "avg_word_len": 4.363636363636363,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_251": {
+    "char_count": 2484.0,
+    "word_count": 449.0,
+    "avg_word_len": 4.534521158129176,
+    "exclamation_count": 2.0,
+    "question_count": 5.0
+  },
+  "rev_252": {
+    "char_count": 3058.0,
+    "word_count": 525.0,
+    "avg_word_len": 4.826666666666667,
+    "exclamation_count": 4.0,
+    "question_count": 1.0
+  },
+  "rev_253": {
+    "char_count": 400.0,
+    "word_count": 72.0,
+    "avg_word_len": 4.569444444444445,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_254": {
+    "char_count": 642.0,
+    "word_count": 118.0,
+    "avg_word_len": 4.4491525423728815,
+    "exclamation_count": 3.0,
+    "question_count": 1.0
+  },
+  "rev_255": {
+    "char_count": 795.0,
+    "word_count": 135.0,
+    "avg_word_len": 4.896296296296296,
+    "exclamation_count": 0.0,
+    "question_count": 3.0
+  },
+  "rev_256": {
+    "char_count": 617.0,
+    "word_count": 119.0,
+    "avg_word_len": 4.19327731092437,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_257": {
+    "char_count": 810.0,
+    "word_count": 144.0,
+    "avg_word_len": 4.631944444444445,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_258": {
+    "char_count": 1084.0,
+    "word_count": 188.0,
+    "avg_word_len": 4.7712765957446805,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_259": {
+    "char_count": 460.0,
+    "word_count": 82.0,
+    "avg_word_len": 4.621951219512195,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_260": {
+    "char_count": 641.0,
+    "word_count": 104.0,
+    "avg_word_len": 5.173076923076923,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_261": {
+    "char_count": 868.0,
+    "word_count": 148.0,
+    "avg_word_len": 4.871621621621622,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_262": {
+    "char_count": 1851.0,
+    "word_count": 314.0,
+    "avg_word_len": 4.898089171974522,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_263": {
+    "char_count": 3054.0,
+    "word_count": 544.0,
+    "avg_word_len": 4.615808823529412,
+    "exclamation_count": 4.0,
+    "question_count": 8.0
+  },
+  "rev_264": {
+    "char_count": 3526.0,
+    "word_count": 592.0,
+    "avg_word_len": 4.956081081081081,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_265": {
+    "char_count": 2964.0,
+    "word_count": 548.0,
+    "avg_word_len": 4.410583941605839,
+    "exclamation_count": 0.0,
+    "question_count": 3.0
+  },
+  "rev_266": {
+    "char_count": 773.0,
+    "word_count": 129.0,
+    "avg_word_len": 5.0,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_267": {
+    "char_count": 2698.0,
+    "word_count": 505.0,
+    "avg_word_len": 4.344554455445545,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_268": {
+    "char_count": 2771.0,
+    "word_count": 494.0,
+    "avg_word_len": 4.611336032388664,
+    "exclamation_count": 2.0,
+    "question_count": 4.0
+  },
+  "rev_269": {
+    "char_count": 1359.0,
+    "word_count": 223.0,
+    "avg_word_len": 5.098654708520179,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_270": {
+    "char_count": 1192.0,
+    "word_count": 211.0,
+    "avg_word_len": 4.654028436018957,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_271": {
+    "char_count": 1288.0,
+    "word_count": 215.0,
+    "avg_word_len": 4.995348837209303,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_272": {
+    "char_count": 1233.0,
+    "word_count": 227.0,
+    "avg_word_len": 4.436123348017621,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_273": {
+    "char_count": 728.0,
+    "word_count": 128.0,
+    "avg_word_len": 4.6953125,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_274": {
+    "char_count": 1713.0,
+    "word_count": 283.0,
+    "avg_word_len": 5.056537102473499,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_275": {
+    "char_count": 661.0,
+    "word_count": 116.0,
+    "avg_word_len": 4.706896551724138,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_276": {
+    "char_count": 1527.0,
+    "word_count": 268.0,
+    "avg_word_len": 4.701492537313433,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_277": {
+    "char_count": 2379.0,
+    "word_count": 353.0,
+    "avg_word_len": 5.742209631728045,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_278": {
+    "char_count": 825.0,
+    "word_count": 149.0,
+    "avg_word_len": 4.543624161073826,
+    "exclamation_count": 4.0,
+    "question_count": 0.0
+  },
+  "rev_279": {
+    "char_count": 323.0,
+    "word_count": 54.0,
+    "avg_word_len": 5.0,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_280": {
+    "char_count": 1311.0,
+    "word_count": 251.0,
+    "avg_word_len": 4.227091633466135,
+    "exclamation_count": 6.0,
+    "question_count": 0.0
+  },
+  "rev_281": {
+    "char_count": 891.0,
+    "word_count": 170.0,
+    "avg_word_len": 4.247058823529412,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_282": {
+    "char_count": 432.0,
+    "word_count": 73.0,
+    "avg_word_len": 4.931506849315069,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_283": {
+    "char_count": 830.0,
+    "word_count": 135.0,
+    "avg_word_len": 5.155555555555556,
+    "exclamation_count": 4.0,
+    "question_count": 0.0
+  },
+  "rev_284": {
+    "char_count": 1231.0,
+    "word_count": 207.0,
+    "avg_word_len": 4.951690821256038,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_285": {
+    "char_count": 1213.0,
+    "word_count": 222.0,
+    "avg_word_len": 4.468468468468468,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_286": {
+    "char_count": 1296.0,
+    "word_count": 231.0,
+    "avg_word_len": 4.6147186147186146,
+    "exclamation_count": 1.0,
+    "question_count": 1.0
+  },
+  "rev_287": {
+    "char_count": 814.0,
+    "word_count": 145.0,
+    "avg_word_len": 4.620689655172414,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_288": {
+    "char_count": 867.0,
+    "word_count": 155.0,
+    "avg_word_len": 4.6,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_289": {
+    "char_count": 2523.0,
+    "word_count": 442.0,
+    "avg_word_len": 4.710407239819005,
+    "exclamation_count": 3.0,
+    "question_count": 2.0
+  },
+  "rev_290": {
+    "char_count": 1162.0,
+    "word_count": 214.0,
+    "avg_word_len": 4.434579439252336,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_291": {
+    "char_count": 994.0,
+    "word_count": 183.0,
+    "avg_word_len": 4.437158469945355,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_292": {
+    "char_count": 755.0,
+    "word_count": 144.0,
+    "avg_word_len": 4.25,
+    "exclamation_count": 3.0,
+    "question_count": 2.0
+  },
+  "rev_293": {
+    "char_count": 4545.0,
+    "word_count": 763.0,
+    "avg_word_len": 4.956749672346002,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_294": {
+    "char_count": 370.0,
+    "word_count": 73.0,
+    "avg_word_len": 4.082191780821918,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_295": {
+    "char_count": 832.0,
+    "word_count": 148.0,
+    "avg_word_len": 4.628378378378378,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_296": {
+    "char_count": 516.0,
+    "word_count": 83.0,
+    "avg_word_len": 5.228915662650603,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_297": {
+    "char_count": 758.0,
+    "word_count": 145.0,
+    "avg_word_len": 4.23448275862069,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_298": {
+    "char_count": 736.0,
+    "word_count": 141.0,
+    "avg_word_len": 4.226950354609929,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_299": {
+    "char_count": 1312.0,
+    "word_count": 252.0,
+    "avg_word_len": 4.2103174603174605,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_300": {
+    "char_count": 844.0,
+    "word_count": 147.0,
+    "avg_word_len": 4.7482993197278915,
+    "exclamation_count": 1.0,
+    "question_count": 2.0
+  },
+  "rev_301": {
+    "char_count": 1719.0,
+    "word_count": 308.0,
+    "avg_word_len": 4.584415584415584,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_302": {
+    "char_count": 3339.0,
+    "word_count": 563.0,
+    "avg_word_len": 4.932504440497335,
+    "exclamation_count": 1.0,
+    "question_count": 1.0
+  },
+  "rev_303": {
+    "char_count": 1135.0,
+    "word_count": 204.0,
+    "avg_word_len": 4.568627450980392,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_304": {
+    "char_count": 1912.0,
+    "word_count": 306.0,
+    "avg_word_len": 5.251633986928105,
+    "exclamation_count": 4.0,
+    "question_count": 0.0
+  },
+  "rev_305": {
+    "char_count": 715.0,
+    "word_count": 123.0,
+    "avg_word_len": 4.821138211382114,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_306": {
+    "char_count": 734.0,
+    "word_count": 133.0,
+    "avg_word_len": 4.526315789473684,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_307": {
+    "char_count": 877.0,
+    "word_count": 144.0,
+    "avg_word_len": 5.097222222222222,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_308": {
+    "char_count": 701.0,
+    "word_count": 134.0,
+    "avg_word_len": 4.2388059701492535,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_309": {
+    "char_count": 406.0,
+    "word_count": 75.0,
+    "avg_word_len": 4.426666666666667,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_310": {
+    "char_count": 1104.0,
+    "word_count": 201.0,
+    "avg_word_len": 4.497512437810945,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_311": {
+    "char_count": 967.0,
+    "word_count": 190.0,
+    "avg_word_len": 4.094736842105263,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_312": {
+    "char_count": 692.0,
+    "word_count": 134.0,
+    "avg_word_len": 4.1716417910447765,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_313": {
+    "char_count": 1856.0,
+    "word_count": 324.0,
+    "avg_word_len": 4.731481481481482,
+    "exclamation_count": 0.0,
+    "question_count": 5.0
+  },
+  "rev_314": {
+    "char_count": 274.0,
+    "word_count": 56.0,
+    "avg_word_len": 3.9107142857142856,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_315": {
+    "char_count": 2178.0,
+    "word_count": 344.0,
+    "avg_word_len": 5.334302325581396,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_316": {
+    "char_count": 1103.0,
+    "word_count": 197.0,
+    "avg_word_len": 4.604060913705584,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_317": {
+    "char_count": 2477.0,
+    "word_count": 430.0,
+    "avg_word_len": 4.7627906976744185,
+    "exclamation_count": 1.0,
+    "question_count": 7.0
+  },
+  "rev_318": {
+    "char_count": 1037.0,
+    "word_count": 197.0,
+    "avg_word_len": 4.269035532994923,
+    "exclamation_count": 7.0,
+    "question_count": 1.0
+  },
+  "rev_319": {
+    "char_count": 701.0,
+    "word_count": 127.0,
+    "avg_word_len": 4.52755905511811,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_320": {
+    "char_count": 766.0,
+    "word_count": 151.0,
+    "avg_word_len": 4.079470198675497,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_321": {
+    "char_count": 1026.0,
+    "word_count": 190.0,
+    "avg_word_len": 4.405263157894737,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_322": {
+    "char_count": 1300.0,
+    "word_count": 222.0,
+    "avg_word_len": 4.86036036036036,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_323": {
+    "char_count": 987.0,
+    "word_count": 187.0,
+    "avg_word_len": 4.283422459893048,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_324": {
+    "char_count": 428.0,
+    "word_count": 85.0,
+    "avg_word_len": 4.047058823529412,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_325": {
+    "char_count": 300.0,
+    "word_count": 60.0,
+    "avg_word_len": 4.016666666666667,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_326": {
+    "char_count": 697.0,
+    "word_count": 129.0,
+    "avg_word_len": 4.410852713178294,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_327": {
+    "char_count": 665.0,
+    "word_count": 121.0,
+    "avg_word_len": 4.5041322314049586,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_328": {
+    "char_count": 1135.0,
+    "word_count": 200.0,
+    "avg_word_len": 4.68,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_329": {
+    "char_count": 406.0,
+    "word_count": 70.0,
+    "avg_word_len": 4.814285714285714,
+    "exclamation_count": 0.0,
+    "question_count": 4.0
+  },
+  "rev_330": {
+    "char_count": 997.0,
+    "word_count": 187.0,
+    "avg_word_len": 4.336898395721925,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_331": {
+    "char_count": 720.0,
+    "word_count": 129.0,
+    "avg_word_len": 4.589147286821706,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_332": {
+    "char_count": 835.0,
+    "word_count": 153.0,
+    "avg_word_len": 4.4640522875816995,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_333": {
+    "char_count": 774.0,
+    "word_count": 138.0,
+    "avg_word_len": 4.615942028985507,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_334": {
+    "char_count": 881.0,
+    "word_count": 171.0,
+    "avg_word_len": 4.157894736842105,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_335": {
+    "char_count": 1331.0,
+    "word_count": 234.0,
+    "avg_word_len": 4.6923076923076925,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_336": {
+    "char_count": 528.0,
+    "word_count": 98.0,
+    "avg_word_len": 4.3979591836734695,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_337": {
+    "char_count": 297.0,
+    "word_count": 61.0,
+    "avg_word_len": 3.8852459016393444,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_338": {
+    "char_count": 836.0,
+    "word_count": 141.0,
+    "avg_word_len": 4.9361702127659575,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_339": {
+    "char_count": 650.0,
+    "word_count": 116.0,
+    "avg_word_len": 4.612068965517241,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_340": {
+    "char_count": 1080.0,
+    "word_count": 178.0,
+    "avg_word_len": 5.073033707865169,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_341": {
+    "char_count": 1505.0,
+    "word_count": 262.0,
+    "avg_word_len": 4.748091603053435,
+    "exclamation_count": 3.0,
+    "question_count": 2.0
+  },
+  "rev_342": {
+    "char_count": 980.0,
+    "word_count": 178.0,
+    "avg_word_len": 4.51123595505618,
+    "exclamation_count": 1.0,
+    "question_count": 3.0
+  },
+  "rev_343": {
+    "char_count": 691.0,
+    "word_count": 116.0,
+    "avg_word_len": 4.9655172413793105,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_344": {
+    "char_count": 1065.0,
+    "word_count": 194.0,
+    "avg_word_len": 4.494845360824742,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_345": {
+    "char_count": 1069.0,
+    "word_count": 202.0,
+    "avg_word_len": 4.297029702970297,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_346": {
+    "char_count": 567.0,
+    "word_count": 108.0,
+    "avg_word_len": 4.25,
+    "exclamation_count": 3.0,
+    "question_count": 2.0
+  },
+  "rev_347": {
+    "char_count": 1460.0,
+    "word_count": 239.0,
+    "avg_word_len": 5.112970711297071,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_348": {
+    "char_count": 882.0,
+    "word_count": 154.0,
+    "avg_word_len": 4.733766233766234,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_349": {
+    "char_count": 2148.0,
+    "word_count": 359.0,
+    "avg_word_len": 4.986072423398329,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_350": {
+    "char_count": 2074.0,
+    "word_count": 371.0,
+    "avg_word_len": 4.592991913746631,
+    "exclamation_count": 7.0,
+    "question_count": 0.0
+  },
+  "rev_351": {
+    "char_count": 765.0,
+    "word_count": 142.0,
+    "avg_word_len": 4.394366197183099,
+    "exclamation_count": 6.0,
+    "question_count": 0.0
+  },
+  "rev_352": {
+    "char_count": 700.0,
+    "word_count": 134.0,
+    "avg_word_len": 4.231343283582089,
+    "exclamation_count": 1.0,
+    "question_count": 3.0
+  },
+  "rev_353": {
+    "char_count": 716.0,
+    "word_count": 133.0,
+    "avg_word_len": 4.390977443609023,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_354": {
+    "char_count": 758.0,
+    "word_count": 155.0,
+    "avg_word_len": 3.8967741935483873,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_355": {
+    "char_count": 2292.0,
+    "word_count": 422.0,
+    "avg_word_len": 4.4336492890995265,
+    "exclamation_count": 5.0,
+    "question_count": 0.0
+  },
+  "rev_356": {
+    "char_count": 491.0,
+    "word_count": 82.0,
+    "avg_word_len": 5.0,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_357": {
+    "char_count": 667.0,
+    "word_count": 122.0,
+    "avg_word_len": 4.475409836065574,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_358": {
+    "char_count": 546.0,
+    "word_count": 102.0,
+    "avg_word_len": 4.362745098039215,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_359": {
+    "char_count": 1501.0,
+    "word_count": 297.0,
+    "avg_word_len": 4.057239057239057,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_360": {
+    "char_count": 2195.0,
+    "word_count": 359.0,
+    "avg_word_len": 5.116991643454039,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_361": {
+    "char_count": 695.0,
+    "word_count": 123.0,
+    "avg_word_len": 4.658536585365853,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_362": {
+    "char_count": 2462.0,
+    "word_count": 451.0,
+    "avg_word_len": 4.4611973392461195,
+    "exclamation_count": 0.0,
+    "question_count": 3.0
+  },
+  "rev_363": {
+    "char_count": 2792.0,
+    "word_count": 480.0,
+    "avg_word_len": 4.81875,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_364": {
+    "char_count": 357.0,
+    "word_count": 65.0,
+    "avg_word_len": 4.507692307692308,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_365": {
+    "char_count": 1749.0,
+    "word_count": 313.0,
+    "avg_word_len": 4.5910543130990416,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_366": {
+    "char_count": 276.0,
+    "word_count": 49.0,
+    "avg_word_len": 4.653061224489796,
+    "exclamation_count": 8.0,
+    "question_count": 0.0
+  },
+  "rev_367": {
+    "char_count": 1509.0,
+    "word_count": 247.0,
+    "avg_word_len": 5.113360323886639,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_368": {
+    "char_count": 1944.0,
+    "word_count": 316.0,
+    "avg_word_len": 5.155063291139241,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_369": {
+    "char_count": 778.0,
+    "word_count": 150.0,
+    "avg_word_len": 4.193333333333333,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_370": {
+    "char_count": 728.0,
+    "word_count": 124.0,
+    "avg_word_len": 4.879032258064516,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_371": {
+    "char_count": 1181.0,
+    "word_count": 221.0,
+    "avg_word_len": 4.34841628959276,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_372": {
+    "char_count": 894.0,
+    "word_count": 151.0,
+    "avg_word_len": 4.927152317880795,
+    "exclamation_count": 1.0,
+    "question_count": 5.0
+  },
+  "rev_373": {
+    "char_count": 3166.0,
+    "word_count": 563.0,
+    "avg_word_len": 4.625222024866785,
+    "exclamation_count": 1.0,
+    "question_count": 4.0
+  },
+  "rev_374": {
+    "char_count": 871.0,
+    "word_count": 151.0,
+    "avg_word_len": 4.774834437086093,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_375": {
+    "char_count": 1144.0,
+    "word_count": 206.0,
+    "avg_word_len": 4.558252427184466,
+    "exclamation_count": 3.0,
+    "question_count": 1.0
+  },
+  "rev_376": {
+    "char_count": 1656.0,
+    "word_count": 294.0,
+    "avg_word_len": 4.636054421768708,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_377": {
+    "char_count": 1037.0,
+    "word_count": 190.0,
+    "avg_word_len": 4.463157894736842,
+    "exclamation_count": 12.0,
+    "question_count": 1.0
+  },
+  "rev_378": {
+    "char_count": 715.0,
+    "word_count": 142.0,
+    "avg_word_len": 4.042253521126761,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_379": {
+    "char_count": 1371.0,
+    "word_count": 235.0,
+    "avg_word_len": 4.8382978723404255,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_380": {
+    "char_count": 559.0,
+    "word_count": 102.0,
+    "avg_word_len": 4.490196078431373,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_381": {
+    "char_count": 670.0,
+    "word_count": 113.0,
+    "avg_word_len": 4.938053097345133,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_382": {
+    "char_count": 540.0,
+    "word_count": 78.0,
+    "avg_word_len": 5.935897435897436,
+    "exclamation_count": 0.0,
+    "question_count": 3.0
+  },
+  "rev_383": {
+    "char_count": 2686.0,
+    "word_count": 478.0,
+    "avg_word_len": 4.621338912133891,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_384": {
+    "char_count": 2719.0,
+    "word_count": 495.0,
+    "avg_word_len": 4.494949494949495,
+    "exclamation_count": 3.0,
+    "question_count": 4.0
+  },
+  "rev_385": {
+    "char_count": 944.0,
+    "word_count": 189.0,
+    "avg_word_len": 4.0,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_386": {
+    "char_count": 1599.0,
+    "word_count": 304.0,
+    "avg_word_len": 4.2631578947368425,
+    "exclamation_count": 0.0,
+    "question_count": 3.0
+  },
+  "rev_387": {
+    "char_count": 604.0,
+    "word_count": 106.0,
+    "avg_word_len": 4.7075471698113205,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_388": {
+    "char_count": 543.0,
+    "word_count": 103.0,
+    "avg_word_len": 4.281553398058253,
+    "exclamation_count": 1.0,
+    "question_count": 1.0
+  },
+  "rev_389": {
+    "char_count": 691.0,
+    "word_count": 125.0,
+    "avg_word_len": 4.536,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_390": {
+    "char_count": 668.0,
+    "word_count": 119.0,
+    "avg_word_len": 4.621848739495798,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_391": {
+    "char_count": 1013.0,
+    "word_count": 165.0,
+    "avg_word_len": 5.1454545454545455,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_392": {
+    "char_count": 1157.0,
+    "word_count": 207.0,
+    "avg_word_len": 4.594202898550725,
+    "exclamation_count": 10.0,
+    "question_count": 0.0
+  },
+  "rev_393": {
+    "char_count": 1030.0,
+    "word_count": 181.0,
+    "avg_word_len": 4.696132596685083,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_394": {
+    "char_count": 1017.0,
+    "word_count": 176.0,
+    "avg_word_len": 4.784090909090909,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_395": {
+    "char_count": 1342.0,
+    "word_count": 228.0,
+    "avg_word_len": 4.890350877192983,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_396": {
+    "char_count": 921.0,
+    "word_count": 150.0,
+    "avg_word_len": 5.1466666666666665,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_397": {
+    "char_count": 722.0,
+    "word_count": 127.0,
+    "avg_word_len": 4.692913385826771,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_398": {
+    "char_count": 1174.0,
+    "word_count": 208.0,
+    "avg_word_len": 4.649038461538462,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_399": {
+    "char_count": 2024.0,
+    "word_count": 351.0,
+    "avg_word_len": 4.769230769230769,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_400": {
+    "char_count": 674.0,
+    "word_count": 127.0,
+    "avg_word_len": 4.31496062992126,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_401": {
+    "char_count": 1613.0,
+    "word_count": 288.0,
+    "avg_word_len": 4.604166666666667,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_402": {
+    "char_count": 1709.0,
+    "word_count": 301.0,
+    "avg_word_len": 4.681063122923588,
+    "exclamation_count": 1.0,
+    "question_count": 2.0
+  },
+  "rev_403": {
+    "char_count": 658.0,
+    "word_count": 132.0,
+    "avg_word_len": 3.992424242424242,
+    "exclamation_count": 4.0,
+    "question_count": 4.0
+  },
+  "rev_404": {
+    "char_count": 668.0,
+    "word_count": 121.0,
+    "avg_word_len": 4.528925619834711,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_405": {
+    "char_count": 784.0,
+    "word_count": 147.0,
+    "avg_word_len": 4.340136054421769,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_406": {
+    "char_count": 501.0,
+    "word_count": 89.0,
+    "avg_word_len": 4.640449438202247,
+    "exclamation_count": 8.0,
+    "question_count": 0.0
+  },
+  "rev_407": {
+    "char_count": 945.0,
+    "word_count": 162.0,
+    "avg_word_len": 4.839506172839506,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_408": {
+    "char_count": 786.0,
+    "word_count": 145.0,
+    "avg_word_len": 4.427586206896552,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_409": {
+    "char_count": 566.0,
+    "word_count": 99.0,
+    "avg_word_len": 4.7272727272727275,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_410": {
+    "char_count": 1226.0,
+    "word_count": 232.0,
+    "avg_word_len": 4.288793103448276,
+    "exclamation_count": 0.0,
+    "question_count": 3.0
+  },
+  "rev_411": {
+    "char_count": 649.0,
+    "word_count": 125.0,
+    "avg_word_len": 4.2,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_412": {
+    "char_count": 3199.0,
+    "word_count": 594.0,
+    "avg_word_len": 4.3872053872053876,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_413": {
+    "char_count": 2578.0,
+    "word_count": 402.0,
+    "avg_word_len": 5.41542288557214,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_414": {
+    "char_count": 1282.0,
+    "word_count": 229.0,
+    "avg_word_len": 4.602620087336245,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_415": {
+    "char_count": 841.0,
+    "word_count": 169.0,
+    "avg_word_len": 3.9822485207100593,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_416": {
+    "char_count": 717.0,
+    "word_count": 135.0,
+    "avg_word_len": 4.318518518518519,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_417": {
+    "char_count": 786.0,
+    "word_count": 142.0,
+    "avg_word_len": 4.542253521126761,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_418": {
+    "char_count": 704.0,
+    "word_count": 133.0,
+    "avg_word_len": 4.3007518796992485,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_419": {
+    "char_count": 1309.0,
+    "word_count": 226.0,
+    "avg_word_len": 4.79646017699115,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_420": {
+    "char_count": 620.0,
+    "word_count": 121.0,
+    "avg_word_len": 4.132231404958677,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_421": {
+    "char_count": 1395.0,
+    "word_count": 234.0,
+    "avg_word_len": 4.965811965811966,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_422": {
+    "char_count": 1736.0,
+    "word_count": 326.0,
+    "avg_word_len": 4.328220858895706,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_423": {
+    "char_count": 1153.0,
+    "word_count": 215.0,
+    "avg_word_len": 4.367441860465116,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_424": {
+    "char_count": 706.0,
+    "word_count": 117.0,
+    "avg_word_len": 5.042735042735043,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_425": {
+    "char_count": 1200.0,
+    "word_count": 211.0,
+    "avg_word_len": 4.691943127962086,
+    "exclamation_count": 2.0,
+    "question_count": 2.0
+  },
+  "rev_426": {
+    "char_count": 679.0,
+    "word_count": 117.0,
+    "avg_word_len": 4.811965811965812,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_427": {
+    "char_count": 2892.0,
+    "word_count": 542.0,
+    "avg_word_len": 4.337638376383764,
+    "exclamation_count": 2.0,
+    "question_count": 5.0
+  },
+  "rev_428": {
+    "char_count": 1169.0,
+    "word_count": 215.0,
+    "avg_word_len": 4.441860465116279,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_429": {
+    "char_count": 1465.0,
+    "word_count": 271.0,
+    "avg_word_len": 4.409594095940959,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_430": {
+    "char_count": 1909.0,
+    "word_count": 337.0,
+    "avg_word_len": 4.667655786350148,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_431": {
+    "char_count": 608.0,
+    "word_count": 112.0,
+    "avg_word_len": 4.4375,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_432": {
+    "char_count": 1038.0,
+    "word_count": 192.0,
+    "avg_word_len": 4.411458333333333,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_433": {
+    "char_count": 2288.0,
+    "word_count": 394.0,
+    "avg_word_len": 4.809644670050761,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_434": {
+    "char_count": 706.0,
+    "word_count": 130.0,
+    "avg_word_len": 4.438461538461539,
+    "exclamation_count": 9.0,
+    "question_count": 0.0
+  },
+  "rev_435": {
+    "char_count": 1359.0,
+    "word_count": 242.0,
+    "avg_word_len": 4.619834710743802,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_436": {
+    "char_count": 5419.0,
+    "word_count": 951.0,
+    "avg_word_len": 4.698212407991588,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_437": {
+    "char_count": 1543.0,
+    "word_count": 267.0,
+    "avg_word_len": 4.782771535580524,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_438": {
+    "char_count": 859.0,
+    "word_count": 154.0,
+    "avg_word_len": 4.584415584415584,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_439": {
+    "char_count": 691.0,
+    "word_count": 124.0,
+    "avg_word_len": 4.580645161290323,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_440": {
+    "char_count": 3012.0,
+    "word_count": 539.0,
+    "avg_word_len": 4.589981447124305,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_441": {
+    "char_count": 457.0,
+    "word_count": 84.0,
+    "avg_word_len": 4.4523809523809526,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_442": {
+    "char_count": 1456.0,
+    "word_count": 258.0,
+    "avg_word_len": 4.647286821705427,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_443": {
+    "char_count": 290.0,
+    "word_count": 51.0,
+    "avg_word_len": 4.705882352941177,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_444": {
+    "char_count": 977.0,
+    "word_count": 180.0,
+    "avg_word_len": 4.433333333333334,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_445": {
+    "char_count": 1060.0,
+    "word_count": 192.0,
+    "avg_word_len": 4.526041666666667,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_446": {
+    "char_count": 1567.0,
+    "word_count": 261.0,
+    "avg_word_len": 5.007662835249042,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_447": {
+    "char_count": 786.0,
+    "word_count": 148.0,
+    "avg_word_len": 4.3175675675675675,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_448": {
+    "char_count": 2873.0,
+    "word_count": 497.0,
+    "avg_word_len": 4.782696177062374,
+    "exclamation_count": 2.0,
+    "question_count": 4.0
+  },
+  "rev_449": {
+    "char_count": 1550.0,
+    "word_count": 295.0,
+    "avg_word_len": 4.257627118644068,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_450": {
+    "char_count": 293.0,
+    "word_count": 48.0,
+    "avg_word_len": 5.125,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_451": {
+    "char_count": 645.0,
+    "word_count": 116.0,
+    "avg_word_len": 4.568965517241379,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_452": {
+    "char_count": 2359.0,
+    "word_count": 414.0,
+    "avg_word_len": 4.700483091787439,
+    "exclamation_count": 1.0,
+    "question_count": 3.0
+  },
+  "rev_453": {
+    "char_count": 986.0,
+    "word_count": 178.0,
+    "avg_word_len": 4.544943820224719,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_454": {
+    "char_count": 4605.0,
+    "word_count": 798.0,
+    "avg_word_len": 4.771929824561403,
+    "exclamation_count": 1.0,
+    "question_count": 5.0
+  },
+  "rev_455": {
+    "char_count": 3311.0,
+    "word_count": 588.0,
+    "avg_word_len": 4.63265306122449,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_456": {
+    "char_count": 1306.0,
+    "word_count": 216.0,
+    "avg_word_len": 5.050925925925926,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_457": {
+    "char_count": 929.0,
+    "word_count": 166.0,
+    "avg_word_len": 4.602409638554217,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_458": {
+    "char_count": 988.0,
+    "word_count": 183.0,
+    "avg_word_len": 4.404371584699454,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_459": {
+    "char_count": 979.0,
+    "word_count": 159.0,
+    "avg_word_len": 5.163522012578617,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_460": {
+    "char_count": 1937.0,
+    "word_count": 343.0,
+    "avg_word_len": 4.650145772594752,
+    "exclamation_count": 1.0,
+    "question_count": 1.0
+  },
+  "rev_461": {
+    "char_count": 955.0,
+    "word_count": 172.0,
+    "avg_word_len": 4.558139534883721,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_462": {
+    "char_count": 736.0,
+    "word_count": 132.0,
+    "avg_word_len": 4.583333333333333,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_463": {
+    "char_count": 730.0,
+    "word_count": 143.0,
+    "avg_word_len": 4.111888111888112,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_464": {
+    "char_count": 2689.0,
+    "word_count": 493.0,
+    "avg_word_len": 4.456389452332657,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_465": {
+    "char_count": 2877.0,
+    "word_count": 480.0,
+    "avg_word_len": 4.995833333333334,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_466": {
+    "char_count": 415.0,
+    "word_count": 65.0,
+    "avg_word_len": 5.4,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_467": {
+    "char_count": 1498.0,
+    "word_count": 252.0,
+    "avg_word_len": 4.948412698412699,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_468": {
+    "char_count": 625.0,
+    "word_count": 125.0,
+    "avg_word_len": 4.008,
+    "exclamation_count": 5.0,
+    "question_count": 0.0
+  },
+  "rev_469": {
+    "char_count": 1282.0,
+    "word_count": 211.0,
+    "avg_word_len": 5.080568720379147,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_470": {
+    "char_count": 670.0,
+    "word_count": 126.0,
+    "avg_word_len": 4.325396825396825,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_471": {
+    "char_count": 1482.0,
+    "word_count": 257.0,
+    "avg_word_len": 4.770428015564202,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_472": {
+    "char_count": 694.0,
+    "word_count": 114.0,
+    "avg_word_len": 5.0964912280701755,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_473": {
+    "char_count": 767.0,
+    "word_count": 135.0,
+    "avg_word_len": 4.688888888888889,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_474": {
+    "char_count": 683.0,
+    "word_count": 127.0,
+    "avg_word_len": 4.3858267716535435,
+    "exclamation_count": 7.0,
+    "question_count": 3.0
+  },
+  "rev_475": {
+    "char_count": 439.0,
+    "word_count": 82.0,
+    "avg_word_len": 4.365853658536586,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_476": {
+    "char_count": 1017.0,
+    "word_count": 174.0,
+    "avg_word_len": 4.850574712643678,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_477": {
+    "char_count": 3189.0,
+    "word_count": 536.0,
+    "avg_word_len": 4.949626865671642,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  },
+  "rev_478": {
+    "char_count": 803.0,
+    "word_count": 145.0,
+    "avg_word_len": 4.544827586206897,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_479": {
+    "char_count": 1153.0,
+    "word_count": 194.0,
+    "avg_word_len": 4.943298969072165,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_480": {
+    "char_count": 646.0,
+    "word_count": 120.0,
+    "avg_word_len": 4.391666666666667,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_481": {
+    "char_count": 655.0,
+    "word_count": 123.0,
+    "avg_word_len": 4.333333333333333,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_482": {
+    "char_count": 5468.0,
+    "word_count": 959.0,
+    "avg_word_len": 4.70281543274244,
+    "exclamation_count": 6.0,
+    "question_count": 4.0
+  },
+  "rev_483": {
+    "char_count": 1456.0,
+    "word_count": 258.0,
+    "avg_word_len": 4.647286821705427,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_484": {
+    "char_count": 741.0,
+    "word_count": 132.0,
+    "avg_word_len": 4.621212121212121,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_485": {
+    "char_count": 802.0,
+    "word_count": 157.0,
+    "avg_word_len": 4.114649681528663,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_486": {
+    "char_count": 666.0,
+    "word_count": 124.0,
+    "avg_word_len": 4.379032258064516,
+    "exclamation_count": 2.0,
+    "question_count": 0.0
+  },
+  "rev_487": {
+    "char_count": 735.0,
+    "word_count": 129.0,
+    "avg_word_len": 4.705426356589148,
+    "exclamation_count": 3.0,
+    "question_count": 0.0
+  },
+  "rev_488": {
+    "char_count": 678.0,
+    "word_count": 125.0,
+    "avg_word_len": 4.432,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_489": {
+    "char_count": 729.0,
+    "word_count": 114.0,
+    "avg_word_len": 5.4035087719298245,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_490": {
+    "char_count": 559.0,
+    "word_count": 93.0,
+    "avg_word_len": 5.021505376344086,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_491": {
+    "char_count": 1153.0,
+    "word_count": 197.0,
+    "avg_word_len": 4.8578680203045685,
+    "exclamation_count": 0.0,
+    "question_count": 1.0
+  },
+  "rev_492": {
+    "char_count": 948.0,
+    "word_count": 176.0,
+    "avg_word_len": 4.392045454545454,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_493": {
+    "char_count": 1777.0,
+    "word_count": 318.0,
+    "avg_word_len": 4.591194968553459,
+    "exclamation_count": 0.0,
+    "question_count": 2.0
+  },
+  "rev_494": {
+    "char_count": 808.0,
+    "word_count": 137.0,
+    "avg_word_len": 4.905109489051095,
+    "exclamation_count": 2.0,
+    "question_count": 1.0
+  },
+  "rev_495": {
+    "char_count": 656.0,
+    "word_count": 128.0,
+    "avg_word_len": 4.1328125,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_496": {
+    "char_count": 937.0,
+    "word_count": 167.0,
+    "avg_word_len": 4.616766467065868,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_497": {
+    "char_count": 724.0,
+    "word_count": 123.0,
+    "avg_word_len": 4.894308943089431,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_498": {
+    "char_count": 687.0,
+    "word_count": 128.0,
+    "avg_word_len": 4.375,
+    "exclamation_count": 0.0,
+    "question_count": 0.0
+  },
+  "rev_499": {
+    "char_count": 2017.0,
+    "word_count": 360.0,
+    "avg_word_len": 4.605555555555555,
+    "exclamation_count": 1.0,
+    "question_count": 0.0
+  }
+}

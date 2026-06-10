@@ -1,0 +1,11 @@
+{
+  "n_samples": 87579,
+  "aspects": [
+    "acting",
+    "plot",
+    "visuals",
+    "pacing",
+    "sound"
+  ],
+  "source": "data/samples/*.csv"
+}

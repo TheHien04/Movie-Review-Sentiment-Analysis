@@ -13,12 +13,19 @@ class SocialShare {
      * Set the current analysis result
      */
     setResult(text, sentiment, confidence, label) {
+        this._fullText = text || '';
         this.currentResult = {
             text: text.substring(0, 100) + (text.length > 100 ? '...' : ''),
             sentiment: sentiment,
             confidence: (confidence * 100).toFixed(1),
             label: label
         };
+    }
+
+    getDeepLink() {
+        const base = this.shareUrl + '/batch.html';
+        if (!this._fullText) return base;
+        return base + '?text=' + encodeURIComponent(this._fullText.substring(0, 400));
     }
 
     /**
@@ -76,13 +83,13 @@ class SocialShare {
      */
     async copyLink() {
         try {
-            await navigator.clipboard.writeText(this.shareUrl + '/batch.html');
+            await navigator.clipboard.writeText(this.getDeepLink());
             return true;
         } catch (error) {
             console.error('Failed to copy:', error);
             // Fallback method
             const textArea = document.createElement('textarea');
-            textArea.value = this.shareUrl + '/batch.html';
+            textArea.value = this.getDeepLink();
             textArea.style.position = 'fixed';
             textArea.style.left = '-999999px';
             document.body.appendChild(textArea);
@@ -158,16 +165,10 @@ class SocialShare {
      */
     async copyLinkWithToast() {
         const success = await this.copyLink();
-        if (success && window.toast) {
-            window.toast.success('Link copied to clipboard!');
-        } else if (success) {
-            alert('Link copied to clipboard!');
+        if (success) {
+            window.toast ? window.toast.success('Link copied to clipboard!') : null;
         } else {
-            if (window.toast) {
-                window.toast.error('Failed to copy link');
-            } else {
-                alert('Failed to copy link');
-            }
+            window.toast ? window.toast.error('Failed to copy link') : null;
         }
     }
 

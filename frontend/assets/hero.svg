@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 360" role="img" aria-labelledby="heroTitle">
+  <title id="heroTitle">Cinema sentiment analysis illustration</title>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5"/>
+      <stop offset="50%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#2563eb"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="280" height="360" rx="24" fill="url(#bg)"/>
+  <rect x="40" y="48" width="200" height="120" rx="12" fill="url(#screen)" stroke="#94a3b8" stroke-width="2"/>
+  <text x="140" y="118" text-anchor="middle" fill="#a5b4fc" font-family="system-ui,sans-serif" font-size="14" font-weight="600">SENTIMENT</text>
+  <rect x="56" y="200" width="48" height="8" rx="4" fill="#34d399" opacity="0.9"/>
+  <rect x="56" y="218" width="120" height="8" rx="4" fill="#94a3b8" opacity="0.5"/>
+  <rect x="56" y="236" width="88" height="8" rx="4" fill="#f87171" opacity="0.85"/>
+  <rect x="56" y="254" width="140" height="8" rx="4" fill="#94a3b8" opacity="0.5"/>
+  <circle cx="200" cy="280" r="36" fill="none" stroke="#e0e7ff" stroke-width="3"/>
+  <text x="200" y="286" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="22">AI</text>
+  <path d="M70 300 L140 330 L210 300" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cinesentiment
+  labels:
+    app.kubernetes.io/name: cinesentiment
+    app.kubernetes.io/part-of: movie-sentiment-ai

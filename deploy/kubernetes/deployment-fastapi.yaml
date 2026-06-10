@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cinesentiment-fastapi
+  namespace: cinesentiment
+  labels:
+    app: cinesentiment-fastapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cinesentiment-fastapi
+  template:
+    metadata:
+      labels:
+        app: cinesentiment-fastapi
+    spec:
+      containers:
+        - name: fastapi
+          image: cinesentiment:2.2.0
+          imagePullPolicy: IfNotPresent
+          command: ["uvicorn", "backend.fastapi_app:app", "--host", "0.0.0.0", "--port", "8001"]
+          ports:
+            - containerPort: 8001
+              name: http
+          envFrom:
+            - configMapRef:
+                name: cinesentiment-config
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8001
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="ROC curve, threshold sweep, and calibration insights for movie sentiment model"/>
+  <meta name="theme-color" content="#050508"/>
+  <title>Research Insights | CineSentiment</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="design-system.css"/>
+  <link rel="stylesheet" href="cinema-theme.css"/>
+  <link rel="stylesheet" href="theme.css"/>
+  <link rel="stylesheet" href="data-viz.css"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="loading.css"/>
+  <link rel="stylesheet" href="toast.css"/>
+  <link rel="stylesheet" href="layout-polish.css"/>
+  <link rel="stylesheet" href="cinema-unified.css"/>
+</head>
+<body class="main-bg" data-page="insights">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav data-cinema-nav></nav>
+  <script src="/layout.js"></script>
+
+  <section class="page-hero" role="banner">
+    <p class="page-hero__eyebrow">v2.0.0 · Model diagnostics</p>
+    <h1>RESEARCH INSIGHTS</h1>
+    <p class="page-hero__sub">ROC, precision–recall, calibration, and threshold sweep — statistical diagnostics for probabilistic classifiers.</p>
+  </section>
+  <div class="film-strip" aria-hidden="true"></div>
+
+  <main id="main-content" class="cinema-landing insights-page" role="main">
+    <section class="card insights-controls">
+      <h2>Split &amp; source</h2>
+      <div class="insights-toolbar">
+        <label for="insights-split">Evaluation split:</label>
+        <select id="insights-split" class="form-select form-select-sm" style="max-width:10rem;display:inline-block;">
+          <option value="val" selected>Validation</option>
+          <option value="test">Test</option>
+        </select>
+        <span id="insights-source-badge" class="ticket-badge">Preparing charts…</span>
+        <button type="button" id="insights-refresh" class="btn btn-secondary-app btn-sm">Refresh charts</button>
+        <button type="button" id="insights-export-pdf" class="btn btn-secondary-app btn-sm">Export PDF</button>
+      </div>
+      <p class="chart-note">Curves load from saved artifacts (<code>make insights-curves</code>). Use <strong>Refresh charts</strong> to reload — no live re-scoring (avoids long waits).</p>
+    </section>
+
+    <div class="insights-grid">
+      <section class="card chart-card">
+        <h2>ROC curve</h2>
+        <div class="section-desc">True positive rate vs false positive rate. AUC summarizes ranking quality (threshold-independent).</div>
+        <p id="roc-auc-label" class="insights-stat" aria-live="polite">AUC: —</p>
+        <div class="chart-wrap chart-wrap--line">
+          <canvas id="roc-chart" role="img" aria-label="ROC curve"></canvas>
+        </div>
+      </section>
+
+      <section class="card chart-card">
+        <h2>Threshold sweep</h2>
+        <div class="section-desc">F1, precision, and recall vs decision threshold on P(positive). Pick a threshold that matches your product goal.</div>
+        <p id="optimal-threshold-label" class="insights-stat" aria-live="polite">F1-optimal threshold: —</p>
+        <div class="chart-wrap chart-wrap--line">
+          <canvas id="threshold-chart" role="img" aria-label="Threshold sweep chart"></canvas>
+        </div>
+      </section>
+
+      <section class="card chart-card">
+        <h2>Precision–recall curve</h2>
+        <div class="section-desc">Trade-off between precision and recall at all thresholds. Average precision (AP) summarizes ranking quality for imbalanced settings.</div>
+        <p id="pr-ap-label" class="insights-stat" aria-live="polite">AP: —</p>
+        <div class="chart-wrap chart-wrap--line">
+          <canvas id="pr-chart" role="img" aria-label="Precision recall curve"></canvas>
+        </div>
+      </section>
+
+      <section class="card chart-card chart-card--wide" id="calibration-section">
+        <h2>Calibration (reliability diagram)</h2>
+        <div class="section-desc">Predicted probability vs observed positive rate in bins. Perfect calibration follows the diagonal. Brier score and ECE quantify probabilistic accuracy.</div>
+        <p id="calibration-stats-label" class="insights-stat" aria-live="polite">Brier: — · ECE: —</p>
+        <div class="chart-wrap chart-wrap--line">
+          <canvas id="calibration-chart" role="img" aria-label="Calibration reliability diagram"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <div id="insights-error" class="insights-error" style="display:none;" role="alert"></div>
+
+    <section class="insights-related" aria-labelledby="insights-related-heading">
+      <h2 id="insights-related-heading" class="insights-related__title">Related</h2>
+      <div class="insights-related__links">
+        <a class="insights-related__chip" href="/evaluation.html">
+          <span class="insights-related__chip-label">Box office metrics</span>
+          <span class="insights-related__chip-desc">Confusion matrix &amp; model comparison</span>
+        </a>
+        <a class="insights-related__chip" href="/evaluation.html#error-analysis-section">
+          <span class="insights-related__chip-label">Error analysis viewer</span>
+          <span class="insights-related__chip-desc">Browse FP/FN misclassified test reviews</span>
+        </a>
+        <a class="insights-related__chip" href="/artifacts/results/error_analysis_test.csv" download>
+          <span class="insights-related__chip-label">Error analysis CSV</span>
+          <span class="insights-related__chip-desc">Download for reports / slides</span>
+        </a>
+        <a class="insights-related__chip" href="/summary.html">
+          <span class="insights-related__chip-label">Statistics report</span>
+          <span class="insights-related__chip-desc">Test metrics, CIs, baseline Δ for reports</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer data-cinema-footer></footer>
+
+  <script src="/data/calibration-data.js"></script>
+  <script src="/config.js"></script>
+  <script src="/ui-messages.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="/chart-theme.js"></script>
+  <script src="/theme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/loading.js"></script>
+  <script src="/toast.js"></script>
+  <script src="/shared.js"></script>
+  <script src="/keyboard-shortcuts.js"></script>
+  <script src="/insights-page.js"></script>
+</body>
+</html>

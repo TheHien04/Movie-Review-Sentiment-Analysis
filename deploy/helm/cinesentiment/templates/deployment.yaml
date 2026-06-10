@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cinesentiment.fullname" . }}-backend
+  labels:
+    {{- include "cinesentiment.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "cinesentiment.name" . }}
+      app.kubernetes.io/component: backend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "cinesentiment.name" . }}
+        app.kubernetes.io/component: backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.backend.port }}
+          env:
+            - name: SECRET_KEY
+              value: {{ .Values.secrets.secretKey | quote }}
+            - name: GUNICORN_WORKERS
+              value: {{ .Values.backend.workers | quote }}
+            - name: RATE_LIMIT_ENABLED
+              value: {{ .Values.config.rateLimitEnabled | quote }}
+            - name: CACHE_ENABLED
+              value: {{ .Values.config.cacheEnabled | quote }}
+            - name: HUB_MODEL_FALLBACK
+              value: {{ .Values.config.hubModelFallback | quote }}
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: {{ .Values.backend.port }}
+            initialDelaySeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.backend.port }}
+            initialDelaySeconds: 60
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+          command: ["gunicorn", "-c", "backend/gunicorn.conf.py", "backend.app:app"]

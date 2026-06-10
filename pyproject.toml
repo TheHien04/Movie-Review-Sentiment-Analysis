@@ -1,0 +1,15 @@
+[project]
+name = "movie-sentiment-ai"
+version = "2.3.0"
+description = "IMDB movie review sentiment analysis with DistilBERT and Flask"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+[project.optional-dependencies]
+train = ["datasets>=2.14.0", "matplotlib>=3.7.0"]
+dev = ["pytest>=7.4.0", "pytest-flask>=1.2.0", "pytest-cov>=4.1.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

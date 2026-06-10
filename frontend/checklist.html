@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Capstone defense readiness checklist"/>
+  <meta name="theme-color" content="#050508"/>
+  <title>Defense Checklist | CineSentiment</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="design-system.css"/>
+  <link rel="stylesheet" href="cinema-theme.css"/>
+  <link rel="stylesheet" href="theme.css"/>
+  <link rel="stylesheet" href="data-viz.css"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="loading.css"/>
+  <link rel="stylesheet" href="toast.css"/>
+  <link rel="stylesheet" href="layout-polish.css"/>
+  <link rel="stylesheet" href="cinema-unified.css"/>
+  <link rel="stylesheet" href="checklist-page.css"/>
+</head>
+<body class="main-bg" data-page="checklist">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav data-cinema-nav></nav>
+  <script src="/layout.js"></script>
+
+  <section class="page-hero" role="banner">
+    <p class="page-hero__eyebrow">v2.0.0 · Capstone readiness</p>
+    <h1>DEFENSE CHECKLIST</h1>
+    <p class="page-hero__sub">One glance before you present — artifacts, statistics, and demo flow.</p>
+  </section>
+  <div class="film-strip" aria-hidden="true"></div>
+
+  <main id="main-content" class="cinema-landing checklist-page" role="main">
+    <section class="checklist-hero card" aria-live="polite">
+      <div class="checklist-hero__glow" aria-hidden="true"></div>
+      <div class="checklist-hero__inner">
+        <div id="checklist-ring" class="checklist-ring" data-ready="unknown">
+          <svg viewBox="0 0 120 120" class="checklist-ring__svg" aria-hidden="true">
+            <circle class="checklist-ring__track" cx="60" cy="60" r="52" />
+            <circle id="checklist-ring-progress" class="checklist-ring__progress" cx="60" cy="60" r="52" />
+          </svg>
+          <div class="checklist-ring__label">
+            <span id="checklist-score" class="checklist-ring__score">—</span>
+            <span class="checklist-ring__caption">required</span>
+          </div>
+        </div>
+        <div class="checklist-hero__copy">
+          <span id="checklist-badge" class="checklist-badge checklist-badge--loading">Checking…</span>
+          <p id="checklist-summary" class="checklist-summary">Loading project status…</p>
+          <p id="checklist-metrics" class="checklist-metrics"></p>
+          <p id="checklist-pipeline" class="checklist-pipeline"></p>
+        </div>
+      </div>
+      <div class="checklist-hero__nav insights-related__links">
+        <a class="insights-related__chip" href="/summary.html">
+          <span class="insights-related__chip-label">Statistics</span>
+          <span class="insights-related__chip-desc">Test metrics &amp; hypothesis tests</span>
+        </a>
+        <a class="insights-related__chip" href="/evaluation.html">
+          <span class="insights-related__chip-label">Metrics</span>
+          <span class="insights-related__chip-desc">Confusion matrix &amp; errors</span>
+        </a>
+        <a class="insights-related__chip" href="/insights.html">
+          <span class="insights-related__chip-label">Insights</span>
+          <span class="insights-related__chip-desc">ROC, PR, calibration</span>
+        </a>
+        <button type="button" id="checklist-refresh-btn" class="insights-related__chip checklist-refresh-chip">
+          <span class="insights-related__chip-label">↻ Refresh status</span>
+          <span class="insights-related__chip-desc">Re-check artifacts</span>
+        </button>
+      </div>
+    </section>
+
+    <div class="checklist-layout">
+      <section class="card checklist-panel" aria-labelledby="checklist-items-heading">
+        <div class="checklist-panel__head">
+          <h2 id="checklist-items-heading">Pipeline Artifacts</h2>
+          <p class="playbook-subtitle">Required for a complete capstone run</p>
+        </div>
+        <div id="checklist-items-required" class="checklist-rows" role="list"></div>
+        <div id="checklist-skeleton" class="checklist-rows checklist-rows--skeleton" aria-hidden="true">
+          <div class="checklist-row checklist-row--skeleton"></div>
+          <div class="checklist-row checklist-row--skeleton"></div>
+          <div class="checklist-row checklist-row--skeleton"></div>
+          <div class="checklist-row checklist-row--skeleton"></div>
+        </div>
+        <div class="checklist-panel__optional">
+          <h3 class="checklist-panel__subhead">Documentation (optional)</h3>
+          <div id="checklist-items-optional" class="checklist-optional-chips" role="list"></div>
+        </div>
+      </section>
+
+      <section class="card checklist-panel checklist-panel--playbook" aria-labelledby="defense-steps-heading">
+        <h2 id="defense-steps-heading">Defense Playbook</h2>
+        <p class="playbook-subtitle">Presentation flow — follow each step in order</p>
+        <ol class="checklist-playbook">
+          <li>
+            <span class="checklist-playbook__num">1</span>
+            <div>
+              <strong>Launch the application</strong>
+              <p>Run <code>make serve</code> and open the dashboard</p>
+            </div>
+          </li>
+          <li>
+            <span class="checklist-playbook__num">2</span>
+            <div>
+              <strong>Walk through key pages</strong>
+              <p>Statistics, Metrics, Insights — ensure live data loads</p>
+            </div>
+          </li>
+          <li>
+            <span class="checklist-playbook__num">3</span>
+            <div>
+              <strong>Live prediction demo</strong>
+              <p>Analyze sample reviews — show confidence and word importance</p>
+            </div>
+          </li>
+          <li>
+            <span class="checklist-playbook__num">4</span>
+            <div>
+              <strong>Present evaluation results</strong>
+              <p>Test-split metrics, confidence intervals, and hypothesis tests</p>
+            </div>
+          </li>
+          <li>
+            <span class="checklist-playbook__num">5</span>
+            <div>
+              <strong>Discuss error analysis</strong>
+              <p>Show misclassified examples and explain model limitations</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+    </div>
+
+    <div id="checklist-error" class="checklist-alert" style="display:none;" role="alert"></div>
+  </main>
+
+  <footer data-cinema-footer></footer>
+
+  <script src="/config.js"></script>
+  <script src="/ui-messages.js"></script>
+  <script src="/theme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/loading.js"></script>
+  <script src="/toast.js"></script>
+  <script src="/shared.js"></script>
+  <script src="/keyboard-shortcuts.js"></script>
+  <script src="/checklist-page.js"></script>
+</body>
+</html>

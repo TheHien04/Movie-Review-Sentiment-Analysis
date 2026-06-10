@@ -3,16 +3,7 @@
    Purple Gradient Theme with Glass Morphism
 ======================================== */
 
-/* Base Styles */
-body, html {
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-  font-family: "Segoe UI", "Roboto", "Montserrat", Arial, sans-serif;
-  background: #f8fafc;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-}
+/* Base Styles — font/background overridden by cinema-theme.css */
 /* Main Background - Soft & Comfortable Gradient */
 .main-bg {
   min-height: 100vh;
@@ -118,9 +109,13 @@ nav a:hover {
   padding: 0 24px;
 }
 
-/* Make dataset overview span full width */
-.dataset-info-section {
+/* Full-width rows on metrics dashboard */
+.dataset-info-section,
+#model-comparison-section {
   grid-column: 1 / -1;
+}
+
+.dataset-info-section {
   background: rgba(255, 255, 255, 0.1) !important;
   border: 1px solid rgba(167, 139, 250, 0.3) !important;
 }
@@ -153,7 +148,6 @@ nav a:hover {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  color: #ffffff;
 }
 
 .metrics-section:hover,
@@ -189,7 +183,6 @@ nav a:hover {
 }
 
 .section-desc {
-  color: rgba(255, 255, 255, 0.7);
   font-size: 0.95rem;
   margin-bottom: 14px;
   line-height: 1.5;
@@ -231,14 +224,15 @@ nav a:hover {
 }
 
 .metric-card:hover {
-  box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.25) inset;
-  transform: translateY(-4px) scale(1.05);
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.65) 0%, rgba(167, 139, 250, 0.6) 50%, rgba(196, 181, 253, 0.65) 100%);
+  box-shadow: 0 10px 40px rgba(232, 197, 71, 0.25);
+  transform: translateY(-4px) scale(1.02);
+  background: rgba(232, 197, 71, 0.1);
 }
 
 .metric-card .info-badge {
   margin-left: 6px;
-  background: rgba(255, 255, 255, 0.95);\n  color: #6366f1;
+  background: rgba(232, 197, 71, 0.15);
+  color: #e8c547;
   border-radius: 50%;
   padding: 3px 8px;
   font-size: 0.85rem;
@@ -253,7 +247,7 @@ nav a:hover {
 .metric-card .info-badge:hover {
   background: white;
   transform: scale(1.15);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 12px rgba(232, 197, 71, 0.3);
 }
 
 .metric-card > div:first-child {
@@ -435,27 +429,6 @@ footer {
   font-size: 1rem;
   border-radius: 0 0 1.2rem 1.2rem;
 }
-/* Threshold slider control */
-.threshold-control {
-  margin: 18px 0 8px 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.threshold-control label {
-  font-weight: 500;
-  margin-right: 8px;
-}
-#threshold-slider {
-  width: 160px;
-  accent-color: #6d5dfc;
-}
-#threshold-value {
-  font-weight: bold;
-  color: #6d5dfc;
-  min-width: 38px;
-  display: inline-block;
-}
 /* Modal detail */
 #detail-modal .modal-content {
   border-radius: 12px;
@@ -577,20 +550,6 @@ canvas {
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
-@media (max-width: 900px) {
-  .eval-grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 0 8px;
-  }
-  .summary-box {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-  .summary-actions {
-    grid-column: 1;
-  }
-}
 @media (max-width: 600px) {
   .metrics-section,
   .confusion-section,

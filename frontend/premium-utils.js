@@ -297,7 +297,7 @@ const ScrollButtons = {
     this.scrollTopBtn.className = 'scroll-btn scroll-top-btn';
     this.scrollTopBtn.innerHTML = '↑';
     this.scrollTopBtn.setAttribute('aria-label', 'Scroll to top');
-    this.scrollTopBtn.setAttribute('title', 'Lên đầu trang');
+    this.scrollTopBtn.setAttribute('title', 'Scroll to top');
     this.scrollTopBtn.onclick = () => this.scrollToTop();
     
     // Create scroll to bottom button
@@ -305,7 +305,7 @@ const ScrollButtons = {
     this.scrollBottomBtn.className = 'scroll-btn scroll-bottom-btn';
     this.scrollBottomBtn.innerHTML = '↓';
     this.scrollBottomBtn.setAttribute('aria-label', 'Scroll to bottom');
-    this.scrollBottomBtn.setAttribute('title', 'Xuống cuối trang');
+    this.scrollBottomBtn.setAttribute('title', 'Scroll to bottom');
     this.scrollBottomBtn.onclick = () => this.scrollToBottom();
     
     this.buttons.appendChild(this.scrollTopBtn);

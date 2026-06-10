@@ -1,0 +1,26 @@
+name: "distilbert_sentiment"
+backend: "python"
+max_batch_size: 32
+
+input [
+  {
+    name: "TEXT"
+    data_type: TYPE_STRING
+    dims: [ -1 ]
+  }
+]
+
+output [
+  {
+    name: "LOGITS"
+    data_type: TYPE_FP32
+    dims: [ 2 ]
+  }
+]
+
+instance_group [
+  {
+    count: 1
+    kind: KIND_CPU
+  }
+]
