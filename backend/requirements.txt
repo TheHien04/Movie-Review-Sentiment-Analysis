@@ -26,7 +26,7 @@ langdetect>=1.0.9
 stripe>=7.0.0
 
 # v2.1 — MLOps / modern stack
-mlflow>=2.10.0
+mlflow>=3.13.0
 prometheus-client>=0.20.0
 opentelemetry-api>=1.22.0
 opentelemetry-sdk>=1.22.0
