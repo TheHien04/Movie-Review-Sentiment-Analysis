@@ -178,9 +178,7 @@ release-check:
 	@test -f sentiment_model/model.safetensors -o -f sentiment_model/pytorch_model.bin || (echo "Missing model weights in sentiment_model/ — run: make train" && exit 1)
 	@echo "Release artifacts OK"
 
-github-check: ## Pre-push: secrets scan + tests (run before git push)
-	@echo "=== GitHub pre-push check ==="
-	@if git ls-files --error-unmatch .env 2>/dev/null; then echo "ERROR: .env is tracked by git — run: git rm --cached .env"; exit 1; else echo "OK: .env not tracked"; fi
-	@if git grep -E 'sk-[a-zA-Z0-9]{20,}' -- '*.py' '*.js' '*.ts' '*.env' '*.yaml' '*.yml' 2>/dev/null; then echo "ERROR: possible API key in source"; exit 1; else echo "OK: no API keys in source"; fi
+github-check: ## Pre-push: hygiene script + tests (run before git push)
+	bash scripts/verify_github_push.sh
 	$(MAKE) test
-	@echo "=== Ready to push (also enable GitHub secret scanning on the repo) ==="
+	@echo "=== Ready to push (enable GitHub Secret Scanning in repo Settings → Security) ==="

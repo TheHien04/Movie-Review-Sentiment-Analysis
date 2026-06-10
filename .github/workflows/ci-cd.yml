@@ -10,6 +10,15 @@ permissions:
   contents: read
 
 jobs:
+  github-hygiene:
+    name: GitHub hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Block secrets, weights, and oversized data in git
+        run: bash scripts/verify_github_push.sh
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -58,6 +67,7 @@ jobs:
 
   test:
     name: Test (Python ${{ matrix.python-version }})
+    needs: [github-hygiene]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

@@ -60,10 +60,11 @@ checkpoint-*/
 *.pkl
 *.pickle
 
-# CSV files (except samples needed for testing)
+# CSV — only tiny CI samples; full IMDB splits are generated locally (make preprocess)
 *.csv
 !data/samples/*.csv
-!data/raw/*.csv
+data/raw/*
+!data/raw/.gitkeep
 
 # Generated artifacts (can be regenerated)
 artifacts/results/*.png
@@ -74,6 +75,9 @@ results/
 
 # API key registry (provisioned keys — never commit)
 data/api_keys_registry.json
+
+# Feast materialized store (regenerate: make feast-materialize)
+data/feast/*.parquet
 
 # Environment & secrets (never commit)
 .env

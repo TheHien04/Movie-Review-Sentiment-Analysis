@@ -68,16 +68,18 @@ From a clean clone:
 git clone https://github.com/TheHien04/Movie-Review-Sentiment-Analysis.git
 cd Movie-Review-Sentiment-Analysis
 make install
+make preprocess    # downloads IMDB → data/raw/ (not stored in git)
 make capstone      # baseline → train → evaluate → hypothesis tests → pytest
 make serve         # http://127.0.0.1:8000
 ```
 
 | Command | Output |
 |---------|--------|
+| `make preprocess` | Stratified IMDB splits in `data/raw/` (local only, ~65 MB) |
 | `make capstone` | Full academic pipeline; writes `artifacts/results/capstone_run_log.json` |
 | `make evaluate` | Refreshes `artifacts/results/evaluation.json` |
 | `make test` | 102 pytest cases |
-| `make github-check` | Secret scan + full test suite (pre-push) |
+| `make github-check` | Hygiene script + tests — run before `git push` ([docs/GITHUB.md](docs/GITHUB.md)) |
 | `make serve-prod` | Gunicorn production WSGI |
 | `make notebooks` | Executes notebooks → `artifacts/results/*.html` |
 

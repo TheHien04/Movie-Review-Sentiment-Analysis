@@ -13,10 +13,14 @@ Columns: `text` (review), `label` (0 = negative, 1 = positive).
 
 ## Regenerate from IMDB
 
+Full splits are **not committed to GitHub** (size + licensing hygiene). After clone:
+
 ```bash
 make install
 make preprocess   # downloads IMDB via Hugging Face `datasets`, writes data/raw/
 ```
+
+CI uses only `samples/*.csv` (5 rows). Local training and evaluation require `make preprocess` once.
 
 ## Reproducibility
 

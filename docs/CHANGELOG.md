@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.0] - 2026-06-10
 
+### Security — Git hygiene (do not push local-only artifacts)
+- **Removed from git:** `data/raw/*.csv` (~65 MB IMDB splits) and `data/feast/review_features.parquet`
+- **`scripts/verify_github_push.sh`** + CI job `github-hygiene` block secrets, weights, and oversized data
+- **`.gitignore`** — raw splits and Feast parquet are local-only; clones run `make preprocess`
+
 ### Changed — GitHub documentation (principal-level English)
 - **README.md** — full English rewrite: executive summary, reproducibility contract, architecture, figure catalog
 - **docs/FIGURES.md** — academic screenshot captions (replaces Vietnamese `HINH_ANH_MO_TA.md`)

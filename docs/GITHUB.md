@@ -2,24 +2,34 @@
 
 Run before `git push` to a **public** repository.
 
-## 1. Secrets
+## 1. Automated gate (run before every push)
 
 ```bash
 make github-check
 ```
 
-- [ ] `.env` is **not** tracked (`git ls-files .env` should be empty)
-- [ ] No API keys, passwords, or tokens in code
-- [ ] Enable **GitHub Secret Scanning** + **Dependabot** in repo Settings → Security
+This runs `scripts/verify_github_push.sh` then pytest. The hygiene script **fails** if any of these are tracked:
 
-## 2. What is safe to commit
+| Blocked | Why |
+|---------|-----|
+| `.env`, `credentials.json`, `secrets.json` | Secrets |
+| `data/api_keys_registry.json` | Provisioned API keys |
+| `data/raw/*.csv` | Full IMDB (~65 MB) — regenerate with `make preprocess` |
+| `*.safetensors`, `*.pth`, `*.bin` | Model weights |
+| `venv/`, `node_modules/`, `__pycache__/` | Local tooling |
+| Tracked files **> 5 MB** (except `Images/` screenshots) | Repo bloat |
 
-| Commit | Do not commit |
-|--------|----------------|
-| Code, tests, docs | `.env`, `venv/`, `*.log` |
-| `data/samples/*.csv` | Full IMDB `data/raw/` (large) |
-| `artifacts/results/evaluation.json` | `*.safetensors`, `*.bin` weights |
-| Tokenizer config in `sentiment_model/` | Trained weight files |
+Also enable **GitHub Secret Scanning** + **Dependabot** in repo Settings → Security.
+
+## 2. What professionals commit vs keep local
+
+| Safe to commit | Keep local / regenerate |
+|----------------|-------------------------|
+| Code, tests, docs, CI workflows | `.env` (copy from `.env.example`) |
+| `data/samples/*.csv` (5 rows) | `data/raw/{train,val,test}.csv` via `make preprocess` |
+| Tokenizer config in `sentiment_model/` | `sentiment_model/*.safetensors` after `make train` |
+| `artifacts/results/evaluation.json` (optional) | `artifacts/mlruns/`, `wandb/`, `logs/` |
+| `Images/` UI screenshots | `data/feast/*.parquet` via `make feast-materialize` |
 
 ## 3. CI on GitHub
 
