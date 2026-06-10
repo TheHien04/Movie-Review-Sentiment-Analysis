@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.0] - 2026-06-10
 
+### Changed — GitHub documentation (principal-level English)
+- **README.md** — full English rewrite: executive summary, reproducibility contract, architecture, figure catalog
+- **docs/FIGURES.md** — academic screenshot captions (replaces Vietnamese `HINH_ANH_MO_TA.md`)
+
 ### Added — FAANG-complete stack (100% checklist)
 - **LangGraph** — `backend/services/agent_graph.py`, `/api/agent/analyze`, `/api/v2/agent/analyze`
 - **vLLM + Triton** — `backend/services/remote_inference.py`, Docker Compose profiles, Triton model repo
