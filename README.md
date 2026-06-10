@@ -6,8 +6,6 @@
 
 End-to-end binary sentiment classification for English movie reviews: a **DistilBERT** classifier with rigorous offline evaluation (bootstrap confidence intervals, baseline comparison, hypothesis tests), exposed through a production-style **REST API**, cinema-themed web UI, and reproducible training pipeline.
 
-**Author:** The Hien · **Version:** 2.3.0 · **License:** MIT
-
 ---
 
 ## Executive summary
