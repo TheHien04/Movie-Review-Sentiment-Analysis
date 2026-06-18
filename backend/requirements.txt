@@ -50,4 +50,4 @@ gunicorn>=21.2.0
 
 # Training (optional; also in scripts/requirements-train.txt)
 accelerate>=0.26.0
-datasets>=2.14.0
+datasets>=5.0.0
