@@ -1,65 +1,83 @@
 # Theoretical Framework — CineSentiment
 
-**Document type:** Curriculum alignment (Stanford + MIT only) mapped onto artefacts  
+**Document type:** Curriculum alignment (Stanford, MIT, Harvard, Oxford, Cambridge) mapped onto artefacts  
 **Audience:** Examiners who know *courses*, not a paper dump  
 **Companion:** [METHODOLOGY.md](METHODOLOGY.md) · [STATS_REPORT.md](STATS_REPORT.md) · [ARCHITECTURE.md](ARCHITECTURE.md)
 
-This chapter records **only methods that exist in code**. Framing is the standard machine-learning syllabus at **Stanford** and **MIT**. Figure prefix **T.**
+This chapter records **only methods that exist in code**. Framing is the standard machine-learning syllabus at **Stanford, MIT, Harvard, Oxford, and Cambridge**. Figure prefix **T.**
 
-You do **not** need to read a stack of authors. If you can name **CS229 + CS224N + CS109** and **6.036 + 6.041**, you already have the theory. This repo is those modules applied to IMDB sentiment.
+You do **not** need to read a stack of authors. The same hold-out + encoder + CI stack is CS229/CS224N/CS109, 6.036/6.S191/18.05, CS181/Stat 110, Oxford ML Part C / Statistical Inference, and Cambridge MLB / NLP. This repo is those modules applied to IMDB sentiment.
 
 ---
 
-## T.0 Curriculum map — Stanford and MIT
+## T.0 Curriculum map — five universities
 
-| What the repo does | Stanford | MIT |
-|--------------------|----------|-----|
-| Supervised binary classification, logistic / NB / SVM | **CS229** | **6.036** (now 6.390) |
-| Train / val / test; select on val; test once | CS229 | 6.036 |
-| TF-IDF, n-grams, text classification | **CS224N** | **6.861** |
-| Transformers, self-attention, BERT-style fine-tune | **CS224N** | **6.S191** / 6.861 |
-| Cross-entropy, softmax, SGD-style training | CS229 / CS231N | 6.036 / 6.S191 |
-| Confusion matrix, F1, ROC | CS229 | 6.036 |
-| Bootstrap CI, hypothesis tests, paired comparison | **CS109** | **6.041** / **18.05** |
-| Gradient saliency (input × gradient) | **CS231N** | 6.S191 |
-| Optional retrieval (neighbours, not fused) | CS224N retrieval | 6.861 |
+| What the repo does | Stanford | MIT | Harvard | Oxford | Cambridge |
+|--------------------|----------|-----|---------|--------|-----------|
+| Supervised classification, logistic / NB / SVM | **CS229** | **6.036** | **CS181** | CS **Machine Learning** (Part C) | **1B MLRD** / **Part II MLB** |
+| Train / val / test; test once | CS229 | 6.036 | CS181 | ML Part C | MLRD / MLB |
+| TF-IDF, n-grams, text classification | **CS224N** | **6.861** | CS181 | **Computational Linguistics** | **Part II NLP** |
+| Transformers, BERT-style fine-tune | CS224N | **6.S191** | CS287 | Computational Linguistics | Part II NLP |
+| Cross-entropy, softmax | CS229 / CS231N | 6.036 / 6.S191 | CS181 | ML Part C | MLB |
+| F1, ROC, confusion matrix | CS229 | 6.036 | CS181 | ML Part C | MLB / MLRD |
+| Bootstrap CI, paired hypothesis tests | **CS109** | **6.041** / **18.05** | **Stat 110** | **Statistical Inference** (SB2) | **IA Probability** / IB Statistics |
+| Gradient saliency | **CS231N** | 6.S191 | CS181 | Computer Vision / ML | MLB |
+| Optional retrieval (not fused) | CS224N | 6.861 | CS287 | Computational Linguistics | Part II NLP |
 
 ```mermaid
 flowchart TB
     subgraph Stanford["Stanford"]
-        S229["CS229  supervised ML"]
-        S224["CS224N  NLP / Transformers"]
-        S231["CS231N  saliency"]
-        S109["CS109  bootstrap / reporting"]
+        S229["CS229"]
+        S224["CS224N"]
+        S109["CS109"]
     end
 
     subgraph MIT["MIT"]
-        M036["6.036  ML"]
-        M041["6.041 / 18.05  probability"]
-        M191["6.S191  DL"]
-        M861["6.861  NLP"]
+        M036["6.036"]
+        M191["6.S191"]
+        M041["6.041 / 18.05"]
+    end
+
+    subgraph Harvard["Harvard"]
+        H181["CS181"]
+        H110["Stat 110"]
+    end
+
+    subgraph Oxford["Oxford"]
+        OML["ML Part C"]
+        ONLP["Computational Linguistics"]
+        OSI["Statistical Inference"]
+    end
+
+    subgraph Cambridge["Cambridge"]
+        CML["1B MLRD / Part II MLB"]
+        CNLP["Part II NLP"]
+        CPr["IA Probability"]
     end
 
     subgraph Repo["This capstone"]
-        Prot["70/15/15  val select  test once"]
-        Base["TF-IDF + logistic / NB / SVM"]
-        Enc["DistilBERT fine-tune"]
-        Inf["Bootstrap CI  McNemar"]
-        XAI["Input x gradient"]
+        Prot["70/15/15  test once"]
+        Enc["TF-IDF + DistilBERT"]
+        Inf["Bootstrap + McNemar"]
     end
 
     S229 --> Prot
     M036 --> Prot
+    H181 --> Prot
+    OML --> Prot
+    CML --> Prot
     S224 --> Enc
     M191 --> Enc
-    S224 --> Base
-    M861 --> Base
+    ONLP --> Enc
+    CNLP --> Enc
     S109 --> Inf
     M041 --> Inf
-    S231 --> XAI
+    H110 --> Inf
+    OSI --> Inf
+    CPr --> Inf
 ```
 
-**Figure T.0.** One ML stack, two schools. Defence: hold-out like CS229/6.036; encoder like CS224N/6.S191; inference like CS109/18.05.
+**Figure T.0.** One ML stack, five universities. Defence: hold-out (CS229 / 6.036 / CS181 / Oxford ML / Cambridge MLB); encoder (CS224N / 6.S191 / Oxford CL / Cambridge NLP); inference (CS109 / 18.05 / Stat 110 / Oxford SB2 / Cambridge IA Probability).
 
 ---
 
@@ -487,10 +505,10 @@ flowchart TB
 
 ## How to use this chapter in a defence
 
-1. Show **T.0** — Stanford + MIT, one stack.  
-2. Protocol **T.3** — CS229 / 6.036 hold-out.  
-3. Two geometries **T.4** — CS224N / 6.861.  
-4. Tests **T.12** — CS109 / 18.05; say the models are **tied**.  
+1. Show **T.0** — five universities, one stack.  
+2. Protocol **T.3** — hold-out (CS229 / 6.036 / CS181 / Oxford ML / Cambridge MLB).  
+3. Two geometries **T.4** — CS224N / 6.861 / Oxford CL / Cambridge NLP.  
+4. Tests **T.12** — CS109 / 18.05 / Stat 110 / Oxford SB2; say the models are **tied**.  
 5. Point to `evaluation.json`.
 
 ---

@@ -215,11 +215,11 @@ Machine-learning diagrams (use-case, layered, neural, activity, sequence, state,
 
 ## Theoretical framework figures (T.0–T.16)
 
-Syllabus architectures (Stanford + MIT), each mapped to an artefact. **T.0–T.12** in README §4; extras in [THEORY.md](THEORY.md).
+Syllabus architectures (Stanford, MIT, Harvard, Oxford, Cambridge), each mapped to an artefact. **T.0–T.12** in README §4; extras in [THEORY.md](THEORY.md).
 
 | Figure | View | Location |
 |--------|------|----------|
-| **T.0** | Stanford + MIT curriculum | README §4.0 · THEORY T.0 |
+| **T.0** | Five-university curriculum | README §4.0 · THEORY T.0 |
 | **T.1** | Knowledge architecture | README §4.1 |
 | **T.2** | Supervised problem + threshold | README §4.2 |
 | **T.3** | Generalisation protocol (no leakage) | README §4.2 |

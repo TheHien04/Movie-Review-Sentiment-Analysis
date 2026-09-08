@@ -18,9 +18,9 @@
 | **Version** | 2.3.0 |
 | **Licence** | MIT |
 
-**Abstract.** This repository presents an end-to-end system for binary sentiment classification of English movie reviews. A DistilBERT encoder is fine-tuned on a stratified 70/15/15 partition of IMDB, evaluated once on a held-out test split with bootstrap confidence intervals, and compared against a pre-registered TF-IDF + logistic regression baseline under McNemar and bootstrap-difference tests. The same checkpoint is served through a Flask product API and a parallel FastAPI v2 surface, with a cinema-themed workbench for single/batch inference, token-level attribution, and a metrics dashboard bound to versioned artefacts. The design follows a C4 software decomposition, CS views of the ML stack, and the Stanford/MIT ML syllabus (CS229, CS224N, 6.036, 6.041). Evidence: [docs/STATS_REPORT.md](docs/STATS_REPORT.md). Courses: [docs/THEORY.md](docs/THEORY.md).
+**Abstract.** This repository presents an end-to-end system for binary sentiment classification of English movie reviews. A DistilBERT encoder is fine-tuned on a stratified 70/15/15 partition of IMDB, evaluated once on a held-out test split with bootstrap confidence intervals, and compared against a pre-registered TF-IDF + logistic regression baseline under McNemar and bootstrap-difference tests. The same checkpoint is served through a Flask product API and a parallel FastAPI v2 surface, with a cinema-themed workbench for single/batch inference, token-level attribution, and a metrics dashboard bound to versioned artefacts. The design follows a C4 software decomposition and the standard ML syllabus at Stanford, MIT, Harvard, Oxford, and Cambridge (hold-out, Transformer fine-tune, bootstrap + paired tests). Evidence: [docs/STATS_REPORT.md](docs/STATS_REPORT.md). Courses: [docs/THEORY.md](docs/THEORY.md).
 
-**Keywords:** sentiment analysis; DistilBERT; IMDB; CS229; CS224N; 6.036; CS109; bootstrap; hold-out evaluation.
+**Keywords:** sentiment analysis; DistilBERT; IMDB; CS229; 6.036; CS181; Oxford ML; Cambridge MLB; bootstrap.
 
 ---
 
@@ -58,7 +58,7 @@ Paired error analysis (McNemar) and metric-difference tests are reported honestl
 4. **Serving architecture.** Dual HTTP surfaces, health/readiness probes, optional RAG/agent path, and Compose/Helm delivery.
 5. **Workbench.** Cinema UI bound to `evaluation.json` so examiners inspect the same numbers as the written report.
 6. **AI architecture (CS diagrams).** Use-case, layered, neural, activity, sequence, state, data-flow, and module views of every ML function that is actually implemented (README §3, Figures M.1–M.15).
-7. **Theoretical framework.** Stanford CS229/CS224N/CS109 and MIT 6.036/6.041 mapped onto artefacts (README §4, [docs/THEORY.md](docs/THEORY.md)).
+7. **Theoretical framework.** Stanford, MIT, Harvard, Oxford, and Cambridge ML syllabi mapped onto artefacts (README §4, [docs/THEORY.md](docs/THEORY.md)).
 
 ---
 
@@ -781,36 +781,45 @@ Canonical write-up of Part B, including loader states and ADRs: [docs/ARCHITECTU
 
 ## 4. Theoretical framework
 
-Software architecture (**A.**) is wiring. ML architecture (**M.**) is which models run. This section is the **syllabus**: Stanford **CS229 / CS224N / CS231N / CS109** and MIT **6.036 / 6.041 / 6.S191** — applied to IMDB. Full map: [docs/THEORY.md](docs/THEORY.md).
+Software architecture (**A.**) is wiring. ML architecture (**M.**) is which models run. This section is the **syllabus** at Stanford, MIT, Harvard, Oxford, and Cambridge — applied to IMDB. Full map: [docs/THEORY.md](docs/THEORY.md).
 
-You do not need a paper stack. If those course names are familiar, the methods below are already known.
+You do not need a paper stack. If CS229, 6.036, CS181, Oxford ML Part C, or Cambridge MLB sound familiar, the methods below are already known.
 
-### 4.0 Stanford and MIT curriculum
+### 4.0 Five-university curriculum
 
 ```mermaid
 flowchart TB
     subgraph Schools["Syllabus"]
-        ST["Stanford CS229 + CS224N + CS109"]
-        MI["MIT 6.036 + 6.041 + 6.S191"]
+        ST["Stanford CS229 CS224N CS109"]
+        MI["MIT 6.036 6.S191 18.05"]
+        HA["Harvard CS181 Stat 110"]
+        OX["Oxford ML Part C + SB2"]
+        CA["Cambridge MLB + NLP"]
     end
 
     subgraph Cap["This repo"]
         P["Hold-out 70/15/15"]
-        C["TF-IDF baselines + DistilBERT"]
+        C["TF-IDF + DistilBERT"]
         I["Bootstrap CI + paired test"]
-        E["Gradient saliency"]
     end
 
     ST --> P
     MI --> P
+    HA --> P
+    OX --> P
+    CA --> P
     ST --> C
     MI --> C
+    OX --> C
+    CA --> C
     ST --> I
     MI --> I
-    ST --> E
+    HA --> I
+    OX --> I
+    CA --> I
 ```
 
-**Figure T.0.** One ML stack, two schools. Defence: hold-out like CS229/6.036; encoder like CS224N/6.S191; inference like CS109/18.05.
+**Figure T.0.** One ML stack, five universities. Hold-out · encoder · inference — same ideas, local course names.
 
 ### 4.1 Knowledge architecture
 
@@ -1261,7 +1270,7 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 | Document | Audience | Content |
 |----------|----------|---------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Software / ML examiners | C4 (A.1–A.8) · AI/ML diagrams (M.1–M.15) · ADRs |
-| [docs/THEORY.md](docs/THEORY.md) | Examiners | Curriculum map: Stanford + MIT → this repo |
+| [docs/THEORY.md](docs/THEORY.md) | Examiners | Curriculum: Stanford, MIT, Harvard, Oxford, Cambridge |
 | [docs/STATS_REPORT.md](docs/STATS_REPORT.md) | Statistics / DS | Test metrics, CIs, confusion matrix, baselines |
 | [docs/METHODOLOGY.md](docs/METHODOLOGY.md) | Reviewers | Protocol, related work, ablation |
 | [docs/MODEL_CARD.md](docs/MODEL_CARD.md) | ML governance | Intended use, limitations, metrics |
@@ -1294,12 +1303,20 @@ Not a reading list. The project is these **modules** applied once.
 | Stanford | CS229 | Supervised learning, hold-out, logistic / NB / SVM |
 | Stanford | CS224N | TF-IDF vs Transformer fine-tune |
 | Stanford | CS231N | Input × gradient saliency |
-| Stanford | CS109 | Bootstrap CIs, honest reporting |
+| Stanford | CS109 | Bootstrap CIs |
 | MIT | 6.036 | Train / val / test, metrics |
 | MIT | 6.041 / 18.05 | Uncertainty, hypothesis tests |
 | MIT | 6.S191 / 6.861 | Deep learning / NLP |
+| Harvard | CS181 | Classification + evaluation |
+| Harvard | Stat 110 | \(P(y\mid x)\), probability language |
+| Oxford | CS Machine Learning (Part C) | Supervised ML project protocol |
+| Oxford | Computational Linguistics | Text classification / NLP |
+| Oxford | Statistical Inference (SB2) | CI + paired tests |
+| Cambridge | 1B MLRD / Part II MLB | ML + hold-out evaluation |
+| Cambridge | Part II NLP | Neural / text models |
+| Cambridge | IA Probability | Uncertainty |
 
-McNemar is the **name of the paired test** (like “t-test”) in the CS109 / 18.05 inference toolkit — not extra homework reading.
+McNemar is the **name of the paired test** (like “t-test”) — CS109 / 18.05 / Stat 110 / Oxford SB2 / Cambridge probability.
 
 ---
 
