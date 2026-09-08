@@ -183,7 +183,33 @@ Software-architecture diagrams live in the README and in [ARCHITECTURE.md](ARCHI
 | **A.7** | Deployment topology (Compose / Helm / multi-region) | README §2.7 · ARCHITECTURE §A.9 |
 | **A.8** | Continuous integration | README §2.8 · ARCHITECTURE §A.10 |
 
-**Suggested caption (architecture set):** *Figures A.1–A.8. C4-inspired architecture of CineSentiment, from system context through serving, evaluation, and delivery.*
+**Suggested caption (architecture set):** *Figures A.1–A.8. C4-inspired software architecture of CineSentiment, from system context through serving, evaluation, and delivery.*
+
+---
+
+## AI / ML architecture figures (M.1–M.15)
+
+Machine-learning diagrams (use-case, layered, neural, activity, sequence, state, data-flow, class). Principal set **M.1–M.12** is in README §3; extras **M.13–M.15** are in [ARCHITECTURE.md](ARCHITECTURE.md) Part B.
+
+| Figure | View | Location |
+|--------|------|----------|
+| **M.1** | Use cases — all AI functions | README §3.1 |
+| **M.2** | Layered ML architecture | README §3.2 |
+| **M.3** | DistilBERT neural blocks | README §3.3 |
+| **M.4** | Served models vs offline comparators | README §3.4 |
+| **M.5** | Inference routing (language + backend) | README §3.5 |
+| **M.6** | Composite analyse sequence | README §3.6 |
+| **M.7** | RAG index / query data flow | README §3.7 |
+| **M.8** | LangGraph agent state | README §3.8 |
+| **M.9** | Aspects + tone arc | README §3.9 |
+| **M.10** | Input × gradient XAI | README §3.10 |
+| **M.11** | MLflow / W&B / Feast | README §3.11 |
+| **M.12** | Backend ML module diagram | README §3.12 |
+| **M.13** | Model-loader states | ARCHITECTURE §B.4 |
+| **M.14** | Level-1 data flow | ARCHITECTURE §B.5 |
+| **M.15** | Training + experiment tracking sequence | ARCHITECTURE §B.6 |
+
+**Suggested caption (ML set):** *Figures M.1–M.15. Computer-science views of CineSentiment’s models, retrieval, agent, explainability, and MLOps — as implemented, including optional surfaces.*
 
 ---
 
@@ -193,6 +219,7 @@ Software-architecture diagrams live in the README and in [ARCHITECTURE.md](ARCHI
 |------|----------|
 | Test-split point estimates + CIs | [STATS_REPORT.md](STATS_REPORT.md) |
 | Experimental protocol | [METHODOLOGY.md](METHODOLOGY.md) |
-| System architecture (C4 + sequences) | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| System architecture (C4 + sequences) | [ARCHITECTURE.md](ARCHITECTURE.md) Part A |
+| AI / ML architecture (CS diagrams) | [ARCHITECTURE.md](ARCHITECTURE.md) Part B · README §3 |
 | Model governance | [MODEL_CARD.md](MODEL_CARD.md) |
 | Reproduce artifacts | `make capstone` |

@@ -5,7 +5,13 @@
 **Audience:** Examiners, reviewers, and operators  
 **Companion reports:** [METHODOLOGY.md](METHODOLOGY.md) · [STATS_REPORT.md](STATS_REPORT.md) · [MODEL_CARD.md](MODEL_CARD.md)
 
-This document is the canonical architecture specification. The GitHub README reproduces the principal diagrams for first-pass reading; figure numbering here is prefixed **A** so it does not collide with the UI screenshot catalog in [FIGURES.md](FIGURES.md).
+This document is the canonical architecture specification. The GitHub README reproduces the principal diagrams for first-pass reading.
+
+| Prefix | Scope |
+|--------|--------|
+| **A.** | Software architecture (C4, deployment, CI) — Part A |
+| **M.** | AI / ML architecture (models, RAG, agent, XAI, MLOps) — Part B |
+| **1–16** | UI screenshots — [FIGURES.md](FIGURES.md) |
 
 ---
 
@@ -14,7 +20,7 @@ This document is the canonical architecture specification. The GitHub README rep
 CineSentiment is an end-to-end binary sentiment classifier for English movie reviews. A fine-tuned DistilBERT encoder is evaluated under a fixed, stratified IMDB protocol and served through a production-style HTTP stack (Flask on port 8000; FastAPI v2 on port 8001). Classical TF-IDF baselines, bootstrap confidence intervals, and paired hypothesis tests are first-class artifacts—not afterthoughts.
 
 **In scope:** data protocol, training/evaluation pipeline, inference path, explainability, optional RAG/agent extensions, observability, and deployment topology.  
-**Out of scope:** multi-domain transfer evaluation; high-stakes decision systems.
+**Out of scope:** multi-domain transfer evaluation; high-stakes decision systems; **Model Context Protocol (MCP) servers** — this repository is a REST/ML service, not an MCP tool host.
 
 ---
 
@@ -452,7 +458,128 @@ Full tree: [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md).
 | [SILICON_VALLEY_STACK.md](SILICON_VALLEY_STACK.md) | MLflow, RAG, K8s, Istio extensions |
 | [DEPLOYMENT.md](DEPLOYMENT.md) | Operator runbooks |
 | [openapi.yaml](openapi.yaml) | HTTP contract |
+| README §3 | AI/ML figures M.1–M.12 (use-case through module diagram) |
 
 ---
 
-*Architecture version 2.3.0. Diagrams follow a C4-inspired decomposition (context → container → component) with additional sequence and pipeline views for the ML lifecycle.*
+# Part B — AI and ML architecture
+
+CS-style views of every machine-learning function that exists in the tree. README §3 renders Figures **M.1–M.12**. This part records **wiring rules**, extra state/data-flow diagrams, and what is *not* claimed.
+
+## B.1 Inventory (mapped to code)
+
+| Concern | Code | Serve path? |
+|---------|------|-------------|
+| DistilBERT IMDB classifier | `scripts/model_training.py`, `sentiment_model/` | Yes — Flask, FastAPI |
+| TF-IDF LR / NB / SVM | `scripts/baseline_tfidf.py` | No — evaluation artefact only |
+| LoRA PEFT | `scripts/lora_finetune.py`, `sentiment_model_lora/` | No |
+| LLM zero-shot | `scripts/llm_baseline.py` | No |
+| Input × gradient XAI | `backend/services/explainability.py` | Yes — `/api/explain` |
+| Aspect polarity | `aspects.py`, `aspect_classifier.py` | Yes — `/api/aspects`, analyze |
+| Tone arc | sentence split + per-sentence predict | Yes — analyze `arc` |
+| Multilingual XLM-R | `multilingual.py`, `language.py` | Yes — if lang ≠ en |
+| RAG MiniLM + Chroma | `rag.py`, `scripts/index_rag.py` | Optional `RAG_ENABLED` |
+| LangGraph agent | `agent_graph.py` | Optional `AGENT_ENABLED` |
+| Remote vLLM / Triton | `remote_inference.py` | FastAPI + agent only |
+| Feast text stats | `feature_store.py` | `/api/features` — not a model input |
+| MLflow / W&B | `experiment_tracking.py` | Train jobs only |
+
+## B.2 Wiring rules (read before drawing)
+
+1. Flask `/api/predict` and `/api/analyze` call `predict_sentiment` (local HF) and may route non-English to XLM-R. They do **not** read `INFERENCE_BACKEND`.
+2. FastAPI `/api/v2/predict` and LangGraph `predict` call `predict_with_backend`.
+3. RAG output is never concatenated into DistilBERT tokens or logits.
+4. LoRA adapters and GPT-4o-mini baselines are offline comparators.
+5. Triton `deploy/triton/model_repository/.../model.py` is a lexicon smoke backend unless replaced.
+6. There is **no MCP (Model Context Protocol) server** in this repository. External agents should use the REST API (`docs/openapi.yaml`).
+
+## B.3 Figure index M.1–M.12
+
+Reproduced with captions in README §3.
+
+| Figure | CS type | Subject |
+|--------|---------|---------|
+| M.1 | Use case | All AI-facing functions |
+| M.2 | Layered | Presentation → ML → loader → evidence |
+| M.3 | Neural block | DistilBERT encoder + 2-way head |
+| M.4 | Family / package | Served models vs offline comparators |
+| M.5 | Activity | Language + backend routing |
+| M.6 | Sequence | Composite `/api/analyze` |
+| M.7 | Data flow | RAG index vs query |
+| M.8 | State | LangGraph linear graph |
+| M.9 | Activity | Aspects + tone arc |
+| M.10 | Data flow | Input × gradient |
+| M.11 | Deployment-ish | MLflow / W&B / Feast |
+| M.12 | Class / module | `backend/` ML units |
+
+## B.4 Model-loader state (extra)
+
+```mermaid
+stateDiagram-v2
+    [*] --> ProbeLocal: get_inference_bundle()
+    ProbeLocal --> ReadyLocal: model.safetensors or pytorch_model.bin
+    ProbeLocal --> HubFallback: no weights and development or HUB_MODEL_FALLBACK set
+    ProbeLocal --> Untrained: ALLOW_UNTRAINED_BASE
+    ProbeLocal --> Failed: production, no weights, no fallback
+    HubFallback --> ReadyHub: SST-2 distilbert loaded
+    HubFallback --> Failed: download / import error
+    ReadyLocal --> [*]
+    ReadyHub --> [*]
+    Untrained --> [*]
+    Failed --> [*]: HTTP 503
+```
+
+**Figure M.13.** Loader states (`backend/model_loader.py`). Production without weights must fail closed. Development may serve `distilbert-base-uncased-finetuned-sst-2-english` so the UI is not stuck on “model loading”.
+
+## B.5 Level-1 data flow (extra)
+
+```mermaid
+flowchart LR
+    IMDB["IMDB HF dataset"] --> Pre["preprocess 70/15/15"]
+    Pre --> TrainFit["fit DistilBERT + TF-IDF"]
+    TrainFit --> Weights["sentiment_model/"]
+    TrainFit --> Eval["evaluation.json"]
+    Weights --> API["Flask / FastAPI"]
+    Eval --> Dash["Metrics / Statistics UI"]
+    User["Review text"] --> API
+    API --> User
+    API -.-> RAG["Chroma optional"]
+    API -.-> Feat["Feast optional"]
+```
+
+**Figure M.14.** Level-1 data flow. Two stores of truth: weights (for labels) and `evaluation.json` (for reported metrics). Dotted edges are optional product extensions.
+
+## B.6 Training sequence with tracking (extra)
+
+```mermaid
+sequenceDiagram
+    participant Make as make train
+    participant Scr as model_training.py
+    participant Track as experiment_run
+    participant HF as HuggingFace Trainer
+    participant Disk as sentiment_model/
+
+    Make->>Scr: train.csv + val.csv
+    Scr->>Track: start cinesentiment-distilbert
+    Scr->>HF: AdamW 2e-5, max_len 256, F1 best
+    HF-->>Scr: checkpoint
+    Scr->>Disk: tokenizer + weights
+    Scr->>Track: log test F1, params, confusion PNG
+    Track-->>Make: MLflow and optional W and B
+```
+
+**Figure M.15.** Train-job sequence. Tracking is a side effect of training, not of `/api/predict`. Disable with `MLFLOW_ENABLED=false` and `WANDB_MODE=disabled`.
+
+## B.7 AI-specific decisions
+
+| Decision | Rationale | Consequence |
+|----------|-----------|-------------|
+| Linear LangGraph, not a ReAct loop | Capstone needs a deterministic demo graph | No tool-selection; RAG always attempted |
+| RAG as neighbour display | Avoid claiming retrieval-augmented *accuracy* without an ablation | Neighbours are UX/context |
+| Aspects via lexicon + optional TF-IDF | A second transformer head is disproportionate | Aspect quality tracks keyword coverage |
+| XAI = input × gradient | Interactive latency; IG/SHAP too slow for the API | First-order saliency only |
+| Dual Flask vs FastAPI inference entry | Preserve examiner URLs on :8000 | Remote backends easy to miss on Flask |
+
+---
+
+*Architecture version 2.3.0. Part A: C4 software views. Part B: CS diagrams of the ML system as implemented.*
