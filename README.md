@@ -1254,26 +1254,22 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
   title        = {CineSentiment: IMDB Movie Review Sentiment Analysis with DistilBERT},
   year         = {2026},
   howpublished = {\url{https://github.com/TheHien04/Movie-Review-Sentiment-Analysis}},
-  note         = {Statistical Machine Learning capstone; theoretical framework T.1-T.16; C4 + ML architecture}
+  note         = {Statistical Machine Learning capstone; DistilBERT; bootstrap CIs}
 }
 ```
 
 ### Selected references
 
-1. Maas, A. L., Daly, R. E., Pham, P. T., Huang, D., Ng, A. Y., & Potts, C. (2011). Learning word vectors for sentiment analysis. *ACL*.
-2. Vaswani, A., et al. (2017). Attention is all you need. *NeurIPS*.
-3. Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of deep bidirectional transformers. *NAACL*.
-4. Sanh, V., Debut, L., Chaumond, J., & Wolf, T. (2019). DistilBERT, a distilled version of BERT. *NeurIPS Workshop*.
-5. Hinton, G., Vinyals, O., & Dean, J. (2015). Distilling the knowledge in a neural network. *NIPS Deep Learning Workshop*.
-6. Salton, G., & Buckley, C. (1988). Term-weighting approaches in automatic text retrieval. *IP&M*.
-7. Hastie, T., Tibshirani, R., & Friedman, J. (2009). *The elements of statistical learning*. Springer.
-8. Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*. Chapman & Hall.
-9. McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions. *Psychometrika*.
-10. Guo, C., Pleiss, G., Sun, Y., & Weinberger, K. Q. (2017). On calibration of modern neural networks. *ICML*.
-11. Sundararajan, M., Taly, A., & Yan, Q. (2017). Axiomatic attribution for deep networks. *ICML*.
-12. Hu, E. J., et al. (2022). LoRA: Low-rank adaptation of large language models. *ICLR*.
-13. Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP. *NeurIPS*.
-14. Brown, S. (2018). The C4 model for visualising software architecture. [https://c4model.com](https://c4model.com).
+Cite what the report actually uses. A GitHub README does not need a textbook bibliography.
+
+| # | Reference | Why it is here |
+|---|-----------|----------------|
+| 1 | Maas et al. (2011), *ACL* | IMDB dataset |
+| 2 | Sanh et al. (2019), DistilBERT | Serving model |
+| 3 | Efron & Tibshirani (1993) | Bootstrap 95% CIs |
+| 4 | McNemar (1947), *Psychometrika* | Paired error test vs TF-IDF |
+
+If a section discusses attention, distillation, or C4 diagrams, add Vaswani et al. (2017), Devlin et al. (2019), or Brown (2018) there — not as a dump at the end. The lookup of every method → paper is [docs/THEORY.md](docs/THEORY.md) §T.0; copy a row only when that method is in the chapter.
 
 ---
 
