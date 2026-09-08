@@ -24,7 +24,7 @@ a label \(y \in \{0, 1\}\) where 0 = *negative* and 1 = *positive*.
 
 ## 2. Related Work
 
-Background for the **task** (movie-review sentiment). Methods in this repo follow the Stanford CS229 / CS224N and MIT 6.036 syllabus, not a long paper list.
+Background for the **task** (movie-review sentiment). Methods follow the Stanford / MIT / Harvard / Oxford / Cambridge ML syllabus, not a long paper list.
 
 | Topic | Role here |
 |-------|-----------|
@@ -203,4 +203,4 @@ make serve            # launch API server
 
 ## 12. References
 
-None required beyond the **course names** in [THEORY.md](THEORY.md) §T.0. Dataset: Hugging Face `imdb`. Model card: `distilbert-base-uncased`. Inference: CS109 / 18.05 paired test + bootstrap (named McNemar because that is the test).
+None required beyond the **course names** in [THEORY.md](THEORY.md) §T.0 (Stanford, MIT, Harvard, Oxford, Cambridge). Dataset: Hugging Face `imdb`. Model card: `distilbert-base-uncased`. Inference: paired test + bootstrap (named McNemar because that is the test).
