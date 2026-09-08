@@ -4,7 +4,7 @@
 **Model:** Fine-tuned DistilBERT; baseline TF-IDF + logistic regression  
 **System version:** 2.3.0
 
-This document provides academic-style captions for each screenshot in `Images/`. Use these when writing papers, capstone reports, or design reviews. **Authoritative test-split numbers** are in [STATS_REPORT.md](STATS_REPORT.md); UI screenshots may show validation split or rounded display values.
+This document provides academic-style captions for each screenshot in `Images/`. Use these when writing papers, capstone reports, or design reviews. **Authoritative test-split numbers** are in [STATS_REPORT.md](STATS_REPORT.md); UI screenshots may show validation split or rounded display values. Software-architecture diagrams (Figures A.1–A.8) are specified in [ARCHITECTURE.md](ARCHITECTURE.md) and reproduced in the repository README.
 
 ---
 
@@ -168,11 +168,31 @@ Links to statistical report, ROC/PR/calibration insights, and EDA. Three-step wo
 
 ---
 
+## Architecture figures (A.1–A.8)
+
+Software-architecture diagrams live in the README and in [ARCHITECTURE.md](ARCHITECTURE.md). They are numbered **A.** so they do not collide with the UI screenshots above.
+
+| Figure | View | Location |
+|--------|------|----------|
+| **A.1** | System context (C4 Level 1) | README §2.1 · ARCHITECTURE §A.3 |
+| **A.2** | Main container architecture (C4 Level 2) | README §2.2 · ARCHITECTURE §A.4 |
+| **A.3** | Flask component diagram (C4 Level 3) | README §2.3 · ARCHITECTURE §A.5 |
+| **A.4** | Training and evaluation pipeline | README §2.4 · ARCHITECTURE §A.6 |
+| **A.5** | Online inference sequence | README §2.5 · ARCHITECTURE §A.7 |
+| **A.6** | Explainability and optional RAG/agent | README §2.6 · ARCHITECTURE §A.8 |
+| **A.7** | Deployment topology (Compose / Helm / multi-region) | README §2.7 · ARCHITECTURE §A.9 |
+| **A.8** | Continuous integration | README §2.8 · ARCHITECTURE §A.10 |
+
+**Suggested caption (architecture set):** *Figures A.1–A.8. C4-inspired architecture of CineSentiment, from system context through serving, evaluation, and delivery.*
+
+---
+
 ## Cross-references
 
 | Need | Document |
 |------|----------|
 | Test-split point estimates + CIs | [STATS_REPORT.md](STATS_REPORT.md) |
 | Experimental protocol | [METHODOLOGY.md](METHODOLOGY.md) |
+| System architecture (C4 + sequences) | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Model governance | [MODEL_CARD.md](MODEL_CARD.md) |
 | Reproduce artifacts | `make capstone` |
