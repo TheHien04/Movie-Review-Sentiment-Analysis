@@ -12,15 +12,15 @@
 | **System** | CineSentiment |
 | **Task** | Binary sentiment classification (Fresh / Rotten) |
 | **Primary model** | Fine-tuned DistilBERT (`distilbert-base-uncased`) |
-| **Dataset** | IMDB 50,000 labelled English movie reviews (Maas et al., 2011) |
+| **Dataset** | IMDB 50,000 labelled English movie reviews |
 | **Held-out test** | *n* = 7,500 · accuracy 91.76% · F1 91.80% · ROC-AUC 97.35% |
 | **Uncertainty** | Percentile bootstrap 95% CI, 500 resamples, seed 42 |
 | **Version** | 2.3.0 |
 | **Licence** | MIT |
 
-**Abstract.** This repository presents an end-to-end system for binary sentiment classification of English movie reviews. A DistilBERT encoder is fine-tuned on a stratified 70/15/15 partition of IMDB, evaluated once on a held-out test split with bootstrap confidence intervals, and compared against a pre-registered TF-IDF + logistic regression baseline under McNemar and bootstrap-difference tests. The same checkpoint is served through a Flask product API and a parallel FastAPI v2 surface, with a cinema-themed workbench for single/batch inference, token-level attribution, and a metrics dashboard bound to versioned artefacts. The design follows a C4-inspired software decomposition, computer-science views of the ML stack, and an explicit theoretical framework (statistical learning, distillation, decision theory, hypothesis tests) mapped onto artefacts. Primary statistical evidence is [docs/STATS_REPORT.md](docs/STATS_REPORT.md); architecture is [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); theory is [docs/THEORY.md](docs/THEORY.md).
+**Abstract.** This repository presents an end-to-end system for binary sentiment classification of English movie reviews. A DistilBERT encoder is fine-tuned on a stratified 70/15/15 partition of IMDB, evaluated once on a held-out test split with bootstrap confidence intervals, and compared against a pre-registered TF-IDF + logistic regression baseline under McNemar and bootstrap-difference tests. The same checkpoint is served through a Flask product API and a parallel FastAPI v2 surface, with a cinema-themed workbench for single/batch inference, token-level attribution, and a metrics dashboard bound to versioned artefacts. The design follows a C4 software decomposition, CS views of the ML stack, and the standard ML syllabus at Stanford, MIT, Harvard, and NUS (hold-out, Transformer fine-tune, bootstrap + paired tests). Evidence: [docs/STATS_REPORT.md](docs/STATS_REPORT.md). Courses: [docs/THEORY.md](docs/THEORY.md).
 
-**Keywords:** sentiment analysis; DistilBERT; IMDB; statistical learning; bootstrap; McNemar; knowledge distillation; TF-IDF; calibration; explainable AI.
+**Keywords:** sentiment analysis; DistilBERT; IMDB; CS229; CS224N; CS3244; ST2132; bootstrap; hold-out evaluation.
 
 ---
 
@@ -58,7 +58,7 @@ Paired error analysis (McNemar) and metric-difference tests are reported honestl
 4. **Serving architecture.** Dual HTTP surfaces, health/readiness probes, optional RAG/agent path, and Compose/Helm delivery.
 5. **Workbench.** Cinema UI bound to `evaluation.json` so examiners inspect the same numbers as the written report.
 6. **AI architecture (CS diagrams).** Use-case, layered, neural, activity, sequence, state, data-flow, and module views of every ML function that is actually implemented (README §3, Figures M.1–M.15).
-7. **Theoretical framework.** Statistical learning, representation theory, decision theory, and hypothesis testing mapped onto artefacts (README §4, Figures T.1–T.16, [docs/THEORY.md](docs/THEORY.md)).
+7. **Theoretical framework.** Stanford CS229/CS224N, MIT 6.036, Harvard CS181, NUS CS3244/CS4248/ST2132 mapped onto artefacts (README §4, [docs/THEORY.md](docs/THEORY.md)).
 
 ---
 
@@ -781,9 +781,41 @@ Canonical write-up of Part B, including loader states and ADRs: [docs/ARCHITECTU
 
 ## 4. Theoretical framework
 
-Software architecture (**A.**) says *how the system is wired*. ML architecture (**M.**) says *which models run*. This section says **which theories those models instantiate**, and where each theory becomes a file, metric, or API. Full write-up with the complete inventory: [docs/THEORY.md](docs/THEORY.md). Figure prefix **T.**
+Software architecture (**A.**) is wiring. ML architecture (**M.**) is which models run. This section is the **syllabus**: Stanford **CS229 / CS224N / CS231N**, MIT **6.036 / 6.041**, Harvard **CS181 / Stat 110**, NUS **CS3244 / CS4248 / ST2132** — applied to IMDB. Full map: [docs/THEORY.md](docs/THEORY.md).
 
-Only theories that appear in code or `evaluation.json` are drawn. SHAP/LIME, MCP, and retrieval-augmented *accuracy* are **not** claimed.
+You do not need a paper stack. If those course names are familiar, the methods below are already known.
+
+### 4.0 Four-school curriculum
+
+```mermaid
+flowchart TB
+    subgraph Schools["Syllabus"]
+        ST["Stanford CS229 + CS224N + CS109"]
+        MI["MIT 6.036 + 6.041"]
+        HA["Harvard CS181 + Stat 110"]
+        NU["NUS CS3244 + CS4248 + ST2132"]
+    end
+
+    subgraph Cap["This repo"]
+        P["Hold-out 70/15/15"]
+        C["TF-IDF baselines + DistilBERT"]
+        I["Bootstrap CI + paired test"]
+        E["Gradient saliency"]
+    end
+
+    ST --> P
+    MI --> P
+    HA --> P
+    NU --> P
+    ST --> C
+    NU --> C
+    ST --> I
+    NU --> I
+    MI --> I
+    ST --> E
+```
+
+**Figure T.0.** Same ML stack, four course codes. Defence one-liner: hold-out like CS229/CS3244; encoder like CS224N/CS4248; inference like ST2132/CS109.
 
 ### 4.1 Knowledge architecture
 
@@ -827,7 +859,7 @@ flowchart TB
     W --> EX
 ```
 
-**Figure T.1.** Theory-to-artefact map. Statistics govern the protocol; distillation + attention supply DistilBERT; TF-IDF supplies the nested baseline; decision theory turns \(P\) into \(\hat{y}\); bootstrap and McNemar turn a point estimate into a **reportable** claim.
+**Figure T.1.** Syllabus-to-artefact map. CS229/CS3244 govern the protocol; CS224N/CS4248 supply DistilBERT and TF-IDF; ST2132/CS109 turn a point estimate into a CI and a paired test.
 
 ### 4.2 Supervised problem and generalisation protocol
 
@@ -841,7 +873,7 @@ flowchart LR
     CE --> F
 ```
 
-**Figure T.2.** Binary classification as a conditional probability plus a threshold (Duda, Hart & Stork, 2001). Default \(\tau = 0.5\) (balanced classes, equal costs).
+**Figure T.2.** Binary classification as \(P(y=1\mid x)\) plus a threshold — CS229 / CS181 / CS3244. Default \(\tau = 0.5\) (balanced classes, equal costs).
 
 ```mermaid
 flowchart TB
@@ -857,7 +889,7 @@ flowchart TB
     Once --> Mc["McNemar on paired errors"]
 ```
 
-**Figure T.3.** Statistical learning protocol (Hastie, Tibshirani & Friedman, 2009). Test data estimate risk; they are not a hyper-parameter loop.
+**Figure T.3.** Hold-out protocol (CS229, 6.036, CS3244). Validation selects the checkpoint; the test split is scored **once**.
 
 ### 4.3 Two representation families
 
@@ -865,14 +897,14 @@ flowchart TB
 flowchart TB
     X["Review"]
 
-    subgraph Sparse["Sparse lexical  Salton"]
+    subgraph Sparse["Sparse lexical  CS224N / CS4248 vector space"]
         Bow["n-grams"]
         Idf["TF-IDF  50k features  sublinear tf"]
         Phi["sparse phi(x)"]
         Bow --> Idf --> Phi
     end
 
-    subgraph Dense["Dense contextual  Vaswani / Devlin"]
+    subgraph Dense["Dense contextual  CS224N Transformer"]
         Tok["WordPiece  len 256"]
         Att["Self-attention x 6"]
         H["h CLS"]
@@ -885,7 +917,7 @@ flowchart TB
     H --> Head["Linear 2-way head"]
 ```
 
-**Figure T.4.** The DistilBERT vs TF-IDF comparison is two **geometries** on the same labels: bag-of-words weights vs contextual hidden states. McNemar tests error overlap, not “whether Transformers exist”.
+**Figure T.4.** Two feature geometries on the same labels (CS224N / CS4248): bag-of-words vs contextual hidden states. The paired test asks whether **errors** differ, not whether Transformers “exist”.
 
 ```mermaid
 flowchart LR
@@ -895,7 +927,7 @@ flowchart LR
     IDF --> SVM["Linear SVM + calibration"]
 ```
 
-**Figure T.5.** Vector-space retrieval (Salton & Buckley, 1988) feeding a Bernoulli GLM, a generative NB model, and a margin classifier with Platt-style probabilities.
+**Figure T.5.** CS229/CS3244 linear models on CS224N-style TF-IDF features: logistic (primary baseline), naïve Bayes, margin SVM with calibrated probabilities.
 
 ### 4.4 Attention, distillation, transfer
 
@@ -917,17 +949,17 @@ flowchart TB
     O --> Six["6 DistilBERT blocks"] --> CLS["CLS then linear head"]
 ```
 
-**Figure T.6.** Scaled dot-product attention (Vaswani et al., 2017) as implemented by DistilBERT. Truncation at 256 tokens is a modelled bias, ablated in `scripts/ablation_study.py`.
+**Figure T.6.** Scaled dot-product attention as taught in CS224N / 6.S191, implemented by DistilBERT. Truncation at 256 tokens is ablated in `scripts/ablation_study.py`.
 
 ```mermaid
 flowchart LR
     Pre["BooksCorpus + Wikipedia"] --> BERT["BERT-base teacher"]
-    BERT -->|"distillation Sanh 2019"| Distil["DistilBERT student 6L"]
+    BERT -->|"distil student 6 layers"| Distil["DistilBERT"]
     Distil --> FT["Fine-tune on IMDB train"]
     FT --> W["sentiment_model/"]
 ```
 
-**Figure T.7.** Two transfers: **knowledge distillation** (Hinton et al., 2015; Sanh et al., 2019) already done upstream, then **inductive transfer** on IMDB in this repo. We do not pre-train BERT.
+**Figure T.7.** Transfer learning as in CS224N: start from a compressed BERT-family encoder, fine-tune on IMDB **train** only. This repo does not pre-train BERT.
 
 ### 4.5 Empirical risk and operating point
 
@@ -939,7 +971,7 @@ flowchart TB
     R --> O --> V
 ```
 
-**Figure T.8.** Cross-entropy as Bernoulli NLL; AdamW (Loshchilov & Hutter, 2019); **never** select on test F1.
+**Figure T.8.** Empirical risk = mean cross-entropy (CS229); AdamW trainer; **never** select on test F1 (CS3244 / 6.036).
 
 ```mermaid
 flowchart LR
@@ -948,7 +980,7 @@ flowchart LR
     UI["Val slider / Insights sweep"] -.-> T
 ```
 
-**Figure T.9.** Bayes operating point under equal costs and a 50/50 prior (Duda et al., 2001). UI threshold exploration is validation-side; STATS_REPORT freezes \(\tau=0.5\).
+**Figure T.9.** Bayes operating point at \(\tau=0.5\) when classes are balanced and costs are equal (CS229 decision theory). The UI slider is validation-side; the report freezes \(\tau=0.5\).
 
 ### 4.6 Evaluation, uncertainty, tests
 
@@ -972,14 +1004,14 @@ flowchart TB
     Pred --> Cal
 ```
 
-**Figure T.10.** Three evaluation questions (Fawcett, 2006; Guo et al., 2017). Lead with test F1 and ROC-AUC; publish CIs on the discrimination block; show reliability on Insights.
+**Figure T.10.** Three evaluation questions from CS229 / CS181: are labels right, are scores ranked, are probabilities honest. Lead with test F1 and ROC-AUC.
 
 ```mermaid
 flowchart LR
     TE["test n=7500"] --> B["resample B=500"] --> Q["2.5 / 97.5 percentiles"] --> CI["95% CI"]
 ```
 
-**Figure T.11.** Percentile bootstrap (Efron & Tibshirani, 1993) in `ml_core.py`. Statement: sampling variability of the **test estimator**, not a parameter posterior.
+**Figure T.11.** Percentile bootstrap CI (CS109 / 18.05 / ST2132) in `ml_core.py`. This is sampling variability of the **test estimator**, not a Bayesian posterior.
 
 ```mermaid
 flowchart TB
@@ -997,7 +1029,7 @@ flowchart TB
     Out --> Hon["Report a tie  ship DistilBERT for transfer / XAI"]
 ```
 
-**Figure T.12.** Paired tests (McNemar, 1947; Dietterich, 1998). Non-significance is the scientific result; DistilBERT is the engineering choice. Bonferroni applies when NB and SVM join the family. Effect sizes (Cohen’s *h*, odds ratio) sit in `evaluation.json`.
+**Figure T.12.** Paired comparison of two classifiers on the **same** 7,500 rows (ST2132 / CS109): McNemar on errors, bootstrap \(\Delta\) on metrics. Result: **tie** at 5%. DistilBERT is still the serving model (transfer + saliency).
 
 ### 4.7 Further theory diagrams
 
@@ -1008,7 +1040,7 @@ flowchart TB
 | **T.15** | LoRA low-rank adapters (offline) | [docs/THEORY.md](docs/THEORY.md) |
 | **T.16** | Dense retrieval / RAG **not fused** into logits | [docs/THEORY.md](docs/THEORY.md) |
 
-Inventory of every cited theory and its file path: [docs/THEORY.md](docs/THEORY.md) §T.0.
+Curriculum lookup (course → file): [docs/THEORY.md](docs/THEORY.md) §T.0.
 
 ---
 
@@ -1016,7 +1048,7 @@ Inventory of every cited theory and its file path: [docs/THEORY.md](docs/THEORY.
 
 | Item | Specification |
 |------|----------------|
-| Source | IMDB via `datasets.load_dataset("imdb")` (Maas et al., 2011) |
+| Source | IMDB via `datasets.load_dataset("imdb")` |
 | Pre-processing | HTML tag removal; no class re-weighting (source is 50/50) |
 | Split | 70% train / 15% validation / 15% test, stratified by label, `random_state=42` |
 | Sizes | 35,000 / 7,500 / 7,500 |
@@ -1234,7 +1266,7 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 | Document | Audience | Content |
 |----------|----------|---------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Software / ML examiners | C4 (A.1–A.8) · AI/ML diagrams (M.1–M.15) · ADRs |
-| [docs/THEORY.md](docs/THEORY.md) | Statistics / ML examiners | Theoretical framework T.1–T.16 · theory→artefact map |
+| [docs/THEORY.md](docs/THEORY.md) | Examiners | Curriculum map: Stanford / MIT / Harvard / NUS → this repo |
 | [docs/STATS_REPORT.md](docs/STATS_REPORT.md) | Statistics / DS | Test metrics, CIs, confusion matrix, baselines |
 | [docs/METHODOLOGY.md](docs/METHODOLOGY.md) | Reviewers | Protocol, related work, ablation |
 | [docs/MODEL_CARD.md](docs/MODEL_CARD.md) | ML governance | Intended use, limitations, metrics |
@@ -1258,18 +1290,25 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 }
 ```
 
-### Selected references
+### Curriculum alignment
 
-Cite what the report actually uses. A GitHub README does not need a textbook bibliography.
+Not a reading list. The project is these **modules** applied once.
 
-| # | Reference | Why it is here |
-|---|-----------|----------------|
-| 1 | Maas et al. (2011), *ACL* | IMDB dataset |
-| 2 | Sanh et al. (2019), DistilBERT | Serving model |
-| 3 | Efron & Tibshirani (1993) | Bootstrap 95% CIs |
-| 4 | McNemar (1947), *Psychometrika* | Paired error test vs TF-IDF |
+| School | Course | What we used |
+|--------|--------|----------------|
+| Stanford | CS229 | Supervised learning, hold-out, logistic / NB / SVM |
+| Stanford | CS224N | TF-IDF vs Transformer fine-tune |
+| Stanford | CS231N | Input × gradient saliency |
+| Stanford | CS109 | Bootstrap CIs, honest reporting |
+| MIT | 6.036 | Train / val / test, metrics |
+| MIT | 6.041 / 18.05 | Uncertainty, hypothesis tests |
+| Harvard | CS181 | Classification + evaluation |
+| Harvard | Stat 110 | Language of \(P(y\mid x)\) |
+| NUS | CS3244 | ML project protocol |
+| NUS | CS4248 | NLP classification |
+| NUS | ST2132 | Inference: CI + paired test |
 
-If a section discusses attention, distillation, or C4 diagrams, add Vaswani et al. (2017), Devlin et al. (2019), or Brown (2018) there — not as a dump at the end. The lookup of every method → paper is [docs/THEORY.md](docs/THEORY.md) §T.0; copy a row only when that method is in the chapter.
+McNemar is the **name of the paired test** (like “t-test”), taught in ST2132-style inference — not extra homework reading.
 
 ---
 
