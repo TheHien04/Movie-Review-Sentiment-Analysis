@@ -213,13 +213,14 @@ Machine-learning diagrams (use-case, layered, neural, activity, sequence, state,
 
 ---
 
-## Theoretical framework figures (T.1–T.16)
+## Theoretical framework figures (T.0–T.16)
 
-Statistical-learning and ML *theory* as architectures, each mapped to an artefact. Principal set **T.1–T.12** is in README §4; extras **T.13–T.16** and the full inventory are in [THEORY.md](THEORY.md).
+Syllabus architectures (Stanford / MIT / Harvard / NUS), each mapped to an artefact. **T.0–T.12** in README §4; extras in [THEORY.md](THEORY.md).
 
-| Figure | Theory | Location |
-|--------|--------|----------|
-| **T.1** | Knowledge architecture (theory → files) | README §4.1 · THEORY T.1 |
+| Figure | View | Location |
+|--------|------|----------|
+| **T.0** | Four-school curriculum | README §4.0 · THEORY T.0 |
+| **T.1** | Knowledge architecture | README §4.1 |
 | **T.2** | Supervised problem + threshold | README §4.2 |
 | **T.3** | Generalisation protocol (no leakage) | README §4.2 |
 | **T.4** | Sparse TF-IDF vs contextual embeddings | README §4.3 |
@@ -230,9 +231,8 @@ Statistical-learning and ML *theory* as architectures, each mapped to an artefac
 | **T.9** | Bayes operating point \(\tau\) | README §4.5 |
 | **T.10** | Discrimination / ranking / calibration | README §4.6 |
 | **T.11** | Percentile bootstrap | README §4.6 |
-| **T.12** | McNemar + bootstrap \(\Delta\) + Bonferroni | README §4.6 |
-| **T.13** | Reliability, Brier, ECE | THEORY T.13 |
-| **T.14** | Attribution literature vs input × gradient | THEORY T.14 |
+| **T.12** | Paired test (McNemar + bootstrap Δ) | README §4.6 |
+| **T.14** | CS231N saliency vs SHAP (not used) | THEORY T.14 |
 | **T.15** | LoRA (offline) | THEORY T.15 |
 | **T.16** | Dense retrieval not fused into logits | THEORY T.16 |
 
@@ -248,6 +248,6 @@ Statistical-learning and ML *theory* as architectures, each mapped to an artefac
 | Experimental protocol | [METHODOLOGY.md](METHODOLOGY.md) |
 | System architecture (C4 + sequences) | [ARCHITECTURE.md](ARCHITECTURE.md) Part A |
 | AI / ML architecture (CS diagrams) | [ARCHITECTURE.md](ARCHITECTURE.md) Part B · README §3 |
-| Theoretical framework (stats / ML theory) | [THEORY.md](THEORY.md) · README §4 |
+| Theoretical framework (curriculum) | [THEORY.md](THEORY.md) · README §4 |
 | Model governance | [MODEL_CARD.md](MODEL_CARD.md) |
 | Reproduce artifacts | `make capstone` |

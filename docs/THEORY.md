@@ -1,51 +1,101 @@
 # Theoretical Framework — CineSentiment
 
-**Document type:** Mapping from statistical / ML theory to artefacts in this repository  
-**Audience:** Examiners (statistics, machine learning, software)  
+**Document type:** Curriculum alignment (Stanford, MIT, Harvard, NUS) mapped onto artefacts  
+**Audience:** Examiners who know *courses*, not a paper dump  
 **Companion:** [METHODOLOGY.md](METHODOLOGY.md) · [STATS_REPORT.md](STATS_REPORT.md) · [ARCHITECTURE.md](ARCHITECTURE.md)
 
-This chapter records **only theories that are instantiated in code or evaluation artefacts**. Each figure is a *theory → implementation* architecture. Figure prefix **T.** does not collide with C4 (**A.**), ML runtime (**M.**), or UI screenshots (**1–16**).
+This chapter records **only methods that exist in code**. Framing is the standard machine-learning and inference syllabus at four schools — the same ideas, different course codes. Figure prefix **T.**
 
-Principal diagrams **T.1–T.12** are reproduced in README §4. Figures **T.13–T.16** live here.
+You do **not** need to read a stack of authors. If you have taken (or can name) **CS229 + CS224N**, **6.036 + 6.041**, **CS181 + Stat 110**, or **CS3244 + CS4248 + ST2132**, you already have the theory. This repo is those modules applied to IMDB sentiment.
 
 ---
 
-## T.0 Inventory — theory used, and where it lands
+## T.0 Curriculum map — four schools, one project
 
-This table is a **lookup**, not a bibliography to paste into the report. Cite a row only if that chapter actually discusses the method.
+| What the repo does | Stanford | MIT | Harvard | NUS |
+|--------------------|----------|-----|---------|-----|
+| Supervised binary classification, logistic / NB / SVM baselines | **CS229** | **6.036** (now 6.390) | **CS181** | **CS3244** |
+| Train / val / test split; select on val; test once | CS229 | 6.036 | CS181 | CS3244 |
+| TF-IDF, n-grams, text classification | **CS224N** (vector space) | **6.861** NLP | CS181 + text labs | **CS4248** |
+| Transformers, self-attention, BERT-style fine-tune | **CS224N** | 6.S191 / 6.861 | CS287 (grad NLP) | CS4248 / **CS5242** |
+| Cross-entropy, softmax, SGD-style training | CS229 / CS231N | 6.036 / 6.S191 | CS181 | CS3244 / CS5242 |
+| Confusion matrix, F1, ROC | CS229 | 6.036 | CS181 | CS3244 |
+| Bootstrap CI, hypothesis tests, paired comparison | **CS109** / STATS 200 | **6.041** / **18.05** | **Stat 110** + CS109 | **ST2131** + **ST2132** |
+| Gradient saliency (input × gradient) | **CS231N** | 6.S191 | CS181 interpretability | CS5242 |
+| Optional retrieval (neighbours, not fused) | CS224N retrieval | 6.861 | CS287 | CS4248 |
 
-| Theory | Canonical reference | Instantiation in this project |
-|--------|---------------------|-------------------------------|
-| Supervised binary classification | Vapnik (1998); Hastie et al. (2009) | \(y \in \{0,1\}\), Fresh vs Rotten |
-| i.i.d. + held-out generalisation | Devroye et al. (1996) | Test split reported **once**; no test tuning |
-| Stratified sampling | Cochran (1977) | 70/15/15 by label, seed 42 |
-| Bag-of-words / TF-IDF | Salton & Buckley (1988) | `TfidfVectorizer` unigrams+bigrams, `sublinear_tf` |
-| Logistic regression (Bernoulli GLM) | McCullagh & Nelder (1989) | Primary classical baseline |
-| Naïve Bayes + Laplace smoothing | Manning et al. (2008) | `MultinomialNB(alpha=1.0)` |
-| Soft-margin linear SVM + calibration | Cortes & Vapnik (1995); Platt (1999) | `CalibratedClassifierCV(LinearSVC)` |
-| Self-attention / Transformer | Vaswani et al. (2017) | DistilBERT 6-block encoder |
-| BERT pre-training + fine-tuning | Devlin et al. (2019) | `distilbert-base-uncased` then IMDB head |
-| Knowledge distillation | Hinton et al. (2015); Sanh et al. (2019) | DistilBERT instead of BERT-base |
-| Cross-entropy / softmax | Goodfellow et al. (2016) | Sequence-classification loss |
-| AdamW, weight decay, warmup | Loshchilov & Hutter (2019) | Trainer defaults in `model_training.py` |
-| Model selection on validation F1 | Hastie et al. (2009) | `load_best_model_at_end` on F1 |
-| Bayes decision / threshold \(\tau\) | Duda et al. (2001) | \(\hat{y}=\mathbb{1}[P\ge 0.5]\) unless swept |
-| Confusion-matrix rates | Fawcett (2006) | TPR, TNR, FPR, FNR, PPV, NPV |
-| F1 (harmonic mean) | van Rijsbergen (1979) | Primary academic metric with accuracy |
-| ROC-AUC / PR-AP | Hanley & McNeil (1982); Manning et al. | Insights curves |
-| Probability calibration, Brier, ECE | Brier (1950); Guo et al. (2017) | 10-bin reliability, Insights page |
-| Percentile bootstrap CI | Efron & Tibshirani (1993) | 500 resamples, seed 42 |
-| McNemar paired test | McNemar (1947) | Continuity-corrected χ² vs TF-IDF |
-| Bootstrap difference test | Efron & Tibshirani (1993) | Δ accuracy, Δ F1 |
-| Bonferroni correction | Bonferroni (1936) | When >1 baseline is tested |
-| Effect size (Cohen’s *h*, OR) | Cohen (1988) | Discordant pairs in `ml_core` |
-| Ablation | Cohen & Howe (1988) | max_length, lr, epochs |
-| Input × gradient saliency | Simonyan et al. (2014); Sundararajan et al. (2017) | `/api/explain` (first-order, not IG/SHAP) |
-| LoRA | Hu et al. (2022) | Offline PEFT comparator only |
-| Dense retrieval / RAG | Lewis et al. (2020); Reimers & Gurevych (2019) | MiniLM + Chroma; **not** fused into logits |
-| Cross-lingual transfer | Conneau et al. (2020) | Optional XLM-R if `lang ≠ en` |
+```mermaid
+flowchart TB
+    subgraph Stanford["Stanford"]
+        S229["CS229  supervised ML"]
+        S224["CS224N  NLP / Transformers"]
+        S231["CS231N  saliency"]
+        S109["CS109  bootstrap / reporting"]
+    end
 
-**Not claimed.** MCP servers; SHAP/LIME as the live explainer (cited as related work only); *k*-fold CV; retrieval-augmented *accuracy* without an ablation.
+    subgraph MIT["MIT"]
+        M036["6.036  ML"]
+        M041["6.041 / 18.05  probability"]
+        M191["6.S191  DL"]
+    end
+
+    subgraph Harvard["Harvard"]
+        H181["CS181  ML"]
+        H110["Stat 110  probability"]
+    end
+
+    subgraph NUS["NUS"]
+        N3244["CS3244  ML"]
+        N4248["CS4248  NLP"]
+        N2132["ST2132  statistical inference"]
+    end
+
+    subgraph Repo["This capstone"]
+        Prot["70/15/15  val select  test once"]
+        Base["TF-IDF + logistic / NB / SVM"]
+        Enc["DistilBERT fine-tune"]
+        Inf["Bootstrap CI  McNemar"]
+        XAI["Input x gradient"]
+    end
+
+    S229 --> Prot
+    N3244 --> Prot
+    M036 --> Prot
+    H181 --> Prot
+    S224 --> Enc
+    N4248 --> Enc
+    M191 --> Enc
+    S224 --> Base
+    N4248 --> Base
+    S109 --> Inf
+    N2132 --> Inf
+    M041 --> Inf
+    H110 --> Inf
+    S231 --> XAI
+```
+
+**Figure T.0.** Same undergraduate/MSc ML stack, four course-number systems. Defence language: “hold-out like CS229/CS3244; encoder like CS224N/CS4248; inference like ST2132/CS109.”
+
+---
+
+## T.0b What lands in which file
+
+| Syllabus topic | Instantiation |
+|----------------|---------------|
+| Binary labels \(y\in\{0,1\}\) | Fresh / Rotten |
+| Hold-out generalisation | Test reported **once** |
+| Stratified split | 70/15/15, seed 42 |
+| Linear baselines | `baseline_tfidf.py` |
+| Transformer fine-tune | `model_training.py` → `sentiment_model/` |
+| Cross-entropy + AdamW | Hugging Face Trainer |
+| Threshold \(\tau=0.5\) | Equal costs, balanced classes |
+| F1, ROC, confusion rates | `evaluation.json` |
+| Bootstrap 95% CI | `ml_core.py`, \(B=500\) |
+| Paired test of two classifiers | McNemar + bootstrap \(\Delta\) on the **same** 7,500 rows |
+| Saliency | `POST /api/explain` |
+| Retrieval optional | Chroma; **not** fused into logits |
+
+**Not in the syllabus of this repo.** MCP servers; SHAP/LIME as the live explainer; *k*-fold CV; claiming RAG improved F1.
 
 ---
 
@@ -95,7 +145,7 @@ flowchart TB
     W --> API
 ```
 
-**Figure T.1.** Theoretical framework of the capstone. Statistics constrain the **protocol**; representation learning supplies **two model families**; decision theory turns logits into labels and probabilities; attribution is a separate first-order map. Everything terminates in files examiners can open.
+**Figure T.1.** Theoretical framework of the capstone. CS229/CS3244 constrain the **protocol**; CS224N/CS4248 supply **two model families**; ST2132/CS109 turn logits into a reportable claim. Everything terminates in files examiners can open.
 
 ---
 
@@ -118,7 +168,7 @@ flowchart LR
     Loss --> Enc
 ```
 
-**Figure T.2.** Supervised classification as conditional probability + threshold (Duda et al., 2001). Training minimises empirical risk on **train.csv only**. Test labels are used solely in `evaluate_model.py` / `STATS_REPORT.md`.
+**Figure T.2.** Supervised classification as conditional probability + threshold (CS229 / CS181 / CS3244). Training minimises empirical risk on **train.csv only**. Test labels are used solely in `evaluate_model.py` / `STATS_REPORT.md`.
 
 ---
 
@@ -139,7 +189,7 @@ flowchart TB
     Once --> Test["McNemar on paired TE errors"]
 ```
 
-**Figure T.3.** Statistical learning protocol. The test split is an **estimator of risk**, not a tuning knob (Hastie et al., 2009). Stratification preserves the 50/50 class prior so accuracy is not dominated by imbalance.
+**Figure T.3.** Hold-out protocol (CS229, 6.036, CS3244). The test split estimates risk; it is not a tuning knob. Stratification keeps the 50/50 prior so accuracy is not an artefact of imbalance.
 
 ---
 
@@ -169,7 +219,7 @@ flowchart TB
     H --> Head["Linear 2-way head"]
 ```
 
-**Figure T.4.** The academic comparison is **not** “neural vs magic”; it is two feature geometries on the **same** \((x,y)\) (Salton & Buckley, 1988 vs Vaswani et al., 2017). McNemar tests whether their **error patterns** differ, not whether embeddings “exist”.
+**Figure T.4.** Two feature geometries on the same \((x,y)\) (CS224N / CS4248). The paired test asks whether **error patterns** differ.
 
 ---
 
@@ -196,7 +246,7 @@ flowchart LR
     LR --> Comp["Primary nested comparator"]
 ```
 
-**Figure T.5.** TF-IDF + logistic regression is the **pre-registered** baseline (GLM with logit link). Naïve Bayes adds a generative independence assumption; Linear SVM maximises margin, then `CalibratedClassifierCV` supplies probabilities so Brier/ECE are defined.
+**Figure T.5.** TF-IDF + logistic regression is the **pre-registered** CS229/CS3244 baseline. Naïve Bayes and a margin SVM are nested comparators; calibrated SVM probabilities make Brier/ECE defined.
 
 ---
 
@@ -223,7 +273,7 @@ flowchart TB
     O --> Blk --> CLS
 ```
 
-**Figure T.6.** Scaled dot-product attention (Vaswani et al., 2017, Eq. 1) inside each DistilBERT block. We do **not** re-implement attention; we fine-tune Hugging Face `DistilBertForSequenceClassification`. Sequence length 256 is a **truncation bias** quantified in ablation (`max_length` ∈ {64, 128, 256, 512}).
+**Figure T.6.** Scaled dot-product attention as in CS224N / 6.S191, inside DistilBERT. We fine-tune Hugging Face weights; we do not re-implement attention. Truncation at 256 is ablated.
 
 ---
 
@@ -245,7 +295,7 @@ flowchart LR
     Head --> Serve
 ```
 
-**Figure T.7.** Two stacked transfers. (1) **Knowledge distillation** (Hinton et al., 2015; Sanh et al., 2019) compresses BERT-base into DistilBERT *before* this project. (2) **Inductive transfer**: we fine-tune that student on IMDB. We do not train BERT-base from scratch; compute is the reason DistilBERT was chosen (ARCHITECTURE ADR).
+**Figure T.7.** CS224N-style transfer: a BERT-family student encoder, then IMDB fine-tune. This repo does not pre-train BERT-base.
 
 ---
 
@@ -262,7 +312,7 @@ flowchart TB
     Risk --> Opt --> Val --> Best --> Stop
 ```
 
-**Figure T.8.** Cross-entropy is the negative log-likelihood of a Bernoulli (via softmax on 2 logits). AdamW decouples weight decay from the adaptive step (Loshchilov & Hutter, 2019). **Selection uses validation F1, never test F1.**
+**Figure T.8.** Cross-entropy as NLL of a two-class softmax (CS229). **Selection uses validation F1, never test F1** (CS3244 / 6.036).
 
 ---
 
@@ -281,7 +331,7 @@ flowchart LR
     Costs -.-> Sweep
 ```
 
-**Figure T.9.** The default 0.5 threshold is Bayes-optimal when classes are balanced and costs are equal (Duda et al., 2001). The UI slider is **exploratory on validation**; primary tables freeze \(\tau=0.5\) on test.
+**Figure T.9.** Default \(\tau=0.5\) is the equal-cost Bayes point on a balanced problem (CS229). The UI slider is **validation**; primary tables freeze \(\tau=0.5\) on test.
 
 ---
 
@@ -311,7 +361,7 @@ flowchart TB
     Pred --> Prob
 ```
 
-**Figure T.10.** Three questions that must not be collapsed (Guo et al., 2017; Fawcett, 2006): (i) are labels right, (ii) are scores ranked, (iii) are probabilities honest. This project reports all three; lead metrics for the capstone are **test F1 + ROC-AUC**, with CIs on the discrimination block.
+**Figure T.10.** Three questions from CS229 / CS181: (i) labels, (ii) ranking, (iii) calibration. Lead metrics: **test F1 + ROC-AUC**.
 
 ---
 
@@ -328,7 +378,7 @@ flowchart TB
     TE --> Draw --> Met --> Q --> CI
 ```
 
-**Figure T.11.** Percentile bootstrap (Efron & Tibshirani, 1993) in `backend/ml_core.py`. The interval is a statement about **sampling variability of the test estimator**, not about Bayesian parameter posteriors. \(B=500\) is a compute compromise; it is not an infinite bootstrap.
+**Figure T.11.** Percentile bootstrap in `ml_core.py` (CS109 / 18.05 / ST2132). The interval is sampling variability of the **test estimator**. \(B=500\) is a compute compromise.
 
 ---
 
@@ -368,7 +418,7 @@ flowchart TB
     P2 --> Bon
 ```
 
-**Figure T.12.** Two complementary tests (Dietterich, 1998; McNemar, 1947). McNemar asks whether **error patterns** differ; bootstrap Δ asks whether **metric magnitude** differs. On this split both fail to reject at 5%. Bonferroni guards the family when NB and SVM are added. **We report non-significance rather than p-hack a winner.**
+**Figure T.12.** Two complementary ST2132/CS109 tests. McNemar: do **error patterns** differ? Bootstrap \(\Delta\): does **metric magnitude** differ? On this split both fail to reject at 5%. **Report the tie.**
 
 ---
 
@@ -387,7 +437,7 @@ flowchart LR
     P --> ECE
 ```
 
-**Figure T.13.** A high-AUC model can still be miscalibrated (Guo et al., 2017). Insights (`/insights.html`) plots the reliability diagram. We do **not** apply temperature scaling at serve time in the default path; calibration is a **reported property**, not a post-hoc fix unless an operator chooses a new \(\tau\).
+**Figure T.13.** High AUC can still be miscalibrated (CS229 evaluation). Insights plots the reliability diagram. Calibration is **reported**, not temperature-scaled at serve time by default.
 
 ---
 
@@ -413,7 +463,7 @@ flowchart TB
     LIME -.->|"not implemented"| Lex
 ```
 
-**Figure T.14.** Related work cites Ribeiro (2016) and Lundberg & Lee (2017). **Live XAI is first-order input × gradient** (Simonyan et al., 2014; cf. Sundararajan et al., 2017). That is an honest subset of the attribution literature, not a SHAP clone.
+**Figure T.14.** Live XAI is first-order **input × gradient** (CS231N saliency). Not SHAP, not integrated gradients. The UI lexicon fallback is labelled as a heuristic.
 
 ---
 
@@ -429,7 +479,7 @@ flowchart LR
     W --> W2
 ```
 
-**Figure T.15.** LoRA (Hu et al., 2022) is an **offline comparator** (`make lora-quick`). Adapters are not merged into the Flask serving bundle. The theory is parameter-efficient fine-tuning; the engineering choice is to keep one DistilBERT checkpoint on the predict path.
+**Figure T.15.** LoRA is an **offline** CS224N-style PEFT comparator (`make lora-quick`). Serving still uses one DistilBERT checkpoint.
 
 ---
 
@@ -446,18 +496,18 @@ flowchart TB
     Cls["DistilBERT ŷ"] -.->|"no concat  no extra loss"| UX
 ```
 
-**Figure T.16.** Dense passage retrieval (Karpukhin et al., 2020; Lewis et al., 2020) as **user context**. We do not train a RAG reader that conditions DistilBERT on neighbours, so we do not claim a retrieval-augmented **F1** gain.
+**Figure T.16.** Dense retrieval (CS224N / CS4248) as **display context**. Neighbours are not concatenated into DistilBERT, so we do not claim a retrieval-augmented **F1** gain.
 
 ---
 
-## How to cite this chapter in a report
+## How to use this chapter in a defence
 
-1. Draw **T.1** on the theory slide.  
-2. State the protocol with **T.3**.  
-3. Contrast representations with **T.4**.  
-4. Put McNemar on **T.12** and say the models are tied.  
-5. Point to `evaluation.json` as the empirical realisation of T.10–T.12.
+1. Show **T.0** — four schools, one stack.  
+2. Protocol **T.3** — CS229 / CS3244 hold-out.  
+3. Two geometries **T.4** — CS224N / CS4248.  
+4. Tests **T.12** — ST2132 / CS109; say the models are **tied**.  
+5. Point to `evaluation.json`.
 
 ---
 
-*Theory version 2.3.0. If a method is not in T.0, do not imply it was used.*
+*If a method is not in T.0, do not imply it was used. Course numbers are the syllabus names, not a claim that the author enrolled at those universities.*

@@ -24,14 +24,16 @@ a label \(y \in \{0, 1\}\) where 0 = *negative* and 1 = *positive*.
 
 ## 2. Related Work
 
-| Reference | Contribution |
-|-----------|-------------|
-| Maas et al. (2011) | IMDB review dataset (50 k reviews); established sentiment benchmarks. |
-| Devlin et al. (2019) | BERT pre-training; contextual word representations. |
-| Sanh et al. (2019) | DistilBERT: 40 % smaller, 60 % faster, retaining 97 % of BERT performance. |
-| Pang & Lee (2008) | Foundational survey on opinion mining and sentiment analysis. |
+Background for the **task** (movie-review sentiment). Methods in this repo follow the CS229 / CS224N / CS3244 syllabus, not a long paper list.
 
-Live explainability in this repo is **input × gradient**, not LIME/SHAP. Those papers are background only; do not cite them as methods used.
+| Topic | Role here |
+|-------|-----------|
+| IMDB labelled reviews | Source dataset (`datasets.load_dataset("imdb")`) |
+| BERT-family encoders | DistilBERT fine-tune (CS224N / CS4248) |
+| Classical text classifiers | TF-IDF + logistic / NB / SVM (CS229 / CS3244) |
+| Opinion mining as a task | Binary Fresh / Rotten |
+
+Live explainability is **input × gradient** (CS231N-style saliency), not LIME/SHAP.
 
 ## 3. Data Protocol
 
@@ -201,11 +203,4 @@ make serve            # launch API server
 
 ## 12. References
 
-Primary sources actually used in the protocol. Do not pad the list.
-
-1. Maas, A. L. et al. (2011). *Learning Word Vectors for Sentiment Analysis.* ACL.
-2. Devlin, J. et al. (2019). *BERT: Pre-training of Deep Bidirectional Transformers.* NAACL.
-3. Sanh, V. et al. (2019). *DistilBERT, a distilled version of BERT.* NeurIPS Workshop.
-4. Efron, B. & Tibshirani, R. J. (1993). *An Introduction to the Bootstrap.* Chapman & Hall.
-5. McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions. *Psychometrika*.
-6. Pang, B. & Lee, L. (2008). *Opinion Mining and Sentiment Analysis.* Foundations and Trends in IR.
+None required beyond the **course names** in [THEORY.md](THEORY.md) §T.0. Dataset: Hugging Face `imdb`. Model card: `distilbert-base-uncased`. Inference: ST2132-style paired test + bootstrap (named McNemar because that is the test).
