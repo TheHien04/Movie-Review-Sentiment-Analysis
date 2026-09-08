@@ -3,7 +3,7 @@
 **Document type:** Software architecture description (C4-inspired)  
 **System version:** 2.3.0  
 **Audience:** Examiners, reviewers, and operators  
-**Companion reports:** [METHODOLOGY.md](METHODOLOGY.md) · [STATS_REPORT.md](STATS_REPORT.md) · [MODEL_CARD.md](MODEL_CARD.md)
+**Companion reports:** [METHODOLOGY.md](METHODOLOGY.md) · [STATS_REPORT.md](STATS_REPORT.md) · [MODEL_CARD.md](MODEL_CARD.md) · [THEORY.md](THEORY.md)
 
 This document is the canonical architecture specification. The GitHub README reproduces the principal diagrams for first-pass reading.
 
@@ -11,6 +11,7 @@ This document is the canonical architecture specification. The GitHub README rep
 |--------|--------|
 | **A.** | Software architecture (C4, deployment, CI) — Part A |
 | **M.** | AI / ML architecture (models, RAG, agent, XAI, MLOps) — Part B |
+| **T.** | Theoretical framework (statistical learning, distillation, tests) — [THEORY.md](THEORY.md) |
 | **1–16** | UI screenshots — [FIGURES.md](FIGURES.md) |
 
 ---
@@ -454,6 +455,7 @@ Full tree: [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md).
 |----------|------|
 | [METHODOLOGY.md](METHODOLOGY.md) | Experimental protocol, related work, ablation |
 | [STATS_REPORT.md](STATS_REPORT.md) | Authoritative test metrics and hypothesis tests |
+| [THEORY.md](THEORY.md) | Statistical / ML theory → artefact diagrams T.1–T.16 |
 | [MODEL_CARD.md](MODEL_CARD.md) | Intended use and limitations |
 | [SILICON_VALLEY_STACK.md](SILICON_VALLEY_STACK.md) | MLflow, RAG, K8s, Istio extensions |
 | [DEPLOYMENT.md](DEPLOYMENT.md) | Operator runbooks |

@@ -213,6 +213,33 @@ Machine-learning diagrams (use-case, layered, neural, activity, sequence, state,
 
 ---
 
+## Theoretical framework figures (T.1–T.16)
+
+Statistical-learning and ML *theory* as architectures, each mapped to an artefact. Principal set **T.1–T.12** is in README §4; extras **T.13–T.16** and the full inventory are in [THEORY.md](THEORY.md).
+
+| Figure | Theory | Location |
+|--------|--------|----------|
+| **T.1** | Knowledge architecture (theory → files) | README §4.1 · THEORY T.1 |
+| **T.2** | Supervised problem + threshold | README §4.2 |
+| **T.3** | Generalisation protocol (no leakage) | README §4.2 |
+| **T.4** | Sparse TF-IDF vs contextual embeddings | README §4.3 |
+| **T.5** | Classical TF-IDF → LR / NB / SVM | README §4.3 |
+| **T.6** | Scaled dot-product attention | README §4.4 |
+| **T.7** | Distillation + IMDB transfer | README §4.4 |
+| **T.8** | Cross-entropy, AdamW, val F1 selection | README §4.5 |
+| **T.9** | Bayes operating point \(\tau\) | README §4.5 |
+| **T.10** | Discrimination / ranking / calibration | README §4.6 |
+| **T.11** | Percentile bootstrap | README §4.6 |
+| **T.12** | McNemar + bootstrap \(\Delta\) + Bonferroni | README §4.6 |
+| **T.13** | Reliability, Brier, ECE | THEORY T.13 |
+| **T.14** | Attribution literature vs input × gradient | THEORY T.14 |
+| **T.15** | LoRA (offline) | THEORY T.15 |
+| **T.16** | Dense retrieval not fused into logits | THEORY T.16 |
+
+**Suggested caption (theory set):** *Figures T.1–T.16. Theoretical framework of CineSentiment: every diagram names a theory that is instantiated in code or evaluation.json.*
+
+---
+
 ## Cross-references
 
 | Need | Document |
@@ -221,5 +248,6 @@ Machine-learning diagrams (use-case, layered, neural, activity, sequence, state,
 | Experimental protocol | [METHODOLOGY.md](METHODOLOGY.md) |
 | System architecture (C4 + sequences) | [ARCHITECTURE.md](ARCHITECTURE.md) Part A |
 | AI / ML architecture (CS diagrams) | [ARCHITECTURE.md](ARCHITECTURE.md) Part B · README §3 |
+| Theoretical framework (stats / ML theory) | [THEORY.md](THEORY.md) · README §4 |
 | Model governance | [MODEL_CARD.md](MODEL_CARD.md) |
 | Reproduce artifacts | `make capstone` |

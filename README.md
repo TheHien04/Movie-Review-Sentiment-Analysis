@@ -18,9 +18,9 @@
 | **Version** | 2.3.0 |
 | **Licence** | MIT |
 
-**Abstract.** This repository presents an end-to-end system for binary sentiment classification of English movie reviews. A DistilBERT encoder is fine-tuned on a stratified 70/15/15 partition of IMDB, evaluated once on a held-out test split with bootstrap confidence intervals, and compared against a pre-registered TF-IDF + logistic regression baseline under McNemar and bootstrap-difference tests. The same checkpoint is served through a Flask product API and a parallel FastAPI v2 surface, with a cinema-themed workbench for single/batch inference, token-level attribution, and a metrics dashboard bound to versioned artefacts. The design follows a C4-inspired software decomposition (context, container, component) plus computer-science views of the ML stack (encoder, retrieval, agent, explainability, MLOps). Primary statistical evidence is [docs/STATS_REPORT.md](docs/STATS_REPORT.md); the canonical architecture specification is [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+**Abstract.** This repository presents an end-to-end system for binary sentiment classification of English movie reviews. A DistilBERT encoder is fine-tuned on a stratified 70/15/15 partition of IMDB, evaluated once on a held-out test split with bootstrap confidence intervals, and compared against a pre-registered TF-IDF + logistic regression baseline under McNemar and bootstrap-difference tests. The same checkpoint is served through a Flask product API and a parallel FastAPI v2 surface, with a cinema-themed workbench for single/batch inference, token-level attribution, and a metrics dashboard bound to versioned artefacts. The design follows a C4-inspired software decomposition, computer-science views of the ML stack, and an explicit theoretical framework (statistical learning, distillation, decision theory, hypothesis tests) mapped onto artefacts. Primary statistical evidence is [docs/STATS_REPORT.md](docs/STATS_REPORT.md); architecture is [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); theory is [docs/THEORY.md](docs/THEORY.md).
 
-**Keywords:** sentiment analysis; DistilBERT; IMDB; bootstrap confidence intervals; McNemar test; RAG; LangGraph; explainable AI; MLOps; reproducible ML.
+**Keywords:** sentiment analysis; DistilBERT; IMDB; statistical learning; bootstrap; McNemar; knowledge distillation; TF-IDF; calibration; explainable AI.
 
 ---
 
@@ -29,17 +29,18 @@
 1. [Research question and contributions](#1-research-question-and-contributions)
 2. [System architecture](#2-system-architecture)
 3. [AI and ML architecture](#3-ai-and-ml-architecture)
-4. [Experimental protocol](#4-experimental-protocol)
-5. [Results](#5-results)
-6. [Reproducibility contract](#6-reproducibility-contract)
-7. [User interface](#7-user-interface)
-8. [Application programming interface](#8-application-programming-interface)
-9. [Repository layout](#9-repository-layout)
-10. [Quality assurance and continuous integration](#10-quality-assurance-and-continuous-integration)
-11. [Deployment](#11-deployment)
-12. [Limitations](#12-limitations)
-13. [Documentation index](#13-documentation-index)
-14. [Citation](#14-citation)
+4. [Theoretical framework](#4-theoretical-framework)
+5. [Experimental protocol](#5-experimental-protocol)
+6. [Results](#6-results)
+7. [Reproducibility contract](#7-reproducibility-contract)
+8. [User interface](#8-user-interface)
+9. [Application programming interface](#9-application-programming-interface)
+10. [Repository layout](#10-repository-layout)
+11. [Quality assurance and continuous integration](#11-quality-assurance-and-continuous-integration)
+12. [Deployment](#12-deployment)
+13. [Limitations](#13-limitations)
+14. [Documentation index](#14-documentation-index)
+15. [Citation](#15-citation)
 
 ---
 
@@ -57,6 +58,7 @@ Paired error analysis (McNemar) and metric-difference tests are reported honestl
 4. **Serving architecture.** Dual HTTP surfaces, health/readiness probes, optional RAG/agent path, and Compose/Helm delivery.
 5. **Workbench.** Cinema UI bound to `evaluation.json` so examiners inspect the same numbers as the written report.
 6. **AI architecture (CS diagrams).** Use-case, layered, neural, activity, sequence, state, data-flow, and module views of every ML function that is actually implemented (README §3, Figures M.1–M.15).
+7. **Theoretical framework.** Statistical learning, representation theory, decision theory, and hypothesis testing mapped onto artefacts (README §4, Figures T.1–T.16, [docs/THEORY.md](docs/THEORY.md)).
 
 ---
 
@@ -777,7 +779,240 @@ Canonical write-up of Part B, including loader states and ADRs: [docs/ARCHITECTU
 
 ---
 
-## 4. Experimental protocol
+## 4. Theoretical framework
+
+Software architecture (**A.**) says *how the system is wired*. ML architecture (**M.**) says *which models run*. This section says **which theories those models instantiate**, and where each theory becomes a file, metric, or API. Full write-up with the complete inventory: [docs/THEORY.md](docs/THEORY.md). Figure prefix **T.**
+
+Only theories that appear in code or `evaluation.json` are drawn. SHAP/LIME, MCP, and retrieval-augmented *accuracy* are **not** claimed.
+
+### 4.1 Knowledge architecture
+
+```mermaid
+flowchart TB
+    subgraph Stats["Statistical learning"]
+        IID["i.i.d. + held-out risk"]
+        Split["Train / val / test isolation"]
+        Boot["Percentile bootstrap"]
+        Hyp["McNemar + Bonferroni"]
+    end
+
+    subgraph Rep["Representation"]
+        Sparse["TF-IDF n-grams"]
+        Ctx["Transformer contexts"]
+        Dist["Knowledge distillation"]
+    end
+
+    subgraph Dec["Decision theory"]
+        CE["Cross-entropy + softmax"]
+        Thr["Threshold tau"]
+        Cal["Brier / ECE"]
+    end
+
+    subgraph Art["Artefacts"]
+        CSV["data/raw splits"]
+        W["sentiment_model/"]
+        EJ["evaluation.json"]
+        API["/api/predict"]
+        EX["/api/explain"]
+    end
+
+    IID --> Split --> CSV
+    Sparse --> EJ
+    Ctx --> Dist --> W
+    Dist --> CE --> Thr --> API
+    Boot --> EJ
+    Hyp --> EJ
+    Cal --> EJ
+    W --> API
+    W --> EX
+```
+
+**Figure T.1.** Theory-to-artefact map. Statistics govern the protocol; distillation + attention supply DistilBERT; TF-IDF supplies the nested baseline; decision theory turns \(P\) into \(\hat{y}\); bootstrap and McNemar turn a point estimate into a **reportable** claim.
+
+### 4.2 Supervised problem and generalisation protocol
+
+```mermaid
+flowchart LR
+    X["x review"] --> F["f_theta = P(y=1 | x)"]
+    F --> G{"P >= tau"}
+    G -->|yes| Pos["Fresh"]
+    G -->|no| Neg["Rotten"]
+    Y["y"] -.-> CE["CE loss on train only"]
+    CE --> F
+```
+
+**Figure T.2.** Binary classification as a conditional probability plus a threshold (Duda, Hart & Stork, 2001). Default \(\tau = 0.5\) (balanced classes, equal costs).
+
+```mermaid
+flowchart TB
+    D["IMDB 50k"] --> S["Stratify by y  seed 42"]
+    S --> TR["Train 35k  fit theta"]
+    S --> VA["Val 7.5k  select checkpoint"]
+    S --> TE["Test 7.5k  report once"]
+    TR --> Fit["DistilBERT + TF-IDF"]
+    VA --> Sel["Best val F1"]
+    Fit --> Sel
+    Sel --> Once["Single evaluation on TE"]
+    Once --> CI["Bootstrap 95% CI"]
+    Once --> Mc["McNemar on paired errors"]
+```
+
+**Figure T.3.** Statistical learning protocol (Hastie, Tibshirani & Friedman, 2009). Test data estimate risk; they are not a hyper-parameter loop.
+
+### 4.3 Two representation families
+
+```mermaid
+flowchart TB
+    X["Review"]
+
+    subgraph Sparse["Sparse lexical  Salton"]
+        Bow["n-grams"]
+        Idf["TF-IDF  50k features  sublinear tf"]
+        Phi["sparse phi(x)"]
+        Bow --> Idf --> Phi
+    end
+
+    subgraph Dense["Dense contextual  Vaswani / Devlin"]
+        Tok["WordPiece  len 256"]
+        Att["Self-attention x 6"]
+        H["h CLS"]
+        Tok --> Att --> H
+    end
+
+    X --> Bow
+    X --> Tok
+    Phi --> Lin["Logistic / NB / SVM"]
+    H --> Head["Linear 2-way head"]
+```
+
+**Figure T.4.** The DistilBERT vs TF-IDF comparison is two **geometries** on the same labels: bag-of-words weights vs contextual hidden states. McNemar tests error overlap, not “whether Transformers exist”.
+
+```mermaid
+flowchart LR
+    TF["tf"] --> Sub["log(1+tf)"] --> IDF["idf"]
+    IDF --> LR["Logistic GLM  primary baseline"]
+    IDF --> NB["Multinomial NB  Laplace alpha=1"]
+    IDF --> SVM["Linear SVM + calibration"]
+```
+
+**Figure T.5.** Vector-space retrieval (Salton & Buckley, 1988) feeding a Bernoulli GLM, a generative NB model, and a margin classifier with Platt-style probabilities.
+
+### 4.4 Attention, distillation, transfer
+
+```mermaid
+flowchart TB
+    Xin["X tokens x d"]
+    Q["Q = X W_Q"]
+    K["K = X W_K"]
+    V["V = X W_V"]
+    A["softmax(Q K^T / sqrt d_k)"]
+    O["A V + residual + FFN"]
+    Xin --> Q
+    Xin --> K
+    Xin --> V
+    Q --> A
+    K --> A
+    A --> O
+    V --> O
+    O --> Six["6 DistilBERT blocks"] --> CLS["CLS then linear head"]
+```
+
+**Figure T.6.** Scaled dot-product attention (Vaswani et al., 2017) as implemented by DistilBERT. Truncation at 256 tokens is a modelled bias, ablated in `scripts/ablation_study.py`.
+
+```mermaid
+flowchart LR
+    Pre["BooksCorpus + Wikipedia"] --> BERT["BERT-base teacher"]
+    BERT -->|"distillation Sanh 2019"| Distil["DistilBERT student 6L"]
+    Distil --> FT["Fine-tune on IMDB train"]
+    FT --> W["sentiment_model/"]
+```
+
+**Figure T.7.** Two transfers: **knowledge distillation** (Hinton et al., 2015; Sanh et al., 2019) already done upstream, then **inductive transfer** on IMDB in this repo. We do not pre-train BERT.
+
+### 4.5 Empirical risk and operating point
+
+```mermaid
+flowchart TB
+    R["R_emp = mean CE(y, softmax z)"]
+    O["AdamW  2e-5  wd 0.01  warmup"]
+    V["Select theta* by val F1"]
+    R --> O --> V
+```
+
+**Figure T.8.** Cross-entropy as Bernoulli NLL; AdamW (Loshchilov & Hutter, 2019); **never** select on test F1.
+
+```mermaid
+flowchart LR
+    P["P(Fresh)"] --> T["tau = 0.5 frozen for tables"]
+    T --> Y["y-hat"]
+    UI["Val slider / Insights sweep"] -.-> T
+```
+
+**Figure T.9.** Bayes operating point under equal costs and a 50/50 prior (Duda et al., 2001). UI threshold exploration is validation-side; STATS_REPORT freezes \(\tau=0.5\).
+
+### 4.6 Evaluation, uncertainty, tests
+
+```mermaid
+flowchart TB
+    subgraph Disc["Discrimination"]
+        Acc["Accuracy"]
+        F1["F1"]
+        CM["TPR TNR PPV NPV"]
+    end
+    subgraph Rank["Ranking"]
+        ROC["ROC-AUC"]
+        AP["Average precision"]
+    end
+    subgraph Cal["Calibration"]
+        Br["Brier"]
+        ECE["ECE 10 bins"]
+    end
+    Pred["frozen split  y-hat and P"] --> Disc
+    Pred --> Rank
+    Pred --> Cal
+```
+
+**Figure T.10.** Three evaluation questions (Fawcett, 2006; Guo et al., 2017). Lead with test F1 and ROC-AUC; publish CIs on the discrimination block; show reliability on Insights.
+
+```mermaid
+flowchart LR
+    TE["test n=7500"] --> B["resample B=500"] --> Q["2.5 / 97.5 percentiles"] --> CI["95% CI"]
+```
+
+**Figure T.11.** Percentile bootstrap (Efron & Tibshirani, 1993) in `ml_core.py`. Statement: sampling variability of the **test estimator**, not a parameter posterior.
+
+```mermaid
+flowchart TB
+    Same["Same 7500 reviews"]
+    D["DistilBERT"]
+    L["TF-IDF+LR"]
+    Same --> D
+    Same --> L
+    D --> Mc["McNemar  b,c  chi-square"]
+    L --> Mc
+    D --> Del["Bootstrap Delta acc / F1"]
+    L --> Del
+    Mc --> Out["p ~ 0.15  H0 not rejected"]
+    Del --> Out
+    Out --> Hon["Report a tie  ship DistilBERT for transfer / XAI"]
+```
+
+**Figure T.12.** Paired tests (McNemar, 1947; Dietterich, 1998). Non-significance is the scientific result; DistilBERT is the engineering choice. Bonferroni applies when NB and SVM join the family. Effect sizes (Cohen’s *h*, odds ratio) sit in `evaluation.json`.
+
+### 4.7 Further theory diagrams
+
+| Figure | Theory | Where |
+|--------|--------|--------|
+| **T.13** | Calibration (Brier, ECE, reliability) | [docs/THEORY.md](docs/THEORY.md) |
+| **T.14** | Attribution: input × gradient vs SHAP/IG | [docs/THEORY.md](docs/THEORY.md) |
+| **T.15** | LoRA low-rank adapters (offline) | [docs/THEORY.md](docs/THEORY.md) |
+| **T.16** | Dense retrieval / RAG **not fused** into logits | [docs/THEORY.md](docs/THEORY.md) |
+
+Inventory of every cited theory and its file path: [docs/THEORY.md](docs/THEORY.md) §T.0.
+
+---
+
+## 5. Experimental protocol
 
 | Item | Specification |
 |------|----------------|
@@ -796,7 +1031,7 @@ Training never reads the test split. Validation may be used for early stopping a
 
 ---
 
-## 5. Results
+## 6. Results
 
 Authoritative numbers are regenerated from `artifacts/results/evaluation.json` (`make evaluate` / `make sync-docs`). The table below is the **test split** at \(\tau = 0.5\).
 
@@ -819,7 +1054,7 @@ Validation accuracy 91.96% (CI 91.33%–92.61%) is consistent with test, indicat
 
 ---
 
-## 6. Reproducibility contract
+## 7. Reproducibility contract
 
 From a clean clone:
 
@@ -849,9 +1084,9 @@ Seeds: NumPy, scikit-learn, PyTorch, and Hugging Face Trainer use `seed=42`. Dep
 
 ---
 
-## 7. User interface
+## 8. User interface
 
-Captions map to [docs/FIGURES.md](docs/FIGURES.md) for thesis-style citation. Dashboard figures may show the **validation** split; cite **test** numbers from Section 5 / `STATS_REPORT.md`.
+Captions map to [docs/FIGURES.md](docs/FIGURES.md) for thesis-style citation. Dashboard figures may show the **validation** split; cite **test** numbers from Section 6 / `STATS_REPORT.md`.
 
 ### Product surfaces
 
@@ -917,7 +1152,7 @@ Captions map to [docs/FIGURES.md](docs/FIGURES.md) for thesis-style citation. Da
 
 ---
 
-## 8. Application programming interface
+## 9. Application programming interface
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -934,7 +1169,7 @@ Extended v2 routes (FastAPI :8001), developer keys, webhooks, RAG, and the agent
 
 ---
 
-## 9. Repository layout
+## 10. Repository layout
 
 | Path | Role |
 |------|------|
@@ -947,13 +1182,13 @@ Extended v2 routes (FastAPI :8001), developer keys, webhooks, RAG, and the agent
 | `e2e/` | Playwright browser tests |
 | `deploy/` | Kubernetes, Helm, Istio, Triton model repository |
 | `artifacts/results/` | Versioned evaluation artefacts |
-| `docs/` | Methodology, statistics, architecture, model card, figures |
+| `docs/` | Methodology, theory, statistics, architecture, model card, figures |
 
 Full tree: [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
 
 ---
 
-## 10. Quality assurance and continuous integration
+## 11. Quality assurance and continuous integration
 
 ```bash
 make test              # pytest
@@ -966,7 +1201,7 @@ GitHub Actions: hygiene (secrets, weights, raw data), lint (flake8, black), secu
 
 ---
 
-## 11. Deployment
+## 12. Deployment
 
 | Target | Command |
 |--------|---------|
@@ -979,7 +1214,7 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 
 ---
 
-## 12. Limitations
+## 13. Limitations
 
 1. **Domain.** Evaluation is IMDB-only; transfer to other review sources is not demonstrated.
 2. **Label set.** Neutral and mixed sentiment are not modelled.
@@ -994,11 +1229,12 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 
 ---
 
-## 13. Documentation index
+## 14. Documentation index
 
 | Document | Audience | Content |
 |----------|----------|---------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Software / ML examiners | C4 (A.1–A.8) · AI/ML diagrams (M.1–M.15) · ADRs |
+| [docs/THEORY.md](docs/THEORY.md) | Statistics / ML examiners | Theoretical framework T.1–T.16 · theory→artefact map |
 | [docs/STATS_REPORT.md](docs/STATS_REPORT.md) | Statistics / DS | Test metrics, CIs, confusion matrix, baselines |
 | [docs/METHODOLOGY.md](docs/METHODOLOGY.md) | Reviewers | Protocol, related work, ablation |
 | [docs/MODEL_CARD.md](docs/MODEL_CARD.md) | ML governance | Intended use, limitations, metrics |
@@ -1010,7 +1246,7 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 
 ---
 
-## 14. Citation
+## 15. Citation
 
 ```bibtex
 @misc{cinesentiment2026,
@@ -1018,24 +1254,30 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
   title        = {CineSentiment: IMDB Movie Review Sentiment Analysis with DistilBERT},
   year         = {2026},
   howpublished = {\url{https://github.com/TheHien04/Movie-Review-Sentiment-Analysis}},
-  note         = {Statistical Machine Learning capstone; bootstrap CIs; C4 + ML architecture diagrams}
+  note         = {Statistical Machine Learning capstone; theoretical framework T.1-T.16; C4 + ML architecture}
 }
 ```
 
 ### Selected references
 
 1. Maas, A. L., Daly, R. E., Pham, P. T., Huang, D., Ng, A. Y., & Potts, C. (2011). Learning word vectors for sentiment analysis. *ACL*.
-2. Sanh, V., Debut, L., Chaumond, J., & Wolf, T. (2019). DistilBERT, a distilled version of BERT. *NeurIPS Workshop*.
+2. Vaswani, A., et al. (2017). Attention is all you need. *NeurIPS*.
 3. Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of deep bidirectional transformers. *NAACL*.
-4. Vaswani, A., et al. (2017). Attention is all you need. *NeurIPS*.
-5. Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP. *NeurIPS*.
-6. Sundararajan, M., Taly, A., & Yan, Q. (2017). Axiomatic attribution for deep networks. *ICML*.
-7. Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*. Chapman & Hall.
-8. McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions. *Psychometrika*, 12(2), 153–157.
-9. Brown, S. (2018). The C4 model for visualising software architecture. [https://c4model.com](https://c4model.com).
+4. Sanh, V., Debut, L., Chaumond, J., & Wolf, T. (2019). DistilBERT, a distilled version of BERT. *NeurIPS Workshop*.
+5. Hinton, G., Vinyals, O., & Dean, J. (2015). Distilling the knowledge in a neural network. *NIPS Deep Learning Workshop*.
+6. Salton, G., & Buckley, C. (1988). Term-weighting approaches in automatic text retrieval. *IP&M*.
+7. Hastie, T., Tibshirani, R., & Friedman, J. (2009). *The elements of statistical learning*. Springer.
+8. Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*. Chapman & Hall.
+9. McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions. *Psychometrika*.
+10. Guo, C., Pleiss, G., Sun, Y., & Weinberger, K. Q. (2017). On calibration of modern neural networks. *ICML*.
+11. Sundararajan, M., Taly, A., & Yan, Q. (2017). Axiomatic attribution for deep networks. *ICML*.
+12. Hu, E. J., et al. (2022). LoRA: Low-rank adaptation of large language models. *ICLR*.
+13. Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP. *NeurIPS*.
+14. Brown, S. (2018). The C4 model for visualising software architecture. [https://c4model.com](https://c4model.com).
 
 ---
 
 **Course context:** Statistical Machine Learning capstone  
 **Architecture specification:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)  
+**Theoretical framework:** [docs/THEORY.md](docs/THEORY.md)  
 **Last updated:** September 2026
