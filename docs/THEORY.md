@@ -1,90 +1,17 @@
 # Theoretical Framework — CineSentiment
 
-**Document type:** Curriculum alignment (Stanford, MIT, Harvard, Oxford, Cambridge) mapped onto artefacts  
-**Audience:** Examiners who know *courses*, not a paper dump  
+**Document type:** Methods used in this repository, mapped onto artefacts  
+**Audience:** Examiners (machine learning, statistics, software)  
 **Companion:** [METHODOLOGY.md](METHODOLOGY.md) · [STATS_REPORT.md](STATS_REPORT.md) · [ARCHITECTURE.md](ARCHITECTURE.md)
 
-This chapter records **only methods that exist in code**. Framing is the standard machine-learning syllabus at **Stanford, MIT, Harvard, Oxford, and Cambridge**. Figure prefix **T.**
-
-You do **not** need to read a stack of authors. The same hold-out + encoder + CI stack is CS229/CS224N/CS109, 6.036/6.S191/18.05, CS181/Stat 110, Oxford ML Part C / Statistical Inference, and Cambridge MLB / NLP. This repo is those modules applied to IMDB sentiment.
+This chapter records **only methods that exist in code**. The evaluation bar is a held-out protocol, a nested baseline, uncertainty on the test estimator, and an honest paired comparison. Figure prefix **T.**
 
 ---
 
-## T.0 Curriculum map — five universities
+## T.0 Methods → artefacts
 
-| What the repo does | Stanford | MIT | Harvard | Oxford | Cambridge |
-|--------------------|----------|-----|---------|--------|-----------|
-| Supervised classification, logistic / NB / SVM | **CS229** | **6.036** | **CS181** | CS **Machine Learning** (Part C) | **1B MLRD** / **Part II MLB** |
-| Train / val / test; test once | CS229 | 6.036 | CS181 | ML Part C | MLRD / MLB |
-| TF-IDF, n-grams, text classification | **CS224N** | **6.861** | CS181 | **Computational Linguistics** | **Part II NLP** |
-| Transformers, BERT-style fine-tune | CS224N | **6.S191** | CS287 | Computational Linguistics | Part II NLP |
-| Cross-entropy, softmax | CS229 / CS231N | 6.036 / 6.S191 | CS181 | ML Part C | MLB |
-| F1, ROC, confusion matrix | CS229 | 6.036 | CS181 | ML Part C | MLB / MLRD |
-| Bootstrap CI, paired hypothesis tests | **CS109** | **6.041** / **18.05** | **Stat 110** | **Statistical Inference** (SB2) | **IA Probability** / IB Statistics |
-| Gradient saliency | **CS231N** | 6.S191 | CS181 | Computer Vision / ML | MLB |
-| Optional retrieval (not fused) | CS224N | 6.861 | CS287 | Computational Linguistics | Part II NLP |
-
-```mermaid
-flowchart TB
-    subgraph Stanford["Stanford"]
-        S229["CS229"]
-        S224["CS224N"]
-        S109["CS109"]
-    end
-
-    subgraph MIT["MIT"]
-        M036["6.036"]
-        M191["6.S191"]
-        M041["6.041 / 18.05"]
-    end
-
-    subgraph Harvard["Harvard"]
-        H181["CS181"]
-        H110["Stat 110"]
-    end
-
-    subgraph Oxford["Oxford"]
-        OML["ML Part C"]
-        ONLP["Computational Linguistics"]
-        OSI["Statistical Inference"]
-    end
-
-    subgraph Cambridge["Cambridge"]
-        CML["1B MLRD / Part II MLB"]
-        CNLP["Part II NLP"]
-        CPr["IA Probability"]
-    end
-
-    subgraph Repo["This capstone"]
-        Prot["70/15/15  test once"]
-        Enc["TF-IDF + DistilBERT"]
-        Inf["Bootstrap + McNemar"]
-    end
-
-    S229 --> Prot
-    M036 --> Prot
-    H181 --> Prot
-    OML --> Prot
-    CML --> Prot
-    S224 --> Enc
-    M191 --> Enc
-    ONLP --> Enc
-    CNLP --> Enc
-    S109 --> Inf
-    M041 --> Inf
-    H110 --> Inf
-    OSI --> Inf
-    CPr --> Inf
-```
-
-**Figure T.0.** One ML stack, five universities. Defence: hold-out (CS229 / 6.036 / CS181 / Oxford ML / Cambridge MLB); encoder (CS224N / 6.S191 / Oxford CL / Cambridge NLP); inference (CS109 / 18.05 / Stat 110 / Oxford SB2 / Cambridge IA Probability).
-
----
-
-## T.0b What lands in which file
-
-| Syllabus topic | Instantiation |
-|----------------|---------------|
+| Method | Instantiation |
+|--------|---------------|
 | Binary labels \(y\in\{0,1\}\) | Fresh / Rotten |
 | Hold-out generalisation | Test reported **once** |
 | Stratified split | 70/15/15, seed 42 |
@@ -98,7 +25,7 @@ flowchart TB
 | Saliency | `POST /api/explain` |
 | Retrieval optional | Chroma; **not** fused into logits |
 
-**Not in the syllabus of this repo.** MCP servers; SHAP/LIME as the live explainer; *k*-fold CV; claiming RAG improved F1.
+**Not claimed.** MCP servers; SHAP/LIME as the live explainer; *k*-fold CV; RAG improved F1.
 
 ---
 
@@ -148,7 +75,7 @@ flowchart TB
     W --> API
 ```
 
-**Figure T.1.** Theoretical framework of the capstone. CS229/6.036 constrain the **protocol**; CS224N/6.S191 supply **two model families**; CS109/18.05 turn logits into a reportable claim. Everything terminates in files examiners can open.
+**Figure T.1.** Theoretical framework. The protocol isolates splits; DistilBERT and TF-IDF are two model families; bootstrap and McNemar make a point estimate reportable. Everything terminates in files examiners can open.
 
 ---
 
@@ -171,7 +98,7 @@ flowchart LR
     Loss --> Enc
 ```
 
-**Figure T.2.** Supervised classification as conditional probability + threshold (CS229 / 6.036). Training minimises empirical risk on **train.csv only**. Test labels are used solely in `evaluate_model.py` / `STATS_REPORT.md`.
+**Figure T.2.** Supervised classification as conditional probability + threshold. Training minimises empirical risk on **train.csv only**. Test labels are used solely in `evaluate_model.py` / `STATS_REPORT.md`.
 
 ---
 
@@ -192,7 +119,7 @@ flowchart TB
     Once --> Test["McNemar on paired TE errors"]
 ```
 
-**Figure T.3.** Hold-out protocol (CS229 / 6.036). The test split estimates risk; it is not a tuning knob. Stratification keeps the 50/50 prior so accuracy is not an artefact of imbalance.
+**Figure T.3.** Hold-out protocol. The test split estimates risk; it is not a tuning knob. Stratification keeps the 50/50 prior so accuracy is not an artefact of imbalance.
 
 ---
 
@@ -222,7 +149,7 @@ flowchart TB
     H --> Head["Linear 2-way head"]
 ```
 
-**Figure T.4.** Two feature geometries on the same \((x,y)\) (CS224N / 6.861). The paired test asks whether **error patterns** differ.
+**Figure T.4.** Two feature geometries on the same \((x,y)\). The paired test asks whether **error patterns** differ.
 
 ---
 
@@ -249,7 +176,7 @@ flowchart LR
     LR --> Comp["Primary nested comparator"]
 ```
 
-**Figure T.5.** TF-IDF + logistic regression is the **pre-registered** CS229/6.036 baseline. Naïve Bayes and a margin SVM are nested comparators; calibrated SVM probabilities make Brier/ECE defined.
+**Figure T.5.** TF-IDF + logistic regression is the **pre-registered** baseline. Naïve Bayes and a margin SVM are nested comparators; calibrated SVM probabilities make Brier/ECE defined.
 
 ---
 
@@ -276,7 +203,7 @@ flowchart TB
     O --> Blk --> CLS
 ```
 
-**Figure T.6.** Scaled dot-product attention as in CS224N / 6.S191, inside DistilBERT. We fine-tune Hugging Face weights; we do not re-implement attention. Truncation at 256 is ablated.
+**Figure T.6.** Scaled dot-product attention inside DistilBERT. We fine-tune Hugging Face weights; we do not re-implement attention. Truncation at 256 is ablated.
 
 ---
 
@@ -298,7 +225,7 @@ flowchart LR
     Head --> Serve
 ```
 
-**Figure T.7.** CS224N-style transfer: a BERT-family student encoder, then IMDB fine-tune. This repo does not pre-train BERT-base.
+**Figure T.7.** Transfer learning: a BERT-family student encoder, then IMDB fine-tune. This repo does not pre-train BERT-base.
 
 ---
 
@@ -315,7 +242,7 @@ flowchart TB
     Risk --> Opt --> Val --> Best --> Stop
 ```
 
-**Figure T.8.** Cross-entropy as NLL of a two-class softmax (CS229). **Selection uses validation F1, never test F1** (CS229 / 6.036).
+**Figure T.8.** Cross-entropy as NLL of a two-class softmax. **Selection uses validation F1, never test F1.**
 
 ---
 
@@ -334,7 +261,7 @@ flowchart LR
     Costs -.-> Sweep
 ```
 
-**Figure T.9.** Default \(\tau=0.5\) is the equal-cost Bayes point on a balanced problem (CS229). The UI slider is **validation**; primary tables freeze \(\tau=0.5\) on test.
+**Figure T.9.** Default \(\tau=0.5\) is the equal-cost operating point on a balanced problem. The UI slider is **validation**; primary tables freeze \(\tau=0.5\) on test.
 
 ---
 
@@ -364,7 +291,7 @@ flowchart TB
     Pred --> Prob
 ```
 
-**Figure T.10.** Three questions from CS229 / 6.036: (i) labels, (ii) ranking, (iii) calibration. Lead metrics: **test F1 + ROC-AUC**.
+**Figure T.10.** Three questions: (i) labels, (ii) ranking, (iii) calibration. Lead metrics: **test F1 + ROC-AUC**.
 
 ---
 
@@ -381,7 +308,7 @@ flowchart TB
     TE --> Draw --> Met --> Q --> CI
 ```
 
-**Figure T.11.** Percentile bootstrap in `ml_core.py` (CS109 / 18.05). The interval is sampling variability of the **test estimator**. \(B=500\) is a compute compromise.
+**Figure T.11.** Percentile bootstrap in `ml_core.py`. The interval is sampling variability of the **test estimator**. \(B=500\) is a compute compromise.
 
 ---
 
@@ -421,7 +348,7 @@ flowchart TB
     P2 --> Bon
 ```
 
-**Figure T.12.** Two complementary CS109/18.05 tests. McNemar: do **error patterns** differ? Bootstrap \(\Delta\): does **metric magnitude** differ? On this split both fail to reject at 5%. **Report the tie.**
+**Figure T.12.** Two complementary tests. McNemar: do **error patterns** differ? Bootstrap \(\Delta\): does **metric magnitude** differ? On this split both fail to reject at 5%. **Report the tie.**
 
 ---
 
@@ -440,7 +367,7 @@ flowchart LR
     P --> ECE
 ```
 
-**Figure T.13.** High AUC can still be miscalibrated (CS229 evaluation). Insights plots the reliability diagram. Calibration is **reported**, not temperature-scaled at serve time by default.
+**Figure T.13.** High AUC can still be miscalibrated. Insights plots the reliability diagram. Calibration is **reported**, not temperature-scaled at serve time by default.
 
 ---
 
@@ -466,7 +393,7 @@ flowchart TB
     LIME -.->|"not implemented"| Lex
 ```
 
-**Figure T.14.** Live XAI is first-order **input × gradient** (CS231N saliency). Not SHAP, not integrated gradients. The UI lexicon fallback is labelled as a heuristic.
+**Figure T.14.** Live XAI is first-order **input × gradient**. Not SHAP, not integrated gradients. The UI lexicon fallback is labelled as a heuristic.
 
 ---
 
@@ -482,7 +409,7 @@ flowchart LR
     W --> W2
 ```
 
-**Figure T.15.** LoRA is an **offline** CS224N-style PEFT comparator (`make lora-quick`). Serving still uses one DistilBERT checkpoint.
+**Figure T.15.** LoRA is an **offline** PEFT comparator (`make lora-quick`). Serving still uses one DistilBERT checkpoint.
 
 ---
 
@@ -499,18 +426,17 @@ flowchart TB
     Cls["DistilBERT ŷ"] -.->|"no concat  no extra loss"| UX
 ```
 
-**Figure T.16.** Dense retrieval (CS224N / 6.861) as **display context**. Neighbours are not concatenated into DistilBERT, so we do not claim a retrieval-augmented **F1** gain.
+**Figure T.16.** Dense retrieval as **display context**. Neighbours are not concatenated into DistilBERT, so we do not claim a retrieval-augmented **F1** gain.
 
 ---
 
 ## How to use this chapter in a defence
 
-1. Show **T.0** — five universities, one stack.  
-2. Protocol **T.3** — hold-out (CS229 / 6.036 / CS181 / Oxford ML / Cambridge MLB).  
-3. Two geometries **T.4** — CS224N / 6.861 / Oxford CL / Cambridge NLP.  
-4. Tests **T.12** — CS109 / 18.05 / Stat 110 / Oxford SB2; say the models are **tied**.  
-5. Point to `evaluation.json`.
+1. Protocol **T.3** — hold-out; test once.  
+2. Two geometries **T.4** — TF-IDF vs DistilBERT.  
+3. Tests **T.12** — say the models are **tied**.  
+4. Point to `evaluation.json`.
 
 ---
 
-*If a method is not in T.0, do not imply it was used. Course numbers are syllabus names, not a claim of enrolment.*
+*If a method is not in T.0, do not imply it was used.*

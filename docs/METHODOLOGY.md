@@ -24,16 +24,16 @@ a label \(y \in \{0, 1\}\) where 0 = *negative* and 1 = *positive*.
 
 ## 2. Related Work
 
-Background for the **task** (movie-review sentiment). Methods follow the Stanford / MIT / Harvard / Oxford / Cambridge ML syllabus, not a long paper list.
+Background for the **task** (movie-review sentiment). Methods are a held-out protocol, a nested linear baseline, and a paired test on the same test rows.
 
 | Topic | Role here |
 |-------|-----------|
 | IMDB labelled reviews | Source dataset (`datasets.load_dataset("imdb")`) |
-| BERT-family encoders | DistilBERT fine-tune (CS224N / 6.S191) |
-| Classical text classifiers | TF-IDF + logistic / NB / SVM (CS229 / 6.036) |
+| BERT-family encoders | DistilBERT fine-tune |
+| Classical text classifiers | TF-IDF + logistic / NB / SVM |
 | Opinion mining as a task | Binary Fresh / Rotten |
 
-Live explainability is **input × gradient** (CS231N-style saliency), not LIME/SHAP.
+Live explainability is **input × gradient**, not LIME/SHAP.
 
 ## 3. Data Protocol
 
@@ -203,4 +203,4 @@ make serve            # launch API server
 
 ## 12. References
 
-None required beyond the **course names** in [THEORY.md](THEORY.md) §T.0 (Stanford, MIT, Harvard, Oxford, Cambridge). Dataset: Hugging Face `imdb`. Model card: `distilbert-base-uncased`. Inference: paired test + bootstrap (named McNemar because that is the test).
+None required in the README. Dataset: Hugging Face `imdb`. Model card: `distilbert-base-uncased`. Inference: paired test + bootstrap (McNemar is the test name).
