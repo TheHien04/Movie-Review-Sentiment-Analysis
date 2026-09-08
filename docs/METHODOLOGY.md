@@ -30,8 +30,8 @@ a label \(y \in \{0, 1\}\) where 0 = *negative* and 1 = *positive*.
 | Devlin et al. (2019) | BERT pre-training; contextual word representations. |
 | Sanh et al. (2019) | DistilBERT: 40 % smaller, 60 % faster, retaining 97 % of BERT performance. |
 | Pang & Lee (2008) | Foundational survey on opinion mining and sentiment analysis. |
-| Ribeiro et al. (2016) | LIME for model-agnostic interpretability. |
-| Lundberg & Lee (2017) | SHAP values; unified framework for feature attribution. |
+
+Live explainability in this repo is **input × gradient**, not LIME/SHAP. Those papers are background only; do not cite them as methods used.
 
 ## 3. Data Protocol
 
@@ -201,9 +201,11 @@ make serve            # launch API server
 
 ## 12. References
 
+Primary sources actually used in the protocol. Do not pad the list.
+
 1. Maas, A. L. et al. (2011). *Learning Word Vectors for Sentiment Analysis.* ACL.
 2. Devlin, J. et al. (2019). *BERT: Pre-training of Deep Bidirectional Transformers.* NAACL.
 3. Sanh, V. et al. (2019). *DistilBERT, a distilled version of BERT.* NeurIPS Workshop.
-4. Pang, B. & Lee, L. (2008). *Opinion Mining and Sentiment Analysis.* Foundations and Trends in IR.
-5. Ribeiro, M. T. et al. (2016). *"Why Should I Trust You?": Explaining the Predictions of Any Classifier.* KDD.
-6. Lundberg, S. M. & Lee, S.-I. (2017). *A Unified Approach to Interpreting Model Predictions.* NeurIPS.
+4. Efron, B. & Tibshirani, R. J. (1993). *An Introduction to the Bootstrap.* Chapman & Hall.
+5. McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions. *Psychometrika*.
+6. Pang, B. & Lee, L. (2008). *Opinion Mining and Sentiment Analysis.* Foundations and Trends in IR.

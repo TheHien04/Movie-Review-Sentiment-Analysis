@@ -12,6 +12,8 @@ Principal diagrams **T.1–T.12** are reproduced in README §4. Figures **T.13�
 
 ## T.0 Inventory — theory used, and where it lands
 
+This table is a **lookup**, not a bibliography to paste into the report. Cite a row only if that chapter actually discusses the method.
+
 | Theory | Canonical reference | Instantiation in this project |
 |--------|---------------------|-------------------------------|
 | Supervised binary classification | Vapnik (1998); Hastie et al. (2009) | \(y \in \{0,1\}\), Fresh vs Rotten |
