@@ -1,7 +1,8 @@
 # Statistical & ML Methodology
 
 > **CineSentiment** — Binary Sentiment Classification on IMDB Movie Reviews  
-> Capstone-level documentation for Data Science coursework.
+> Capstone-level documentation for Data Science coursework.  
+> Theory-to-artefact diagrams: [THEORY.md](THEORY.md) (Figures T.1–T.16).
 
 ---
 
