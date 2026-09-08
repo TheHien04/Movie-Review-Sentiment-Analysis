@@ -18,9 +18,9 @@
 | **Version** | 2.3.0 |
 | **Licence** | MIT |
 
-**Abstract.** This repository presents an end-to-end system for binary sentiment classification of English movie reviews. A DistilBERT encoder is fine-tuned on a stratified 70/15/15 partition of IMDB, evaluated once on a held-out test split with bootstrap confidence intervals, and compared against a pre-registered TF-IDF + logistic regression baseline under McNemar and bootstrap-difference tests. The same checkpoint is served through a Flask product API and a parallel FastAPI v2 surface, with a cinema-themed workbench for single/batch inference, token-level attribution, and a metrics dashboard bound to versioned artefacts. The design follows a C4-inspired decomposition (context, container, component) and a Makefile-driven reproducibility contract. Primary statistical evidence is [docs/STATS_REPORT.md](docs/STATS_REPORT.md); the canonical architecture specification is [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+**Abstract.** This repository presents an end-to-end system for binary sentiment classification of English movie reviews. A DistilBERT encoder is fine-tuned on a stratified 70/15/15 partition of IMDB, evaluated once on a held-out test split with bootstrap confidence intervals, and compared against a pre-registered TF-IDF + logistic regression baseline under McNemar and bootstrap-difference tests. The same checkpoint is served through a Flask product API and a parallel FastAPI v2 surface, with a cinema-themed workbench for single/batch inference, token-level attribution, and a metrics dashboard bound to versioned artefacts. The design follows a C4-inspired software decomposition (context, container, component) plus computer-science views of the ML stack (encoder, retrieval, agent, explainability, MLOps). Primary statistical evidence is [docs/STATS_REPORT.md](docs/STATS_REPORT.md); the canonical architecture specification is [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-**Keywords:** sentiment analysis; DistilBERT; IMDB; bootstrap confidence intervals; McNemar test; reproducible ML; REST API; explainable AI.
+**Keywords:** sentiment analysis; DistilBERT; IMDB; bootstrap confidence intervals; McNemar test; RAG; LangGraph; explainable AI; MLOps; reproducible ML.
 
 ---
 
@@ -28,17 +28,18 @@
 
 1. [Research question and contributions](#1-research-question-and-contributions)
 2. [System architecture](#2-system-architecture)
-3. [Experimental protocol](#3-experimental-protocol)
-4. [Results](#4-results)
-5. [Reproducibility contract](#5-reproducibility-contract)
-6. [User interface](#6-user-interface)
-7. [Application programming interface](#7-application-programming-interface)
-8. [Repository layout](#8-repository-layout)
-9. [Quality assurance and continuous integration](#9-quality-assurance-and-continuous-integration)
-10. [Deployment](#10-deployment)
-11. [Limitations](#11-limitations)
-12. [Documentation index](#12-documentation-index)
-13. [Citation](#13-citation)
+3. [AI and ML architecture](#3-ai-and-ml-architecture)
+4. [Experimental protocol](#4-experimental-protocol)
+5. [Results](#5-results)
+6. [Reproducibility contract](#6-reproducibility-contract)
+7. [User interface](#7-user-interface)
+8. [Application programming interface](#8-application-programming-interface)
+9. [Repository layout](#9-repository-layout)
+10. [Quality assurance and continuous integration](#10-quality-assurance-and-continuous-integration)
+11. [Deployment](#11-deployment)
+12. [Limitations](#12-limitations)
+13. [Documentation index](#13-documentation-index)
+14. [Citation](#14-citation)
 
 ---
 
@@ -55,6 +56,7 @@ Paired error analysis (McNemar) and metric-difference tests are reported honestl
 3. **Comparison.** Nested TF-IDF baselines (logistic regression, naïve Bayes, calibrated Linear SVM) plus McNemar, bootstrap Δ, effect sizes, and Bonferroni correction.
 4. **Serving architecture.** Dual HTTP surfaces, health/readiness probes, optional RAG/agent path, and Compose/Helm delivery.
 5. **Workbench.** Cinema UI bound to `evaluation.json` so examiners inspect the same numbers as the written report.
+6. **AI architecture (CS diagrams).** Use-case, layered, neural, activity, sequence, state, data-flow, and module views of every ML function that is actually implemented (README §3, Figures M.1–M.15).
 
 ---
 
@@ -251,14 +253,14 @@ sequenceDiagram
     else production, not ready
         L-->>U: 503
     end
-    F->>I: predict_with_backend()
+    F->>I: predict_sentiment() local HF
     I->>M: tokenize 256, softmax
     M-->>I: label, P(Fresh)
     I->>C: format JSON
     C-->>U: label, sentiment, confidence
 ```
 
-**Figure A.5.** Inference sequence. The decision rule is \(\hat{y} = \mathbb{1}[P(\text{Fresh}) \ge 0.5]\). Confidence is \(\max(P, 1-P)\). Truncation length is identical in training, evaluation, and serving.
+**Figure A.5.** Inference sequence on the **Flask product path**. The decision rule is \(\hat{y} = \mathbb{1}[P(\text{Fresh}) \ge 0.5]\). Confidence is \(\max(P, 1-P)\). Truncation length is identical in training, evaluation, and serving. FastAPI and LangGraph instead call `predict_with_backend()` (Figure M.5).
 
 ### 2.6 Explainability and optional extensions
 
@@ -349,7 +351,433 @@ Layer-to-path mapping, health semantics, security controls, and architecture dec
 
 ---
 
-## 3. Experimental protocol
+## 3. AI and ML architecture
+
+Section 2 is the **software** architecture (C4). This section is the **machine-learning** architecture: model family, neural encoder, inference routing, retrieval, agent orchestration, explainability, and experiment tracking. Figure numbers **M.1–M.12** match [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) Part B. CS diagram types used: use-case, layered, neural-block, class/module, activity, sequence, state, and data-flow.
+
+These diagrams describe **code that exists in this repository**. Optional surfaces are labelled as such. Retrieval is **not** fused into DistilBERT logits. LoRA and the LLM baseline are **offline comparators**, not the serving checkpoint.
+
+### 3.1 Use cases — AI functions examiners can invoke
+
+```mermaid
+flowchart TB
+    subgraph Actors["Actors"]
+        U["End user"]
+        A["Analyst"]
+        D["Developer"]
+    end
+
+    subgraph Core["Core ML — always on the product path"]
+        UC1["Classify review<br/>POST /api/predict"]
+        UC2["Batch CSV / SSE stream"]
+        UC3["Explain tokens<br/>POST /api/explain"]
+        UC4["Inspect test metrics / CIs"]
+    end
+
+    subgraph Product["Product ML — same DistilBERT"]
+        UC5["Tone arc per sentence"]
+        UC6["Aspect polarity<br/>acting plot visuals …"]
+        UC7["Live draft preview"]
+        UC8["A/B compare + attribution"]
+        UC9["Voice to text then classify"]
+    end
+
+    subgraph Optional["Optional — env flags"]
+        UC10["RAG similar reviews"]
+        UC11["LangGraph agent"]
+        UC12["Non-English via XLM-R"]
+        UC13["Feast text features"]
+        UC14["Remote vLLM / Triton"]
+    end
+
+    subgraph Offline["Offline science — Makefile"]
+        UC15["Fine-tune DistilBERT"]
+        UC16["TF-IDF / LoRA / LLM baselines"]
+        UC17["McNemar · bootstrap · ablation"]
+    end
+
+    U --> UC1
+    U --> UC2
+    U --> UC3
+    U --> UC5
+    U --> UC6
+    U --> UC7
+    U --> UC8
+    U --> UC9
+    U --> UC10
+    U --> UC11
+    A --> UC4
+    A --> UC15
+    A --> UC16
+    A --> UC17
+    D --> UC12
+    D --> UC13
+    D --> UC14
+```
+
+**Figure M.1.** UML-style use-case map of every AI-facing function. Core classification, explanation, and statistics are first-class. RAG, the agent, multilingual routing, Feast, and remote backends are optional. LoRA / GPT-4o-mini baselines never sit on the live `/api/predict` path.
+
+### 3.2 Layered ML architecture
+
+```mermaid
+flowchart TB
+    subgraph L1["L1 Presentation"]
+        UI["Cinema UI · React SPA · Swagger"]
+    end
+
+    subgraph L2["L2 Application — orchestration"]
+        Flask["Flask analyze / predict / explain"]
+        Fast["FastAPI v2"]
+        Agent["LangGraph validate → predict → rag → summarize"]
+    end
+
+    subgraph L3["L3 Domain ML"]
+        Cls["DistilBERT sequence classifier"]
+        XAI["Input × gradient"]
+        Asp["Aspect keyword + optional TF-IDF"]
+        Rag["MiniLM + Chroma"]
+        Multi["XLM-RoBERTa if lang ≠ en"]
+    end
+
+    subgraph L4["L4 Model access"]
+        Loader["model_loader — local → hub fallback → refuse"]
+        Remote["INFERENCE_BACKEND: local | vllm | triton"]
+    end
+
+    subgraph L5["L5 Evidence and tracking"]
+        Eval["evaluation.json"]
+        MLflow["MLflow / W&B"]
+        Feast["Feast text stats"]
+    end
+
+    UI --> Flask
+    UI --> Fast
+    Flask --> Cls
+    Flask --> XAI
+    Flask --> Asp
+    Fast --> Cls
+    Fast --> Rag
+    Agent --> Cls
+    Agent --> Rag
+    Cls --> Loader
+    Fast --> Remote
+    Agent --> Remote
+    Cls --> Eval
+```
+
+**Figure M.2.** Five-layer ML stack. L3 is the intelligence; L4 is how weights are resolved; L5 is evidence, not a second classifier. **Wiring caveat:** `INFERENCE_BACKEND` is honoured by FastAPI and LangGraph. Flask `POST /api/predict` and `POST /api/analyze` use local DistilBERT (`predict_sentiment`) plus optional multilingual routing.
+
+### 3.3 DistilBERT neural architecture
+
+```mermaid
+flowchart TB
+    Tok["Tokenizer distilbert-base-uncased<br/>truncate / pad max_length = 256"]
+    Emb["Token + position embeddings"]
+    T1["Transformer block × 6<br/>MHSA + FFN + residual + LayerNorm"]
+    Pool["[CLS] hidden state"]
+    Head["Linear classification head<br/>num_labels = 2"]
+    Soft["Softmax → P(Rotten), P(Fresh)"]
+    Dec["ŷ = 1 if P(Fresh) ≥ 0.5"]
+
+    Tok --> Emb --> T1 --> Pool --> Head --> Soft --> Dec
+```
+
+**Figure M.3.** Serving network: DistilBERT-base encoder (6 Transformer blocks) plus a 2-way head. Loss at train time is cross-entropy. Optimizer AdamW, lr \(2\times10^{-5}\), weight decay 0.01, 3 epochs, batch 16, best checkpoint by **F1** on validation. Sequence length is shared by train, evaluate, and serve (`MAX_SEQUENCE_LENGTH`).
+
+### 3.4 Model family — what is trained vs what is served
+
+```mermaid
+flowchart LR
+    subgraph Served["On the serving path"]
+        D["DistilBERT IMDB fine-tune<br/>sentiment_model/"]
+        X["XLM-R Twitter sentiment<br/>non-English only"]
+        AspM["Optional aspect TF-IDF<br/>artifacts/models/"]
+    end
+
+    subgraph Offline["Offline comparators — not loaded by Flask"]
+        LR["TF-IDF + logistic regression"]
+        NB["TF-IDF + MultinomialNB"]
+        SVM["TF-IDF + calibrated LinearSVC"]
+        LoRA["LoRA r=8 on q_lin, v_lin"]
+        LLM["GPT-4o-mini or demo lexicon"]
+    end
+
+    IMDB["IMDB train.csv"] --> D
+    IMDB --> LR
+    IMDB --> NB
+    IMDB --> SVM
+    IMDB --> LoRA
+    Test["test.csv once"] --> D
+    Test --> LR
+    Test --> NB
+    Test --> SVM
+    Test --> LoRA
+    Test --> LLM
+```
+
+**Figure M.4.** Model family. The academic story is DistilBERT vs TF-IDF+LR on the same test split. LoRA (`make lora-quick`) and the LLM baseline (`make llm-baseline`) write comparison JSON; they do **not** replace `sentiment_model/` at inference.
+
+### 3.5 Inference routing — language and backend
+
+```mermaid
+flowchart TD
+    In["Review text"]
+    Lang{"detect_language<br/>langdetect"}
+    En{"lang = en?"}
+    FlaskPath{"Flask product path?"}
+    Backend{"INFERENCE_BACKEND"}
+
+    Distil["Local DistilBERT<br/>max_len 256 · softmax"]
+    XLMR["cardiffnlp/twitter-xlm-roberta-base-sentiment<br/>3-class → binary by P(pos) vs P(neg)"]
+    VLLM["vLLM :8002<br/>Llama-3.2-1B-Instruct · POS/NEG parse"]
+    Trit["Triton :8003<br/>distilbert_sentiment"]
+
+    In --> Lang --> En
+    En -->|yes| FlaskPath
+    En -->|no| XLMR
+    FlaskPath -->|yes /api/predict /api/analyze| Distil
+    FlaskPath -->|no FastAPI or agent| Backend
+    Backend -->|local| Distil
+    Backend -->|vllm| VLLM
+    Backend -->|triton| Trit
+```
+
+**Figure M.5.** Activity diagram of inference routing. English product traffic stays on the IMDB DistilBERT. Non-English may load XLM-R (`HUB_MODEL_MULTILINGUAL`; empty string disables). Remote backends are Compose profiles, not the default. The Triton repository currently ships a **lexicon Python backend** for smoke tests, not exported DistilBERT weights.
+
+### 3.6 Composite analyse pipeline
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Browser
+    participant F as Flask /api/analyze
+    participant I as DistilBERT
+    participant X as explainability
+    participant A as aspects
+    participant S as sentence splitter
+
+    U->>F: POST text, explain, aspects, arc
+    F->>I: whole-review predict
+    I-->>F: label, P(Fresh), confidence
+    alt explain true
+        F->>X: input × gradient on predicted class
+        X-->>F: token weights
+    end
+    alt aspects true
+        F->>A: keyword spans then score
+        A-->>F: acting, plot, visuals, pacing, sound
+    end
+    alt arc true and ≥ 2 sentences
+        F->>S: split . ! ? …
+        S->>I: per-sentence predict max 14
+        I-->>F: tone_shift if first ≠ last
+    end
+    F-->>U: JSON + optional uncertainty if conf in 0.45–0.55
+```
+
+**Figure M.6.** Sequence for the rich analyse path. One encoder, four views: document label, token attribution, aspect polarity, sentence tone arc. Live draft (`live-preview.js`, 750 ms debounce) calls `/api/predict` only.
+
+### 3.7 Retrieval-augmented generation (RAG)
+
+```mermaid
+flowchart LR
+    subgraph Index["Offline index — make rag-index"]
+        CSV["Sample reviews ≤ 500"]
+        EmbI["all-MiniLM-L6-v2 L2-normalised"]
+        Chroma["Chroma data/chroma<br/>collection imdb_reviews"]
+        CSV --> EmbI --> Chroma
+    end
+
+    subgraph Query["Online — RAG_ENABLED"]
+        Q["Query text"]
+        EmbQ["Same MiniLM"]
+        KNN["cosine k = 5 default"]
+        Out["matches — context only"]
+        Q --> EmbQ --> KNN --> Out
+        Chroma --> KNN
+    end
+```
+
+**Figure M.7.** RAG is retrieve-and-display, **not** retrieval-augmented *classification*. Neighbours are returned beside the DistilBERT verdict; they do not enter the classification head. Disable: `RAG_ENABLED=false`. Empty index tells the client to run `make rag-index`.
+
+### 3.8 LangGraph agent
+
+```mermaid
+stateDiagram-v2
+    [*] --> validate
+    validate --> predict: text non-empty
+    validate --> [*]: error empty text
+    predict --> rag: predict:ok
+    rag --> summarize: rag:ok even if RAG off
+    summarize --> [*]: summary string
+
+    note right of validate: AGENT_ENABLED=false skips graph
+    note right of predict: predict_with_backend — honours INFERENCE_BACKEND
+    note right of rag: k = 3; errors swallowed
+    note right of summarize: template sentiment + similar count
+```
+
+**Figure M.8.** Agent state machine (`backend/services/agent_graph.py`). The graph is **linear** (no conditional tools, no planner loop): `validate → predict → rag → summarize → END`. Routes: `POST /api/agent/analyze`, `POST /api/v2/agent/analyze`.
+
+### 3.9 Aspect sentiment and tone arc
+
+```mermaid
+flowchart TB
+    Rev["Review text"]
+    Split["Sentence split"]
+    Key["ASPECT_LEXICONS<br/>acting · plot · visuals · pacing · sound"]
+
+    Rev --> Split --> Key
+
+    subgraph PerAspect["Per matching sentence"]
+        ML{"aspect joblib present?"}
+        DistilA["Main DistilBERT on sentence"]
+        TfidfA["TF-IDF+LR on '[aspect] sentence'"]
+        Vote["Majority Fresh ratio ≥ 0.5"]
+        ML -->|no| DistilA --> Vote
+        ML -->|yes| TfidfA --> Vote
+    end
+
+    Key --> PerAspect
+    Arc["Tone arc: per-sentence DistilBERT<br/>tone_shift if first ≠ last label"]
+    Split --> Arc
+```
+
+**Figure M.9.** Aspects are **not** a second DistilBERT head. Keywords select spans; polarity comes from the main classifier or a small TF-IDF model (`make aspect-train`). Tone arc is independent: up to 14 sentence-level predictions.
+
+### 3.10 Explainability data flow
+
+```mermaid
+flowchart TB
+    T["input_ids · attention_mask"]
+    E["word_embeddings as inputs_embeds"]
+    FWD["Forward DistilBERT + head"]
+    Y["Logit of predicted class"]
+    BWD["autograd backward"]
+    IxG["sum embedding ⊙ gradient over hidden"]
+    N["divide by max abs"]
+    Drop["drop CLS SEP PAD"]
+    API["POST /api/explain method=input_x_gradient"]
+
+    T --> E --> FWD --> Y --> BWD --> IxG --> N --> Drop --> API
+
+    FB["Frontend lexicon heuristic<br/>labelled not neural attention"]
+    API -.->|if 503 / unavailable| FB
+```
+
+**Figure M.10.** Model-derived XAI is first-order input × gradient (Sundararajan-style saliency, not SHAP/IG). The cinema heatmap falls back to a POS/NEG lexicon and is labelled as such in the UI.
+
+### 3.11 MLOps, features, and experiment tracking
+
+```mermaid
+flowchart LR
+    subgraph TrainJobs["Training jobs"]
+        T1["model_training.py"]
+        T2["baseline_tfidf.py"]
+        T3["lora_finetune.py"]
+        T4["llm_baseline.py"]
+    end
+
+    subgraph Track["experiment_run fan-out"]
+        MF["MLflow artifacts/mlruns<br/>:5001"]
+        WB["Weights and Biases"]
+    end
+
+    subgraph Feat["Feast — not a DistilBERT input"]
+        Comp["char/word counts, avg len, !"]
+        Off["parquet data/feast/"]
+        On["SQLite + JSON cache"]
+        API["POST /api/features"]
+        Comp --> Off --> On --> API
+    end
+
+    T1 --> MF
+    T2 --> MF
+    T3 --> MF
+    T4 --> MF
+    T1 --> WB
+    T2 --> WB
+    T3 --> WB
+    T4 --> WB
+```
+
+**Figure M.11.** MLflow experiments: `cinesentiment-distilbert`, `cinesentiment-baselines`, `cinesentiment-lora`, `cinesentiment-llm-baseline`. Kill switches: `MLFLOW_ENABLED`, `WANDB_ENABLED` / `WANDB_MODE=disabled`, `FEAST_ENABLED`. Feast stores surface text statistics for demos; DistilBERT still consumes raw tokens only.
+
+### 3.12 Module diagram — ML code units
+
+```mermaid
+classDiagram
+    class model_loader {
+        +get_inference_bundle()
+        local weights
+        HUB_MODEL_FALLBACK
+    }
+    class inference {
+        +predict_sentiment()
+        +predict_with_backend()
+    }
+    class remote_inference {
+        local | vllm | triton
+    }
+    class explainability {
+        +explain_input_gradient()
+    }
+    class rag {
+        +query_similar(k)
+        MiniLM + Chroma
+    }
+    class agent_graph {
+        validate
+        predict
+        rag
+        summarize
+    }
+    class aspects {
+        +analyze_aspects()
+        keyword | TF-IDF
+    }
+    class multilingual {
+        +detect_language()
+        XLM-R route
+    }
+    class ml_core {
+        metrics
+        bootstrap CI
+        McNemar
+        artifact I/O
+    }
+    class experiment_tracking {
+        MLflow
+        W and B
+    }
+
+    inference --> model_loader
+    inference --> remote_inference
+    explainability --> model_loader
+    agent_graph --> inference
+    agent_graph --> rag
+    aspects --> inference
+    multilingual --> inference
+    inference --> ml_core
+```
+
+**Figure M.12.** Static module view of `backend/`. Training scripts (`scripts/*.py`) write `sentiment_model/` and `evaluation.json`; they are not imported at request time except through those artefacts.
+
+| Flag | Default | Effect |
+|------|---------|--------|
+| `RAG_ENABLED` | true | Chroma query surfaces |
+| `AGENT_ENABLED` | true | LangGraph routes |
+| `INFERENCE_BACKEND` | `local` | `vllm` / `triton` on FastAPI + agent only |
+| `HUB_MODEL_MULTILINGUAL` | XLM-R id | Empty disables multilingual load |
+| `MLFLOW_ENABLED` | true | Train-job logging |
+| `FEAST_ENABLED` | true | Online feature lookup vs inline stats |
+| `MAX_SEQUENCE_LENGTH` | 256 | Train = evaluate = serve |
+
+Canonical write-up of Part B, including loader states and ADRs: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+---
+
+## 4. Experimental protocol
 
 | Item | Specification |
 |------|----------------|
@@ -368,7 +796,7 @@ Training never reads the test split. Validation may be used for early stopping a
 
 ---
 
-## 4. Results
+## 5. Results
 
 Authoritative numbers are regenerated from `artifacts/results/evaluation.json` (`make evaluate` / `make sync-docs`). The table below is the **test split** at \(\tau = 0.5\).
 
@@ -391,7 +819,7 @@ Validation accuracy 91.96% (CI 91.33%–92.61%) is consistent with test, indicat
 
 ---
 
-## 5. Reproducibility contract
+## 6. Reproducibility contract
 
 From a clean clone:
 
@@ -421,9 +849,9 @@ Seeds: NumPy, scikit-learn, PyTorch, and Hugging Face Trainer use `seed=42`. Dep
 
 ---
 
-## 6. User interface
+## 7. User interface
 
-Captions map to [docs/FIGURES.md](docs/FIGURES.md) for thesis-style citation. Dashboard figures may show the **validation** split; cite **test** numbers from Section 4 / `STATS_REPORT.md`.
+Captions map to [docs/FIGURES.md](docs/FIGURES.md) for thesis-style citation. Dashboard figures may show the **validation** split; cite **test** numbers from Section 5 / `STATS_REPORT.md`.
 
 ### Product surfaces
 
@@ -489,7 +917,7 @@ Captions map to [docs/FIGURES.md](docs/FIGURES.md) for thesis-style citation. Da
 
 ---
 
-## 7. Application programming interface
+## 8. Application programming interface
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -506,7 +934,7 @@ Extended v2 routes (FastAPI :8001), developer keys, webhooks, RAG, and the agent
 
 ---
 
-## 8. Repository layout
+## 9. Repository layout
 
 | Path | Role |
 |------|------|
@@ -525,7 +953,7 @@ Full tree: [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
 
 ---
 
-## 9. Quality assurance and continuous integration
+## 10. Quality assurance and continuous integration
 
 ```bash
 make test              # pytest
@@ -538,7 +966,7 @@ GitHub Actions: hygiene (secrets, weights, raw data), lint (flake8, black), secu
 
 ---
 
-## 10. Deployment
+## 11. Deployment
 
 | Target | Command |
 |--------|---------|
@@ -551,7 +979,7 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 
 ---
 
-## 11. Limitations
+## 12. Limitations
 
 1. **Domain.** Evaluation is IMDB-only; transfer to other review sources is not demonstrated.
 2. **Label set.** Neutral and mixed sentiment are not modelled.
@@ -560,14 +988,17 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 5. **Attribution.** Input × gradient is a first-order approximation; SHAP / integrated gradients are more rigorous but too expensive for the interactive API.
 6. **Validation design.** A single stratified split (no *k*-fold) is used; transformer *k*-fold was judged computationally prohibitive.
 7. **Ablation compute.** Hyper-parameter sweeps use a training subset (default 3,000 rows).
+8. **Retrieval.** RAG neighbours are context for the UI/agent; they are not concatenated into DistilBERT.
+9. **Remote inference.** `INFERENCE_BACKEND` does not apply to Flask `/api/predict`. Triton’s checked-in `model.py` is a lexicon smoke test.
+10. **Agent.** LangGraph is a linear four-node graph, not a tool-calling planner.
 
 ---
 
-## 12. Documentation index
+## 13. Documentation index
 
 | Document | Audience | Content |
 |----------|----------|---------|
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Software examiners | C4 context/container/component, sequences, ADRs |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Software / ML examiners | C4 (A.1–A.8) · AI/ML diagrams (M.1–M.15) · ADRs |
 | [docs/STATS_REPORT.md](docs/STATS_REPORT.md) | Statistics / DS | Test metrics, CIs, confusion matrix, baselines |
 | [docs/METHODOLOGY.md](docs/METHODOLOGY.md) | Reviewers | Protocol, related work, ablation |
 | [docs/MODEL_CARD.md](docs/MODEL_CARD.md) | ML governance | Intended use, limitations, metrics |
@@ -579,7 +1010,7 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 
 ---
 
-## 13. Citation
+## 14. Citation
 
 ```bibtex
 @misc{cinesentiment2026,
@@ -587,7 +1018,7 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
   title        = {CineSentiment: IMDB Movie Review Sentiment Analysis with DistilBERT},
   year         = {2026},
   howpublished = {\url{https://github.com/TheHien04/Movie-Review-Sentiment-Analysis}},
-  note         = {Statistical Machine Learning capstone; bootstrap CIs; baseline comparison; C4 architecture}
+  note         = {Statistical Machine Learning capstone; bootstrap CIs; C4 + ML architecture diagrams}
 }
 ```
 
@@ -596,9 +1027,12 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 1. Maas, A. L., Daly, R. E., Pham, P. T., Huang, D., Ng, A. Y., & Potts, C. (2011). Learning word vectors for sentiment analysis. *ACL*.
 2. Sanh, V., Debut, L., Chaumond, J., & Wolf, T. (2019). DistilBERT, a distilled version of BERT. *NeurIPS Workshop*.
 3. Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of deep bidirectional transformers. *NAACL*.
-4. Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*. Chapman & Hall.
-5. McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions. *Psychometrika*, 12(2), 153–157.
-6. Brown, S. (2018). The C4 model for visualising software architecture. [https://c4model.com](https://c4model.com).
+4. Vaswani, A., et al. (2017). Attention is all you need. *NeurIPS*.
+5. Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP. *NeurIPS*.
+6. Sundararajan, M., Taly, A., & Yan, Q. (2017). Axiomatic attribution for deep networks. *ICML*.
+7. Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*. Chapman & Hall.
+8. McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions. *Psychometrika*, 12(2), 153–157.
+9. Brown, S. (2018). The C4 model for visualising software architecture. [https://c4model.com](https://c4model.com).
 
 ---
 
