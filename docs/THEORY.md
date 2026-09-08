@@ -1,28 +1,28 @@
 # Theoretical Framework — CineSentiment
 
-**Document type:** Curriculum alignment (Stanford, MIT, Harvard, NUS) mapped onto artefacts  
+**Document type:** Curriculum alignment (Stanford + MIT only) mapped onto artefacts  
 **Audience:** Examiners who know *courses*, not a paper dump  
 **Companion:** [METHODOLOGY.md](METHODOLOGY.md) · [STATS_REPORT.md](STATS_REPORT.md) · [ARCHITECTURE.md](ARCHITECTURE.md)
 
-This chapter records **only methods that exist in code**. Framing is the standard machine-learning and inference syllabus at four schools — the same ideas, different course codes. Figure prefix **T.**
+This chapter records **only methods that exist in code**. Framing is the standard machine-learning syllabus at **Stanford** and **MIT**. Figure prefix **T.**
 
-You do **not** need to read a stack of authors. If you have taken (or can name) **CS229 + CS224N**, **6.036 + 6.041**, **CS181 + Stat 110**, or **CS3244 + CS4248 + ST2132**, you already have the theory. This repo is those modules applied to IMDB sentiment.
+You do **not** need to read a stack of authors. If you can name **CS229 + CS224N + CS109** and **6.036 + 6.041**, you already have the theory. This repo is those modules applied to IMDB sentiment.
 
 ---
 
-## T.0 Curriculum map — four schools, one project
+## T.0 Curriculum map — Stanford and MIT
 
-| What the repo does | Stanford | MIT | Harvard | NUS |
-|--------------------|----------|-----|---------|-----|
-| Supervised binary classification, logistic / NB / SVM baselines | **CS229** | **6.036** (now 6.390) | **CS181** | **CS3244** |
-| Train / val / test split; select on val; test once | CS229 | 6.036 | CS181 | CS3244 |
-| TF-IDF, n-grams, text classification | **CS224N** (vector space) | **6.861** NLP | CS181 + text labs | **CS4248** |
-| Transformers, self-attention, BERT-style fine-tune | **CS224N** | 6.S191 / 6.861 | CS287 (grad NLP) | CS4248 / **CS5242** |
-| Cross-entropy, softmax, SGD-style training | CS229 / CS231N | 6.036 / 6.S191 | CS181 | CS3244 / CS5242 |
-| Confusion matrix, F1, ROC | CS229 | 6.036 | CS181 | CS3244 |
-| Bootstrap CI, hypothesis tests, paired comparison | **CS109** / STATS 200 | **6.041** / **18.05** | **Stat 110** + CS109 | **ST2131** + **ST2132** |
-| Gradient saliency (input × gradient) | **CS231N** | 6.S191 | CS181 interpretability | CS5242 |
-| Optional retrieval (neighbours, not fused) | CS224N retrieval | 6.861 | CS287 | CS4248 |
+| What the repo does | Stanford | MIT |
+|--------------------|----------|-----|
+| Supervised binary classification, logistic / NB / SVM | **CS229** | **6.036** (now 6.390) |
+| Train / val / test; select on val; test once | CS229 | 6.036 |
+| TF-IDF, n-grams, text classification | **CS224N** | **6.861** |
+| Transformers, self-attention, BERT-style fine-tune | **CS224N** | **6.S191** / 6.861 |
+| Cross-entropy, softmax, SGD-style training | CS229 / CS231N | 6.036 / 6.S191 |
+| Confusion matrix, F1, ROC | CS229 | 6.036 |
+| Bootstrap CI, hypothesis tests, paired comparison | **CS109** | **6.041** / **18.05** |
+| Gradient saliency (input × gradient) | **CS231N** | 6.S191 |
+| Optional retrieval (neighbours, not fused) | CS224N retrieval | 6.861 |
 
 ```mermaid
 flowchart TB
@@ -37,17 +37,7 @@ flowchart TB
         M036["6.036  ML"]
         M041["6.041 / 18.05  probability"]
         M191["6.S191  DL"]
-    end
-
-    subgraph Harvard["Harvard"]
-        H181["CS181  ML"]
-        H110["Stat 110  probability"]
-    end
-
-    subgraph NUS["NUS"]
-        N3244["CS3244  ML"]
-        N4248["CS4248  NLP"]
-        N2132["ST2132  statistical inference"]
+        M861["6.861  NLP"]
     end
 
     subgraph Repo["This capstone"]
@@ -59,22 +49,17 @@ flowchart TB
     end
 
     S229 --> Prot
-    N3244 --> Prot
     M036 --> Prot
-    H181 --> Prot
     S224 --> Enc
-    N4248 --> Enc
     M191 --> Enc
     S224 --> Base
-    N4248 --> Base
+    M861 --> Base
     S109 --> Inf
-    N2132 --> Inf
     M041 --> Inf
-    H110 --> Inf
     S231 --> XAI
 ```
 
-**Figure T.0.** Same undergraduate/MSc ML stack, four course-number systems. Defence language: “hold-out like CS229/CS3244; encoder like CS224N/CS4248; inference like ST2132/CS109.”
+**Figure T.0.** One ML stack, two schools. Defence: hold-out like CS229/6.036; encoder like CS224N/6.S191; inference like CS109/18.05.
 
 ---
 
@@ -145,7 +130,7 @@ flowchart TB
     W --> API
 ```
 
-**Figure T.1.** Theoretical framework of the capstone. CS229/CS3244 constrain the **protocol**; CS224N/CS4248 supply **two model families**; ST2132/CS109 turn logits into a reportable claim. Everything terminates in files examiners can open.
+**Figure T.1.** Theoretical framework of the capstone. CS229/6.036 constrain the **protocol**; CS224N/6.S191 supply **two model families**; CS109/18.05 turn logits into a reportable claim. Everything terminates in files examiners can open.
 
 ---
 
@@ -168,7 +153,7 @@ flowchart LR
     Loss --> Enc
 ```
 
-**Figure T.2.** Supervised classification as conditional probability + threshold (CS229 / CS181 / CS3244). Training minimises empirical risk on **train.csv only**. Test labels are used solely in `evaluate_model.py` / `STATS_REPORT.md`.
+**Figure T.2.** Supervised classification as conditional probability + threshold (CS229 / 6.036). Training minimises empirical risk on **train.csv only**. Test labels are used solely in `evaluate_model.py` / `STATS_REPORT.md`.
 
 ---
 
@@ -189,7 +174,7 @@ flowchart TB
     Once --> Test["McNemar on paired TE errors"]
 ```
 
-**Figure T.3.** Hold-out protocol (CS229, 6.036, CS3244). The test split estimates risk; it is not a tuning knob. Stratification keeps the 50/50 prior so accuracy is not an artefact of imbalance.
+**Figure T.3.** Hold-out protocol (CS229 / 6.036). The test split estimates risk; it is not a tuning knob. Stratification keeps the 50/50 prior so accuracy is not an artefact of imbalance.
 
 ---
 
@@ -219,7 +204,7 @@ flowchart TB
     H --> Head["Linear 2-way head"]
 ```
 
-**Figure T.4.** Two feature geometries on the same \((x,y)\) (CS224N / CS4248). The paired test asks whether **error patterns** differ.
+**Figure T.4.** Two feature geometries on the same \((x,y)\) (CS224N / 6.861). The paired test asks whether **error patterns** differ.
 
 ---
 
@@ -246,7 +231,7 @@ flowchart LR
     LR --> Comp["Primary nested comparator"]
 ```
 
-**Figure T.5.** TF-IDF + logistic regression is the **pre-registered** CS229/CS3244 baseline. Naïve Bayes and a margin SVM are nested comparators; calibrated SVM probabilities make Brier/ECE defined.
+**Figure T.5.** TF-IDF + logistic regression is the **pre-registered** CS229/6.036 baseline. Naïve Bayes and a margin SVM are nested comparators; calibrated SVM probabilities make Brier/ECE defined.
 
 ---
 
@@ -312,7 +297,7 @@ flowchart TB
     Risk --> Opt --> Val --> Best --> Stop
 ```
 
-**Figure T.8.** Cross-entropy as NLL of a two-class softmax (CS229). **Selection uses validation F1, never test F1** (CS3244 / 6.036).
+**Figure T.8.** Cross-entropy as NLL of a two-class softmax (CS229). **Selection uses validation F1, never test F1** (CS229 / 6.036).
 
 ---
 
@@ -361,7 +346,7 @@ flowchart TB
     Pred --> Prob
 ```
 
-**Figure T.10.** Three questions from CS229 / CS181: (i) labels, (ii) ranking, (iii) calibration. Lead metrics: **test F1 + ROC-AUC**.
+**Figure T.10.** Three questions from CS229 / 6.036: (i) labels, (ii) ranking, (iii) calibration. Lead metrics: **test F1 + ROC-AUC**.
 
 ---
 
@@ -378,7 +363,7 @@ flowchart TB
     TE --> Draw --> Met --> Q --> CI
 ```
 
-**Figure T.11.** Percentile bootstrap in `ml_core.py` (CS109 / 18.05 / ST2132). The interval is sampling variability of the **test estimator**. \(B=500\) is a compute compromise.
+**Figure T.11.** Percentile bootstrap in `ml_core.py` (CS109 / 18.05). The interval is sampling variability of the **test estimator**. \(B=500\) is a compute compromise.
 
 ---
 
@@ -418,7 +403,7 @@ flowchart TB
     P2 --> Bon
 ```
 
-**Figure T.12.** Two complementary ST2132/CS109 tests. McNemar: do **error patterns** differ? Bootstrap \(\Delta\): does **metric magnitude** differ? On this split both fail to reject at 5%. **Report the tie.**
+**Figure T.12.** Two complementary CS109/18.05 tests. McNemar: do **error patterns** differ? Bootstrap \(\Delta\): does **metric magnitude** differ? On this split both fail to reject at 5%. **Report the tie.**
 
 ---
 
@@ -496,18 +481,18 @@ flowchart TB
     Cls["DistilBERT ŷ"] -.->|"no concat  no extra loss"| UX
 ```
 
-**Figure T.16.** Dense retrieval (CS224N / CS4248) as **display context**. Neighbours are not concatenated into DistilBERT, so we do not claim a retrieval-augmented **F1** gain.
+**Figure T.16.** Dense retrieval (CS224N / 6.861) as **display context**. Neighbours are not concatenated into DistilBERT, so we do not claim a retrieval-augmented **F1** gain.
 
 ---
 
 ## How to use this chapter in a defence
 
-1. Show **T.0** — four schools, one stack.  
-2. Protocol **T.3** — CS229 / CS3244 hold-out.  
-3. Two geometries **T.4** — CS224N / CS4248.  
-4. Tests **T.12** — ST2132 / CS109; say the models are **tied**.  
+1. Show **T.0** — Stanford + MIT, one stack.  
+2. Protocol **T.3** — CS229 / 6.036 hold-out.  
+3. Two geometries **T.4** — CS224N / 6.861.  
+4. Tests **T.12** — CS109 / 18.05; say the models are **tied**.  
 5. Point to `evaluation.json`.
 
 ---
 
-*If a method is not in T.0, do not imply it was used. Course numbers are the syllabus names, not a claim that the author enrolled at those universities.*
+*If a method is not in T.0, do not imply it was used. Course numbers are syllabus names, not a claim of enrolment.*
