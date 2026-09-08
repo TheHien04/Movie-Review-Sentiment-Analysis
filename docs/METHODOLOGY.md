@@ -24,13 +24,13 @@ a label \(y \in \{0, 1\}\) where 0 = *negative* and 1 = *positive*.
 
 ## 2. Related Work
 
-Background for the **task** (movie-review sentiment). Methods in this repo follow the CS229 / CS224N / CS3244 syllabus, not a long paper list.
+Background for the **task** (movie-review sentiment). Methods in this repo follow the Stanford CS229 / CS224N and MIT 6.036 syllabus, not a long paper list.
 
 | Topic | Role here |
 |-------|-----------|
 | IMDB labelled reviews | Source dataset (`datasets.load_dataset("imdb")`) |
-| BERT-family encoders | DistilBERT fine-tune (CS224N / CS4248) |
-| Classical text classifiers | TF-IDF + logistic / NB / SVM (CS229 / CS3244) |
+| BERT-family encoders | DistilBERT fine-tune (CS224N / 6.S191) |
+| Classical text classifiers | TF-IDF + logistic / NB / SVM (CS229 / 6.036) |
 | Opinion mining as a task | Binary Fresh / Rotten |
 
 Live explainability is **input × gradient** (CS231N-style saliency), not LIME/SHAP.
@@ -203,4 +203,4 @@ make serve            # launch API server
 
 ## 12. References
 
-None required beyond the **course names** in [THEORY.md](THEORY.md) §T.0. Dataset: Hugging Face `imdb`. Model card: `distilbert-base-uncased`. Inference: ST2132-style paired test + bootstrap (named McNemar because that is the test).
+None required beyond the **course names** in [THEORY.md](THEORY.md) §T.0. Dataset: Hugging Face `imdb`. Model card: `distilbert-base-uncased`. Inference: CS109 / 18.05 paired test + bootstrap (named McNemar because that is the test).

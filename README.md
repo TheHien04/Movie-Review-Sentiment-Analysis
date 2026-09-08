@@ -18,9 +18,9 @@
 | **Version** | 2.3.0 |
 | **Licence** | MIT |
 
-**Abstract.** This repository presents an end-to-end system for binary sentiment classification of English movie reviews. A DistilBERT encoder is fine-tuned on a stratified 70/15/15 partition of IMDB, evaluated once on a held-out test split with bootstrap confidence intervals, and compared against a pre-registered TF-IDF + logistic regression baseline under McNemar and bootstrap-difference tests. The same checkpoint is served through a Flask product API and a parallel FastAPI v2 surface, with a cinema-themed workbench for single/batch inference, token-level attribution, and a metrics dashboard bound to versioned artefacts. The design follows a C4 software decomposition, CS views of the ML stack, and the standard ML syllabus at Stanford, MIT, Harvard, and NUS (hold-out, Transformer fine-tune, bootstrap + paired tests). Evidence: [docs/STATS_REPORT.md](docs/STATS_REPORT.md). Courses: [docs/THEORY.md](docs/THEORY.md).
+**Abstract.** This repository presents an end-to-end system for binary sentiment classification of English movie reviews. A DistilBERT encoder is fine-tuned on a stratified 70/15/15 partition of IMDB, evaluated once on a held-out test split with bootstrap confidence intervals, and compared against a pre-registered TF-IDF + logistic regression baseline under McNemar and bootstrap-difference tests. The same checkpoint is served through a Flask product API and a parallel FastAPI v2 surface, with a cinema-themed workbench for single/batch inference, token-level attribution, and a metrics dashboard bound to versioned artefacts. The design follows a C4 software decomposition, CS views of the ML stack, and the Stanford/MIT ML syllabus (CS229, CS224N, 6.036, 6.041). Evidence: [docs/STATS_REPORT.md](docs/STATS_REPORT.md). Courses: [docs/THEORY.md](docs/THEORY.md).
 
-**Keywords:** sentiment analysis; DistilBERT; IMDB; CS229; CS224N; CS3244; ST2132; bootstrap; hold-out evaluation.
+**Keywords:** sentiment analysis; DistilBERT; IMDB; CS229; CS224N; 6.036; CS109; bootstrap; hold-out evaluation.
 
 ---
 
@@ -58,7 +58,7 @@ Paired error analysis (McNemar) and metric-difference tests are reported honestl
 4. **Serving architecture.** Dual HTTP surfaces, health/readiness probes, optional RAG/agent path, and Compose/Helm delivery.
 5. **Workbench.** Cinema UI bound to `evaluation.json` so examiners inspect the same numbers as the written report.
 6. **AI architecture (CS diagrams).** Use-case, layered, neural, activity, sequence, state, data-flow, and module views of every ML function that is actually implemented (README §3, Figures M.1–M.15).
-7. **Theoretical framework.** Stanford CS229/CS224N, MIT 6.036, Harvard CS181, NUS CS3244/CS4248/ST2132 mapped onto artefacts (README §4, [docs/THEORY.md](docs/THEORY.md)).
+7. **Theoretical framework.** Stanford CS229/CS224N/CS109 and MIT 6.036/6.041 mapped onto artefacts (README §4, [docs/THEORY.md](docs/THEORY.md)).
 
 ---
 
@@ -781,19 +781,17 @@ Canonical write-up of Part B, including loader states and ADRs: [docs/ARCHITECTU
 
 ## 4. Theoretical framework
 
-Software architecture (**A.**) is wiring. ML architecture (**M.**) is which models run. This section is the **syllabus**: Stanford **CS229 / CS224N / CS231N**, MIT **6.036 / 6.041**, Harvard **CS181 / Stat 110**, NUS **CS3244 / CS4248 / ST2132** — applied to IMDB. Full map: [docs/THEORY.md](docs/THEORY.md).
+Software architecture (**A.**) is wiring. ML architecture (**M.**) is which models run. This section is the **syllabus**: Stanford **CS229 / CS224N / CS231N / CS109** and MIT **6.036 / 6.041 / 6.S191** — applied to IMDB. Full map: [docs/THEORY.md](docs/THEORY.md).
 
 You do not need a paper stack. If those course names are familiar, the methods below are already known.
 
-### 4.0 Four-school curriculum
+### 4.0 Stanford and MIT curriculum
 
 ```mermaid
 flowchart TB
     subgraph Schools["Syllabus"]
         ST["Stanford CS229 + CS224N + CS109"]
-        MI["MIT 6.036 + 6.041"]
-        HA["Harvard CS181 + Stat 110"]
-        NU["NUS CS3244 + CS4248 + ST2132"]
+        MI["MIT 6.036 + 6.041 + 6.S191"]
     end
 
     subgraph Cap["This repo"]
@@ -805,17 +803,14 @@ flowchart TB
 
     ST --> P
     MI --> P
-    HA --> P
-    NU --> P
     ST --> C
-    NU --> C
+    MI --> C
     ST --> I
-    NU --> I
     MI --> I
     ST --> E
 ```
 
-**Figure T.0.** Same ML stack, four course codes. Defence one-liner: hold-out like CS229/CS3244; encoder like CS224N/CS4248; inference like ST2132/CS109.
+**Figure T.0.** One ML stack, two schools. Defence: hold-out like CS229/6.036; encoder like CS224N/6.S191; inference like CS109/18.05.
 
 ### 4.1 Knowledge architecture
 
@@ -859,7 +854,7 @@ flowchart TB
     W --> EX
 ```
 
-**Figure T.1.** Syllabus-to-artefact map. CS229/CS3244 govern the protocol; CS224N/CS4248 supply DistilBERT and TF-IDF; ST2132/CS109 turn a point estimate into a CI and a paired test.
+**Figure T.1.** Syllabus-to-artefact map. CS229/6.036 govern the protocol; CS224N/6.S191 supply DistilBERT and TF-IDF; CS109/18.05 turn a point estimate into a CI and a paired test.
 
 ### 4.2 Supervised problem and generalisation protocol
 
@@ -873,7 +868,7 @@ flowchart LR
     CE --> F
 ```
 
-**Figure T.2.** Binary classification as \(P(y=1\mid x)\) plus a threshold — CS229 / CS181 / CS3244. Default \(\tau = 0.5\) (balanced classes, equal costs).
+**Figure T.2.** Binary classification as \(P(y=1\mid x)\) plus a threshold — CS229 / 6.036. Default \(\tau = 0.5\) (balanced classes, equal costs).
 
 ```mermaid
 flowchart TB
@@ -889,7 +884,7 @@ flowchart TB
     Once --> Mc["McNemar on paired errors"]
 ```
 
-**Figure T.3.** Hold-out protocol (CS229, 6.036, CS3244). Validation selects the checkpoint; the test split is scored **once**.
+**Figure T.3.** Hold-out protocol (CS229 / 6.036). Validation selects the checkpoint; the test split is scored **once**.
 
 ### 4.3 Two representation families
 
@@ -897,7 +892,7 @@ flowchart TB
 flowchart TB
     X["Review"]
 
-    subgraph Sparse["Sparse lexical  CS224N / CS4248 vector space"]
+    subgraph Sparse["Sparse lexical  CS224N / 6.861 vector space"]
         Bow["n-grams"]
         Idf["TF-IDF  50k features  sublinear tf"]
         Phi["sparse phi(x)"]
@@ -917,7 +912,7 @@ flowchart TB
     H --> Head["Linear 2-way head"]
 ```
 
-**Figure T.4.** Two feature geometries on the same labels (CS224N / CS4248): bag-of-words vs contextual hidden states. The paired test asks whether **errors** differ, not whether Transformers “exist”.
+**Figure T.4.** Two feature geometries on the same labels (CS224N / 6.861): bag-of-words vs contextual hidden states. The paired test asks whether **errors** differ, not whether Transformers “exist”.
 
 ```mermaid
 flowchart LR
@@ -927,7 +922,7 @@ flowchart LR
     IDF --> SVM["Linear SVM + calibration"]
 ```
 
-**Figure T.5.** CS229/CS3244 linear models on CS224N-style TF-IDF features: logistic (primary baseline), naïve Bayes, margin SVM with calibrated probabilities.
+**Figure T.5.** CS229/6.036 linear models on CS224N-style TF-IDF features: logistic (primary baseline), naïve Bayes, margin SVM with calibrated probabilities.
 
 ### 4.4 Attention, distillation, transfer
 
@@ -971,7 +966,7 @@ flowchart TB
     R --> O --> V
 ```
 
-**Figure T.8.** Empirical risk = mean cross-entropy (CS229); AdamW trainer; **never** select on test F1 (CS3244 / 6.036).
+**Figure T.8.** Empirical risk = mean cross-entropy (CS229); AdamW trainer; **never** select on test F1 (CS229 / 6.036).
 
 ```mermaid
 flowchart LR
@@ -1004,14 +999,14 @@ flowchart TB
     Pred --> Cal
 ```
 
-**Figure T.10.** Three evaluation questions from CS229 / CS181: are labels right, are scores ranked, are probabilities honest. Lead with test F1 and ROC-AUC.
+**Figure T.10.** Three evaluation questions from CS229 / 6.036: are labels right, are scores ranked, are probabilities honest. Lead with test F1 and ROC-AUC.
 
 ```mermaid
 flowchart LR
     TE["test n=7500"] --> B["resample B=500"] --> Q["2.5 / 97.5 percentiles"] --> CI["95% CI"]
 ```
 
-**Figure T.11.** Percentile bootstrap CI (CS109 / 18.05 / ST2132) in `ml_core.py`. This is sampling variability of the **test estimator**, not a Bayesian posterior.
+**Figure T.11.** Percentile bootstrap CI (CS109 / 18.05) in `ml_core.py`. This is sampling variability of the **test estimator**, not a Bayesian posterior.
 
 ```mermaid
 flowchart TB
@@ -1029,7 +1024,7 @@ flowchart TB
     Out --> Hon["Report a tie  ship DistilBERT for transfer / XAI"]
 ```
 
-**Figure T.12.** Paired comparison of two classifiers on the **same** 7,500 rows (ST2132 / CS109): McNemar on errors, bootstrap \(\Delta\) on metrics. Result: **tie** at 5%. DistilBERT is still the serving model (transfer + saliency).
+**Figure T.12.** Paired comparison of two classifiers on the **same** 7,500 rows (CS109 / 18.05): McNemar on errors, bootstrap \(\Delta\) on metrics. Result: **tie** at 5%. DistilBERT is still the serving model (transfer + saliency).
 
 ### 4.7 Further theory diagrams
 
@@ -1266,7 +1261,7 @@ Environment template: `.env.example`. Never commit `.env`. Operator notes: [docs
 | Document | Audience | Content |
 |----------|----------|---------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Software / ML examiners | C4 (A.1–A.8) · AI/ML diagrams (M.1–M.15) · ADRs |
-| [docs/THEORY.md](docs/THEORY.md) | Examiners | Curriculum map: Stanford / MIT / Harvard / NUS → this repo |
+| [docs/THEORY.md](docs/THEORY.md) | Examiners | Curriculum map: Stanford + MIT → this repo |
 | [docs/STATS_REPORT.md](docs/STATS_REPORT.md) | Statistics / DS | Test metrics, CIs, confusion matrix, baselines |
 | [docs/METHODOLOGY.md](docs/METHODOLOGY.md) | Reviewers | Protocol, related work, ablation |
 | [docs/MODEL_CARD.md](docs/MODEL_CARD.md) | ML governance | Intended use, limitations, metrics |
@@ -1302,13 +1297,9 @@ Not a reading list. The project is these **modules** applied once.
 | Stanford | CS109 | Bootstrap CIs, honest reporting |
 | MIT | 6.036 | Train / val / test, metrics |
 | MIT | 6.041 / 18.05 | Uncertainty, hypothesis tests |
-| Harvard | CS181 | Classification + evaluation |
-| Harvard | Stat 110 | Language of \(P(y\mid x)\) |
-| NUS | CS3244 | ML project protocol |
-| NUS | CS4248 | NLP classification |
-| NUS | ST2132 | Inference: CI + paired test |
+| MIT | 6.S191 / 6.861 | Deep learning / NLP |
 
-McNemar is the **name of the paired test** (like “t-test”), taught in ST2132-style inference — not extra homework reading.
+McNemar is the **name of the paired test** (like “t-test”) in the CS109 / 18.05 inference toolkit — not extra homework reading.
 
 ---
 
